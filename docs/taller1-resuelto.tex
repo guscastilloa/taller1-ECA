@@ -1,0 +1,185 @@
+\documentclass[12pt, letter]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{geometry}
+\geometry{
+ letterpaper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+ bottom = 20mm
+ }
+\usepackage{enumitem}
+
+
+
+\title{Solución del Taller 1 \\ \large Econometría Avanzada 2025-1}
+\author{Ana María Patrón \\
+ Gustavo A. Castillo Alvarez}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ▗▄▄▖  ▗▄▖ ▗▄▄▖▗▄▄▄▖▗▄▄▄▖     ▗▄▖ 
+% ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌ █  ▐▌       ▐▌ ▐▌
+% ▐▛▀▘ ▐▛▀▜▌▐▛▀▚▖ █  ▐▛▀▀▘    ▐▛▀▜▌
+% ▐▌   ▐▌ ▐▌▐▌ ▐▌ █  ▐▙▄▄▖    ▐▌ ▐▌
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Parte A: El Impacto de Publicar en Temas de Investigación de Tendencia}
+\subsection*{A1. Describa el problema de estimación usando el lenguaje de resultados potenciales.}
+
+Sabemos que $Y_i$ representa el número de citaciones obtenidas en el corte de datos por el investigador $i$. Asimismo tenemos que 
+$$
+D_i=\begin{cases}
+        1, & \text{Si $i$ publica en \textit{trending topic}}\\
+        0, & \text{de lo contrario}
+    \end{cases}
+$$
+
+El problema de estimación se puede describir en términos de resultados potenciales de la siguiente manera:
+
+\begin{align*}
+    Y_i(1) &= \text{Número de citaciones si el investigador $i$ publica en \textit{trending topic}} \\
+    Y_i(0) &= \text{Número de citaciones si el investigador $i$ no publica en \textit{trending topic}}
+\end{align*}
+
+Sin embargo, como en la realidad solo observamos uno de los resultados potenciales, podemos escribir el número de citaciones obtenidas por el investigador $i$ como:
+
+$$
+Y_i = Y_i(1)D_i + Y_i(0)(1-D_i)
+$$
+
+
+
+
+\subsection{A2. Representación matemática de mecanismo de asignación}
+
+
+
+\subsection{A3. }
+\subsection{A4. Demostración consistencia estimador}
+\subsection{A5. Análisis e interpretación ATE, ATT, ATU}
+
+\begin{enumerate}[label=A.\arabic*]
+    \item Describa el problema de estimación usando el lenguaje de resultados potenciales.
+    \begin{enumerate}[label=A.1.\alph*]
+        \item Describa los resultados potenciales en contexto.
+        \item Explique el problema de inferencia causal.
+        \item Escriba e interprete el ATE, ATT y ATU.
+    \end{enumerate}
+
+
+    \item Representación matemática de los mecanismos de asignación.
+    \begin{enumerate}[label=A.2.\alph*]
+        \item ¿Es aleatoria la Alternativa 1? Justifique (150 palabras).
+        \item ¿Es aleatoria la Alternativa 2? Justifique (150 palabras).
+        \item Discuta problemas de inferencia causal si la asignación no es aleatoria (150 palabras).
+    \end{enumerate}
+    \item Demostración de la consistencia del estimador.
+    \item Interpretación y análisis de los parámetros ATT, ATU, y ATE.
+\end{enumerate}
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ▗▄▄▖  ▗▄▖ ▗▄▄▖▗▄▄▄▖▗▄▄▄▖    ▗▄▄▖ 
+% ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌ █  ▐▌       ▐▌ ▐▌
+% ▐▛▀▘ ▐▛▀▜▌▐▛▀▚▖ █  ▐▛▀▀▘    ▐▛▀▚▖
+% ▐▌   ▐▌ ▐▌▐▌ ▐▌ █  ▐▙▄▄▖    ▐▙▄▞▘
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                                 
+                                
+\section{Parte B: Teorema de Frisch-Waugh-Lovell}
+\subsection{B1. Demostraciones relacionadas con proyecciones y residuales.}
+
+Primero veamos que la matriz $\textbf{P} = \textbf{X}(\textbf{X}'\textbf{X})^{-1}\textbf{X}'$ es una proyección ortogonal. Para ello debemos ver si esta es idempotente y simétrica. En exte ejercicio utilizaremos las mayúsculas $X$ como matrices para facilitar la notación. 
+
+
+
+\( P = X (X'X)^{-1} X' \), \quad \( X \in \mathbb{R}^{n \times k} \), \quad \( P \in \mathbb{R}^{n \times n} \)
+
+\subsubsection*{Idempotencia:}
+\begin{align*}
+P P &= \left( X (X'X)^{-1} X' \right) \left( X (X'X)^{-1} X' \right) \\
+    &= X (X'X)^{-1} (X'X) (X'X)^{-1} X' \\
+    &= X (X'X)^{-1} X' \\
+    &= P
+\end{align*}
+
+\subsubsection*{Simetría:}
+\begin{align*}
+P' &= \left( X (X'X)^{-1} X' \right)' \\
+   &= \left(  \right) \\
+   &= \left( X' \right)' \left( (X'X)^{-1} \right)' X' \\
+   &= X \left( (X'X)^{-1} \right)' X' \\
+   &= X \left( (X'X)' \right)^{-1} X' \\
+   &= X \left( X'X \right)^{-1} X' \\
+   &= P
+\end{align*}
+
+
+\subsection{B2. Regresión particionada: derivación y demostración.}
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ▗▄▄▖  ▗▄▖ ▗▄▄▖▗▄▄▄▖▗▄▄▄▖     ▗▄▄▖
+% ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌ █  ▐▌       ▐▌   
+% ▐▛▀▘ ▐▛▀▜▌▐▛▀▚▖ █  ▐▛▀▀▘    ▐▌   
+% ▐▌   ▐▌ ▐▌▐▌ ▐▌ █  ▐▙▄▄▖    ▝▚▄▄▖
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Parte C: Aplicación Práctica — Conflicto en Darfur}
+\begin{enumerate}[label=C.\arabic*]
+    \item Discusión del problema de identificación causal.
+    \item Uso del Teorema de Frisch-Waugh-Lovell para análisis de sesgo.
+\end{enumerate}
+
+
+
+
+\section{Parte D: Diseño Experimental en Punjab}
+\subsection{Configuración del Experimento y Análisis}
+\begin{enumerate}[label=D.\arabic*]
+    \item Definición de asignación y resultados potenciales.
+    \item Balance de muestra y especificación de efectos de tratamiento.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ▗▄▄▖  ▗▄▖ ▗▄▄▖▗▄▄▄▖▗▄▄▄▖    ▗▄▄▄ 
+% ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌ █  ▐▌       ▐▌  █
+% ▐▛▀▘ ▐▛▀▜▌▐▛▀▚▖ █  ▐▛▀▀▘    ▐▌  █
+% ▐▌   ▐▌ ▐▌▐▌ ▐▌ █  ▐▙▄▄▖    ▐▙▄▄▀
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Estimación y Análisis de Regresión}
+\begin{enumerate}[label=D.\arabic*]
+    \item Estimación con controles y efectos fijos.
+    \item Análisis del comportamiento oportunista y su impacto en los resultados.
+\end{enumerate}
+
+\section*{Conclusión}
+\noindent En este documento se resolvieron los ejercicios planteados, abordando problemas de identificación causal, análisis de regresión y diseño experimental.
+
+\end{document}

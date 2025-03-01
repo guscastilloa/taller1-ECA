@@ -99,6 +99,60 @@ Dado que, como explicamos previamente, el problema de inferencia causal deriva p
     $$\pi(D_i = 1 | Y_i(1), Y_i(0), X_i)$$
 \end{definition}
 
+\begin{definition}
+    Decimos que un mecanismo es aleatorio (\textit{unconfounded}) si la asignación al tratamiento es independiente de los resultados potenciales y de las covariables. Es decir:
+    $$\pi(D_i = 1 | Y_i(1), Y_i(0), X_i) = \pi(D_i = 1 | X_i)$$
+\end{definition}
+
+
+Para cada alternativa podemos definir matemáticamente el mecanismo de asignación así:
+
+\begin{algorithm}
+\caption{Alternativa 1}
+\begin{algorithmic}
+\FOR{cada investigador $i$}
+    \FOR{cada tema de investigación $j$}
+        \IF{investigador $i$ ha trabajado en tema $j$ antes}
+            \STATE $\pi_{ij}(D_i = 1) = 0$
+        \ELSE
+            \STATE $\pi_{ij}(D_i = 1) = p_j$
+        \ENDIF
+    \ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+donde $p_j$ es la probabilidad de asignación al tema $j$ cuando el investigador es elegible.
+
+\begin{algorithm}
+\caption{Alternativa 2}
+\begin{algorithmic}
+\FOR{cada investigador $i$}
+    \FOR{cada tema de investigación $j$}
+        \IF{investigador $i$ ha trabajado en tema $j$ antes}
+            \STATE $\pi_{ij}(D_i = 1 | X_i) = 0$
+        \ELSE
+            \STATE $\pi_{ij}(D_i = 1 | X_i) = f(\epsilon_i)$
+        \ENDIF
+    \ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+donde $f(\epsilon_i)$ es una función que depende de las características no observables del investigador.
+
+Antes de adentrarnos a explicar matemáticamente si la asignación es aleatoria o no, podemos ilustrar el problema con dos ejemplos.
+
+\textbf{Ejemplo 1:} Supongamos que un investigador $i$ deliberadamente ha escogido en su carrera trabajar en temas que nadie trabaja, que resultan ser (\textit{\textbf{not} trending research topics}) por razones no observables $\epsilon_i$. Por lo tanto no ha trabajado en el tema $j$ que resulta ser \textit{trending research topic} antes. Por lo tanto, bajo la Alternativa 1, es seguro (altamente probable) que $i$ sea asignado al tratamiento (si no le asignan $j$, tal vez le asignen $j'$ que, por su historial de elecciónes, también será \textit{trending research topic}). EN este caso la asignación al tratamiento está "contaminada" por características sistemáticas de $i$, haciéndole 
+
+En este caso, la probabilidad de asignación al tratamiento es $\pi_{ij}(D_i = 1, ) = 0$. Por lo tanto, el investigador no será asignado al tratamiento.
+
+\colortext{yellow}{END EJEMPLO 1}
+
+Ahora podemos definir la probabilidad de asignación al tratamiento para cada alternativa. Para la Alternativa 1, la probabilidad de asignación al tratamiento es:
+\colorbox{yellow}{HELP!!}
+
+
 
 \begin{enumerate}[label=A.\arabic*]
     \item Describa el problema de estimación usando el lenguaje de resultados potenciales.

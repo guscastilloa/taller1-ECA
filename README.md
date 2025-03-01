@@ -60,6 +60,5 @@ Este proyecto está vinculado a un documento de LaTeX en Overleaf para facilitar
 
 ## Notas Importantes
 
-- No subir datos sensibles al repositorio
 - Mantener actualizado el archivo de configuración para ambos sistemas operativos
 - Documentar todos los cambios importantes en los commits

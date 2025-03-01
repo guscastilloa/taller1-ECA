@@ -13,6 +13,7 @@
 %\usepackage de{quiz}
 \usepackage{threeparttable}
 \usepackage{framed}
+\usepackage{xcolor}
 \usepackage{amsmath}   % For mathematical formatting and equations
 \usepackage{hyperref}  % For hyperlinks and clickable references
 \usepackage{enumitem}  % For customizing lists
@@ -91,15 +92,12 @@ Taller 1\\
 \vspace{2mm}
 \normalsize 
 Econometría Avanzada, 2025-1\\ 
-Fecha de Entrega: 7 de marzo.
+\vspace{2mm}
+Presentado por: \\Gustavo Alvarez Castillo- 201812166\\
+Ana María Patrón Piñerez -201714291
+
 \end{minipage}
-\begin{minipage}{0.295\textwidth} 
-\begin{figure}[H]
-\raggedleft
-\includegraphics[scale=0.3]{Taller 1 - Tex/uniandes.pdf}
-\end{figure}
-\hfill
-\end{minipage}
+
 \medskip\hrule 
 \bigskip
 
@@ -119,10 +117,37 @@ Por el momento, suponga que el mecanismo de asignación de áreas de estudio (es
 
     \begin{itemize}
         \item[a.] Usando el contexto del caso de estudio, describa los resultados potenciales.
-        
-        \item[b.] Describa brevemente cuál es el problema de inferencia causal en función del contexto dado.  
+        \begin{mdframed}
+        \textbf{Solución}
+      
+    \begin{align*}
+    Y_i^1 &= \quad \text{Número total de citas recibidas por el investigador i} \\
+          &\quad \text{dado que publicó en un trending research topic} \\
+    Y_i^0 &= \quad \text{Número total de citas recibidas por el investigador i} \\
+          &\quad \text{dado que no publicó en un trending research topic}
+\end{align*}
 
-        \item[c.] Escriba en lenguaje matemático el ATE, el ATT y el ATU. Interprete estos conceptos de acuerdo al contexto del caso.  
+
+        \end{mdframed}
+        \item[b.] Describa brevemente cuál es el problema de inferencia causal en función del contexto dado.  
+\begin{mdframed}
+\textbf{Solución}
+El problema de inferencia causal en este contexto es determinar cuál es el efecto de publicar en trending topic versus no hacerlo, sobre el número de citaciones que recibe un investigador \textcolor{red}{Revisar}
+        \end{mdframed}
+        \item[c.] Escriba en lenguaje matemático el ATE, el ATT y el ATU. Interprete estos conceptos de acuerdo al contexto del caso.
+        \begin{mdframed}
+        \textbf{Solución}
+        \begin{itemize}
+    \item \textbf{Efecto total:} \( \text{ATE} = E[Y_i^1] - E[Y_i^0] \) \\
+    Es el efecto causal promedio sobre el número de citaciones que recibieron los investigadores como consecuencia de haber escrito sobre un trending reserach topic \textcolor{red}{versus no hacerlo?}
+    \item \textbf{Efecto sobre tratados:} \( \text{ATT} = E[Y_i^1 | D_i = 1] - E[Y_i^0 | D_i = 1] \)\\
+     Es el efecto causal promedio sobre el número de citaciones que recibieron los investigadores que efectivamente escribieron sobre un trending reserach topic versus  si no  hubiesen escrito sobre el trending reserach topic 
+    
+    \item \textbf{Efecto sobre no tratados:} \( \text{ATU} = E[Y_i^1 | D_i = 0] - E[Y_i^0 | D_i = 0] \)\\
+          Es el efecto causal promedio sobre el número de citaciones que recibieron los investigadores que efectivamente no escribieron sobre un trending reserach topic versus  si sí hubiesen escrito sobre el trending reserach topic 
+\end{itemize}
+
+        \end{mdframed}
     \end{itemize}
 
 \end{itemize}
@@ -138,21 +163,79 @@ No obstante, el Profesor Melquíades discrepa con este método de asignación y 
     
     \begin{itemize}
         \item ¿Considera usted que la \textbf{alternativa 1} es aleatoria? Justifique. \textit{(Máximo 150 palabras)}.
+         \begin{mdframed}
+        \textbf{Solución}\\
+      Esta alternativa no es aleatoria. La justificación es que la asignación al tratamiento de un investigador está condicionada a los temas que ese investigador haya trabajado antes. Como los trending reserch topic son temas que ya han podido ser trabajados antes por los investigadores, esto a su vez implica que la asignación al tratamiento está condicionada a haber trabajado o no en un trending research topic. Esto implica que para los investigadores que ya han publicado en trending research topics, pueden tener probabilidades más bajas de que se les asignen trending research topics nuevamnete. Para ejemplificar esto, es posible tener un caso extremo como que nada más haya un solo trending reserach topi y que preciso el investigador haya publicado sobre ese antes, entonces ahora es imposible que se le asigne un trending reserach topic, por tanto será asignado al grupo de control. Esto implica que hay un sesgo de selección y que por tanto el grupo de control será sistemáticamente distinto al grupo de tratamiento. Lo cual tiene efectos sobre el valor del $\tau$, como en nuestro ejemplo, el investigador x trabajó antes en un trending reserach topic,  $D_x=0$ pero puede que ya tuviese popularidad por sus trabajos previos en el trending research topic, por tanto el efecto causal se estaría subestimando. \textcolor{red}{Revisar}
+        \end{mdframed}
         
         \item ¿Considera usted que la \textbf{alternativa 2} es aleatoria? Justifique. \textit{(Máximo 150 palabras)}.
+         \begin{mdframed}
+        \textbf{Solución}\\
+        Esta alternativa tampoco es aleatoria porque es en esencia parecida al punto anterior, en donde la asignación al tratamiento está condicionada a haber trabajado o no en un trending reserach topic. La diferencia es que acá se autoseleccionan\textcolor{red}{Revisar}
+        \end{mdframed}
         
         \item Siguiendo la pregunta que guía este ejercicio, ¿qué problemas de inferencia causal se pueden generar si la asignación no es aleatoria? \textit{(Máximo 150 palabras)}.
+         \begin{mdframed}
+        \textbf{Solución}\\
+        Si la asignación no es aleatoria, el efecto causal promedio sobre el número de citaciones como consecuencia de publicar sobre un trending research versus no hacerlo  va a estar mal estimado. En particular, las alternativas 1 y 2 sugieren que el efecto va a estar subestimado, pues varios investigadores asignados al grupo de control, podrían ya ser populares por sus trabajos previos en los trendings reserach topics.
+        \end{mdframed}
     \end{itemize}
 
     \item[3.] Considere el siguiente modelo lineal:
 
-    \begin{equation*} Y_i = \tau D_i + u_i. \end{equation*}
+
+    \begin{equation*} Y_i = \textcolor{red}{\alpha}+ \tau D_i + u_i. \end{equation*}
 
     Demuestre que el estimador $\hat\tau_{MCO}$ coincide con la diferencia de medias entre el grupo de tratados y el grupo de no tratados. Es decir, pruebe que $\hat\tau_{\scriptsize{MCO}} = \hat\tau_{\scriptsize{DM}}$, donde
 
     \begin{equation*} \hat\tau_{\scriptsize{DM}} := \frac{1}{N_1}\sum_{{i : D_i = 1}} Y_i - \frac{1}{N_0}\sum_{{i : D_i = 0}} Y_i \end{equation*}
 
     donde $N_1$ representa el número de individuos tratados y $N_0$ el número de individuos no tratados.
+ \begin{mdframed}
+        \textbf{Solución}\\
+        \begin{proof}
+        Sea
+  \begin{align} \label{estmco}
+    Y_i &= \alpha + \tau D_i + u_i
+\end{align}
+
+Para los tratados $D_i=1$, el modelo es:
+
+\begin{align*}
+    Y_i &= \alpha + \tau + u_i
+\end{align*}
+
+Para los no tratados $D_i=0$, el modelo es:
+
+\begin{align*}
+    Y_i &= \alpha + u_i
+\end{align*}
+Entonces la diferencia de medias condicional entre tratados y no tratados es:
+\begin{align*}
+    E[Y_i | D_i = 1] - E[Y_i | D_i = 0] &= \alpha + \tau + E[u_i | D_i = 1]-\alpha -E[u_i | D_i = 0] \\ &= \tau + E[u_i | D_i = 1] -E[u_i | D_i = 0]
+\end{align*}
+
+Como estamos en el mundo de estimación por MCO, se supone exogeneidad, esto es que $E[u_i | D_i ]=0$. Por tanto no hay sesgo de selección y $ E[u_i | D_i = 1] - E[u_i | D_i = 0]=0$. \textcolor{red}{esto se puede suponer?}. Entonces, la diferencia de medias condicional identifica 
+efecto causal $\tau$:
+
+\begin{equation*}
+    E[Y_i | D_i = 1] - E[Y_i | D_i = 0]=\tau
+\end{equation*}
+
+Usando la muestra, tenemos que:
+\begin{itemize}
+    \item $\hat\tau_{\scriptsize{MCO}}$ es el estimador por MCO de $\tau$ usando \ref{estmco}   
+    \item $\frac{1}{N_1}\sum_{{i : D_i = 1}} Y_i$ es el análogo muestral de $ E[Y_i | D_i = 1]$
+    \item $\frac{1}{N_0}\sum_{{i : D_i = 0}} Y_i$ es el análogo muestral de $E[Y_i | D_i = 0]$
+\end{itemize}
+Entonces:
+ \begin{align*} \hat\tau_{\scriptsize{MCO}} &= \frac{1}{N_1}\sum_{{i : D_i = 1}} Y_i - \frac{1}{N_0}\sum_{{i : D_i = 0}} Y_i \\ &= \hat\tau_{\scriptsize{DM}} \end{align*}
+\end{proof}
+
+
+
+\end{mdframed}
+    
 
     \item[4.] De ahora en adelante, e independientemente de su respuesta a la pregunta 2., suponga que la asignación al tratamiento es aleatoria. Demuestre que el estimador $\hat\tau_{DM}$ es consistente (y, por tanto, el estimador de MCO también lo es). Esto es, demuestre que
 
@@ -161,15 +244,60 @@ No obstante, el Profesor Melquíades discrepa con este método de asignación y 
     \end{equation*}
 
     donde \(Y^{j}_{i}\) para \(j \in \{0, 1\}\) son los resultados potenciales asociados a cada estado de tratamiento.
+     \begin{mdframed}
+        \textbf{Solución}
+        \begin{proof}
+       Sabemos que:
+        \begin{align*}
+    \widehat{\tau}_{DM} &:= \frac{1}{N_1} \sum_{i: D_i=1} Y_i - \frac{1}{N_0} \sum_{i: D_i=0} Y_i \\&=
+  \frac{1}{N_1} \sum_{i \in N} Y_i \mathbb{I}_{\{D_i=1\}} -\frac{1}{N_0} \sum_{i \in N} Y_i \mathbb{I}_{\{D_i=0\}}  &\text{(reescribiendo las sumatorias en términos de N)} 
+  \end{align*}
+  Usando que $N_1=\sum_{i \in N}  \mathbb{I}_{\{D_i=1\}}, N_0=\sum_{i \in N}  \mathbb{I}_{\{D_i=0\}}$. Tenemos
+  \begin{align*}
+  \\&=
+   \frac{\sum_{i \in N} Y_i \mathbb{I}_{\{D_i=1\}}}{\sum_{i \in N}  \mathbb{I}_{\{D_i=1\}}}  -\frac{\sum_{i \in N} Y_i \mathbb{I}_{\{D_i=0\}}  }{\sum_{i \in N} \mathbb{I}_{\{D_i=0\}}} 
+   \\&=
+    \frac{\frac{1}{N}\sum_{i \in N} Y_i \mathbb{I}_{\{D_i=1\}}}{\frac{1}{N} \sum_{i \in N}  \mathbb{I}_{\{D_i=1\}}}  -\frac{\frac{1}{N}\sum_{i \in N} Y_i \mathbb{I}_{\{D_i=0\}}  }{\frac{1}{N}\sum_{i \in N} \mathbb{I}_{\{D_i=0\}}} &\text{(Sumando y dividiendo por $\frac{1}{N}$)} 
+   \end{align*}
+   Ahora aplicamos el plim:
+  \begin{align*}
+    \text{plim} \widehat{\tau}_{DM}&=  \text{plim} \bigg( \frac{\frac{1}{N}\sum_{i \in N} Y_i \mathbb{I}_{\{D_i=1\}}}{\frac{1}{N} \sum_{i \in N}  \mathbb{I}_{\{D_i=1\}}}  -\frac{\frac{1}{N}\sum_{i \in N} Y_i \mathbb{I}_{\{D_i=0\}}  }{\frac{1}{N}\sum_{i \in N} \mathbb{I}_{\{D_i=0\}}} \bigg) \\&=
+     \frac{\text{plim}\frac{1}{N}\sum_{i \in N} Y_i \mathbb{I}_{\{D_i=1\}}}{\text{plim} \frac{1}{N} \sum_{i \in N}  \mathbb{I}_{\{D_i=1\}}}  -\frac{\text{plim}\frac{1}{N}\sum_{i \in N} Y_i \mathbb{I}_{\{D_i=0\}}  }{\text{plim}\frac{1}{N}\sum_{i \in N} \mathbb{I}_{\{D_i=0\}}}  \\&=
+     \frac{E[ Y_i \mathbb{I}_{\{D_i=1\}}]}
+     {E[\mathbb{I}_{\{D_i=1\}}] }  -\frac{E[ Y_i \mathbb{I}_{\{D_i=0\}}] }{E[\mathbb{I}_{\{D_i=0\}}]} &\text{(Usando la débil de los grandes números)} 
+\end{align*}
+Ahora, note que $\frac{E[ Y_i \mathbb{I}_{\{D_i=1\}}]}
+     {E[\mathbb{I}_{\{D_i=1\}}] }= E[ Y_i| D_i=1]$. Intuitivamente se ve con el análogo muestral : $\frac{\frac{\sum_i Y_i \mathbb{I}_{\{D_i=1\}}}{N}}{\frac{N_1}{N}}=\frac{\sum_i Y_i \mathbb{I}_{\{D_i=1\}}}{N_1}$. Vale tambien para el segundo término, entonces:
+\begin{align*}
+&=E[Y_i | D_i = 1] - E[Y_i | D_i = 0]\\&=E[Y_i^{1}  | D_i = 1] - E[Y_i^{0}  | D_i = 1] &\text{(Como $Y_i=Y_i^{0} (1-D_i)+ Y_i^{1} D_i$ )}
+\\&=E[Y_i^{1}  | D_i = 1] - E[Y_i^{0}  | D_i = 1] &\text{(Como experimento es aleatorio $E[Y_i^{0} | D_i = 0]=E[Y_i^{0} | D_i = 0] $ )}\\&=\mathbb{E}[Y^{1}_{i} - Y^{0}_{i} | D_i = 1]
+\end{align*}
+
+     
+\begin{align*}
+E[Y_i | D_i = 1] - E[Y_i | D_i = 0] &= E[Y_i | D_i = 1] - E[Y_i | D_i = 1] \\&=\mathbb{E}[Y^{1}_{i} - Y^{0}_{i} | D_i = 1]\\&=\tau
+\end{align*}
+\end{proof}
+
+        \end{mdframed}
 
     \item[5.] Demuestre los siguientes hechos:
 
     \begin{itemize}
         \item[a.] $\tau = \text{ATT}+\left( \mathbb{E}[Y^{0}_{i}|D_i=1]-\mathbb{E}[Y^{0}_{i}|D_i=0] \right)$
+         \begin{mdframed}
+        \textbf{Solución}\\
+        \end{mdframed}
 
         \item[b.] $\tau= \text{ATU}+\left( \mathbb{E}[Y^{1}_{i}|D_i=1]-\mathbb{E}[Y^{1}_{i}|D_i=0] \right)$
+         \begin{mdframed}
+        \textbf{Solución}\\
+        \end{mdframed}
 
         \item[c.] $\text{ATE}=\pi \,\text{ATT}+(1-\pi)\text{ATU}$ \quad donde $\pi \equiv \mathbb{P}(D_i=1)$
+         \begin{mdframed}
+        \textbf{Solución}
+        \end{mdframed}
     \end{itemize}
     
     Interprete las proposiciones de los sub-incisos a, b, y c. Finalmente, ¿es cierto que si $\tau = \text{ATT}$, entonces $\tau = \text{ATU}$? Si su respuesta es afirmativa, demuéstrelo. En caso contrario, dé un contra ejemplo con una situación de la vida real. 
@@ -198,11 +326,14 @@ La universidad le ha dado a usted una base de datos denominada \texttt{researche
 \bigskip
 \begin{itemize}
     \item[6.] Compare esta nueva situación con el efecto considerado previamente (incisos 1-5). ¿De qué manera el efecto adicional de publicar en un proyecto colaborativo podría afectar la identificación causal planteada? Justifique. \textit{(Máximo 200 palabras)}.
+     \begin{mdframed}
+        \textbf{Solución}
+        \end{mdframed}
 
     \item[7.] Elabore una gráfica que ilustre el comportamiento del estimador MCO, denotado como $\hat{\tau}_{MCO}$, para ocho sub-muestras aleatorias diferentes de la base de datos\footnote{Se recomienda utilizar sub-muestras de tamaño 50, 100, 500, 1'000, 5'000, 10'000, 50'000 y, finalmente, la muestra completa.}. Tenga en cuenta las siguientes indicaciones:  
 
     \begin{itemize}
-        \item La regresión a estimar es $Y_i = \tau D_i + u_i$.
+        \item La regresión a estimar es $Y_i = \textcolor{red}{\alpha}+\tau D_i + u_i$.
     
         \item El eje horizontal debe representar el logaritmo del número de observaciones en cada sub-muestra.  
 
@@ -214,6 +345,35 @@ La universidad le ha dado a usted una base de datos denominada \texttt{researche
     \end{itemize}  
 
     Una vez generada la gráfica, interprete sus resultados. ¿Cómo se comporta el estimador en relación con la línea de referencia?
+     \begin{mdframed}
+        \textbf{Solución}
+        \begin{figure}[H]  % La opción [H] fuerza que la imagen quede aquí
+    \centering
+    \includegraphics[width=0.8\textwidth]{output/figures/graficoconinter.png} 
+    %\caption{Descripción de la imagen.}
+    \label{fig:mi_grafico}
+\end{figure}Se estima la regresión para muestras de tamaño 50, 100, 500, 1000, 5000, 10000  y el total de la muestra que fueron 10380 datos. A continuación se detalla una tabla con los resultados del estimador por MCO (beta\_hat) para los logaritmos de las muestras (log\_n): 
+\begin{table}[H]
+    \centering
+    \caption{Resultados de log\_n y beta\_hat}
+    \begin{tabular}{cc}
+        \toprule
+         \textbf{log\_n} & \textbf{beta\_hat} \\
+        \midrule
+        3.912023  & 5.2463235 \\
+         4.6051702 & 4.5747697 \\
+         6.2146081 & 5.0180653 \\
+         6.9077553 & 5.0959556 \\
+        8.5171932 & 5.1672351 \\
+         9.2103404 & 5.1790206 \\
+        9.2477325 & 5.1669749 \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:resultados}
+\end{table}
+Estos resultados dan intuición sobre la presencia de un posible sesgo que esté sobreestimando el estimador. Se puede observar que el estimador tiende a estabilizarse alrededor de un valor sobre 5, mientras que el valor teórico esperado es 4. 
+
+        \end{mdframed}
 
     \item[8.] Demuestre que, asintóticamente, el estimador MCO sobrestima el efecto $\tau$. Es decir, pruebe que  
 \[
@@ -221,6 +381,35 @@ La universidad le ha dado a usted una base de datos denominada \texttt{researche
 \]
 
     Usando su demostración y la base de datos que tiene, de una estimación del valor de $\theta$. ¿Este estimador es coherente con los resultados que ha estado obteniendo?
+     \begin{mdframed}
+        \textbf{Solución}
+        \begin{proof}
+       Considere la regresión $Y_i =\alpha+ \tau^* D_i + u_i$. Sabemos 
+\begin{align*}
+    \hat{\tau}^*_{MCO} &=(X'X)^{-1} X' y \\
+    &= (X'X)^{-1} X' (X \tau^* + \epsilon) \\
+    &= (X'X)^{-1} X' (X (\tau + \theta) + \epsilon) \\
+    &= (X'X)^{-1} X' X \tau + (X'X)^{-1} X' X\theta + (X'X)^{-1} X' \epsilon \\
+    &= \tau + \theta + (X'X)^{-1} X' \epsilon \\
+    &= \tau + \theta + \left( \frac{X'X}{N} \right)^{-1} \left( \frac{X'\epsilon}{N} \right) \quad \text{(multiplicando y dividiendo por N)} \\
+    &= \tau + \theta + \left( \frac{1}{N} \sum_{i=1}^{N} x_i x_i' \right)^{-1} \left( \frac{1}{N} \sum_{i=1}^{N} x_i \epsilon_i \right).
+  \end{align*}
+  Ahora, aplicando el p-lim tenemos:
+  \begin{align*}
+    \text{plim } \hat{\tau}^*_{MCO} &= \text{plim} \left( \tau + \theta+ \left( \frac{1}{N} \sum_{i=1}^{N} x_i x_i' \right)^{-1} 
+    \left( \frac{1}{N} \sum_{i=1}^{N} x_i \epsilon_i \right) \right) \\
+    &= \text{plim } \tau + \text{plim } \theta +\text{plim} \left( \left( \frac{1}{N} \sum_{i=1}^{N} x_i x_i' \right)^{-1} 
+    \left( \frac{1}{N} \sum_{i=1}^{N} x_i \epsilon_i \right) \right) \\
+    &= \tau +\theta+ \text{plim} \left( \frac{1}{N} \sum_{i=1}^{N} x_i x_i' \right)^{-1} 
+    \cdot \text{plim} \left( \frac{1}{N} \sum_{i=1}^{N} x_i \epsilon_i \right) \\
+      &= \tau +\theta + \text{plim} E[x_i x_i'] ^{-1} \text{plim} E[x_i \epsilon_i] \qquad \text{(por ley débil de grandes números) }\\
+      &= \tau +\theta + \text{plim} E[x_i x_i'] ^{-1} 0 \qquad \text{(usando exogeneidad débil) }\\
+       &= \tau +\theta
+    \end{align*}
+   Como $\theta > 0$ entonces se tiene que $\text{plim } \hat{\tau}^*_{MCO}=\tau + \theta >\tau$.
+        \end{proof}
+        Ahora, como empíricamente obtuvimos $\hat{\tau}^*_{MCO} \approx 5.16$ y teóricamente $\tau \approx 4$ entonces el tenemos que el sesgo $\theta$ es $\approx 1.16$, Esto es consistente con los resultados obtenidos en cuanto el estimador empírico es mayor que el estimador teórico.
+        \end{mdframed}
 
     \item[9.] Proponga una metodología para recuperar estimadores consistentes de $\tau$ y de $\theta$. 
 
@@ -236,6 +425,9 @@ La universidad le ha dado a usted una base de datos denominada \texttt{researche
         \item[e.] Reporte los resultados de los incisos c., y d.en una tabla, compárelos y concluya. 
 
     \end{itemize}
+     \begin{mdframed}
+        \textbf{Solución}
+        \end{mdframed}
     
 
 \end{itemize}
@@ -328,7 +520,7 @@ El teorema de Frisch-Waugh-Lovell es uno de los resultados más importantes en e
 
     \item Demuestre que la matriz $\textbf{P}_1 \equiv \textbf{X}_1(\textbf{X}_1'\textbf{X}_1)^{-1}\textbf{X}_1'$ es una matriz de proyección ortogonal y defina la matriz de aniquilación $\textbf{M}_1$ asociada a $\textbf{X}_1$. Demuestre que $\textbf{M}_1$ también es una matriz de proyección ortogonal. Así mismo, demuestre que 
 
-    \begin{enumerate}
+    \begin{enumerate}\label{aniquiladoranotaciona}
         \item $M_1\textbf{X}_1 = \textbf{0}$ (es por esta razón que la matriz se denomina como aniquiladora).
         \item $M_1\boldsymbol\epsilon = \boldsymbol\epsilon$.
     \end{enumerate}
@@ -336,7 +528,7 @@ El teorema de Frisch-Waugh-Lovell es uno de los resultados más importantes en e
 
     \item Sean:
     
-    \begin{itemize}
+    \begin{itemize}\label{aniquiladoranotacion}
         \item $\boldsymbol{\Tilde{X}_2} =  M_1\textbf{X}_2$.
         \item $\boldsymbol{\Tilde{y}} =  M_1\textbf{y}$.
     \end{itemize}
@@ -435,6 +627,16 @@ Usted cuenta con una base de datos de corte transversal a nivel de individuo con
 
 \begin{enumerate}
     \item Bajo el contexto dado, ¿cuál es el principal obstáculo para la identificación del efecto causal? Adicionalmente, argumente si la propuesta de su co-autora~\eqref{eq:no_z} logra capturar dicho efecto.
+    \begin{mdframed}
+        \textbf{Solución}\\
+        El principal obstáculo para identificar el efecto causal de ser victima sobre la voluntad de firmar la paz $\tau$ sería la presencia la presencia de confounders o variable omitida. Esto porque se estaría originando un sesgo por la variable omitida. Este confounder o variable omitida, entraría en el error indebidamente. La razón importante detrás es que el confounder va a estar afectando tanto el ser victima como la voluntad de firmar la paz, por lo tanto la estimación de $\tau$ va a estar contaminada por el efecto de este confounder, impidiendo la identificación del verdadero efecto causal. Por lo tanto, en el contexto particular de la violencia en Dafur se requiere controlar por los posibles confounders para aislar el efecto causal y garantizar que $\tau$ refleje únicamente el efecto causal de ser victima sobre la voluntad de firmar la paz.  En este sentido, el problem se soluciona si hay disponibilidad de datos del confounder. Sin embargo, si no es posible observar esta variable, la credibilidad de la regresión quedaría en riesgo pues no se podría incluir como control.\\
+
+        Un ejemplo de un posible confounder podría ser estar en el centro. Estar en el centro y ser victima podrían estar correlacionados porque podría ser que los bombardeos dirigidos al centro tiendan a ser más letales porque se invierte más maquinaria, precisamente porque el centro está más poblado usualmente y es más fácil acceso para los bombardeos. Por otro lado, estar en el centro podría estar correlacionado con la voluntad de firmar la paz bajo la teoría de que las personas del centro suelen tener opiniones distintas que las personas de las periferia, se podría argumentar que habría una mayor voluntad de firmar la paz precisamente porque se vive una mayor intranquilidad. Lo clave es que pueden existir diferencias sistemáticas entre la voluntad de firmar la paz que tienen las personas del centro y la voluntad de firmar la paz que tienen personas de la periferia.\\
+
+        Así las cosas, la propuesta de mi coautora no lograría captar el efecto causal que deseo, pues el efecto capturado estaría mal estimado. Para el caso de que la variable omitida fuese centro, y por el argumento que mencioné, la covarianza se estaría sobre-estimando el $\tau$.\\
+        
+        Ahora podría darse el caso donde se subestimará también, honestamente la discusión es relativa. Por ejemplo, que el confounder sea estar en un barrio aledaño a donde vive alguien del gobierno (acá esto es diferente a la variable village) o un familiar cercano de alguien del gobierno. Es de esperarse que la correlación entre ser victima y esta variable sea negativa, por ende la covarianza también lo será.Por otro lado, se podría argumentar que vivir aledaño a alguien del gobierno trae consigo ciertas particularidades, tal vez se ha reforzado la seguridad en esos barrios, se recibe una propaganda politica distinta, por ende la percepción de violencia en estos lugares sería más baja que la de otros barrios donde no vive gente del gobierno o familiares de estos. En tal caso se estaría subestimando $\tau$.
+        \end{mdframed}
 
     
 \end{enumerate}
@@ -450,7 +652,63 @@ Usted cuenta con una base de datos de corte transversal a nivel de individuo con
 \begin{enumerate} [resume]
     \item Comente por qué la preocupación de su co-autora puede ser un obstáculo en la identificación del efecto causal. Después, considere los modelos~\eqref{eq:no_z} y \eqref{eq:center} y use el teorema de Frisch-Waugh-Lovell para demostrar que, si se cumple la preocupación de su co-autora, entonces el estimador $\hat\tau^c$ tiene un sesgo con respecto al estimador $\hat\tau$.
 
-  
+  \begin{mdframed}
+        \textbf{Solución}\\
+        La preocupación de mi coautora puede ser un obstáculo en la identificación del efecto causal en cuanto que apoya la idea de que existe un confounder, en este caso sería la variable center. Como center no es observable, entonces no se podría estimar la  estimar la regresión \eqref{eq:center}. Si no hay otra alternativa, tocaría estimar \ref{eq:no_z} pero prendería alarmas sobre la credibilidad del estimador $\tau$ pues este está mal estimado, no capturaría el efecto causal que queremos (ser victima sobre la voluntad de firmar paz) y esto se da precisamente porque se tenía que meter center como control pero no fue posible. \\
+        Esto también abre la discusión a que así como center, puede haber otras variables que se están omitiendo, por ejemplo también incluir una variable dummy ('neighbhor') que sea 1 si se vive en el mismo barrio de alguien del gobierno o de un familiar de hasta tercer grado de alguien del gobierno y 0 de lo contrario, etc.\\
+        
+    Vamos a mostrar que en este caso, el estimador  $\hat\tau^c$ tendría un sesgo con respecto al estimador $\hat\tau$. Para ello, vamos a computar $\hat\tau$
+    \begin{proof}
+Considere el modelo a estimar:
+\begin{equation*} 
+    peace_i = \tau \cdot victim_i + \textbf{x}'_i\boldsymbol\beta + \epsilon_i
+\end{equation*}
+
+Considere los siguientes modelos auxiliares:
+
+\begin{align*}
+    peace_i &= \textbf{x}_i \beta^{*} + \eta_i, \\
+    victim_i &= \textbf{x}_i\beta^{**} + \mu_i,
+\end{align*}
+
+\noindent Ahora vamos a aislar el efecto de las $X's$ sobre ser victima y sobre la voluntad de firmar la paz. Entonces considere las variables residuales correspondientes:
+
+\begin{align*}
+    \tilde{peace}_i &= peace_i - \textbf{x}_i \hat{\beta^{*}} \qquad \text{(Note que esto es lo mismo que usar $M_X peace= \tilde{peace}$ por ej \ref{aniquiladoranotacion})}, \\
+    \tilde{victim}_i &= victim_i - \textbf{x}_i \hat{\beta^{**}} 
+\end{align*}
+
+\noindent donde \( \hat{\beta^{*}} \) y \( \hat{\beta^{**}} \) son los estimadores de MCO. Ahora, al hacer la regresión de $\tilde{peace}_i= \phi \tilde{victim}_i+\nu_i $. Por el teorema de Frisch-Waugh-Lovell tenemos que $\phi = \tau$, entonces podemos escribir $\tau$ como el estimador por MCO de un modelo de regresión lineal simple (A1).\\
+
+Note que $\tilde{peace}_i, \tilde{victim}_i$ siguen teniendo informaciòn de la variable omitida center. En particular, tenemos que como la correcta especificación es : 
+    \begin{gather*}
+         peace_i = \tau^{c} \cdot victim_i + \textbf{x}_i\boldsymbol\beta^{c} + \gamma \cdot center_i + \epsilon^{c}_i
+         \end{gather*}
+   Cuando aniquilamos la influencia de las X's sobre las variables ( lo que hicimos con las regresiones auxiliares y usando las propiedades de ej \ref{aniquiladoranotaciona}, \ref{aniquiladoranotacion}))tenemos en realidad que:
+     \begin{align*}
+        M_x peace_i &= \tau^{c} \cdot M_x victim_i + M_x \textbf{x}_i\boldsymbol\beta^{c} + \gamma  M_x center_i + M_x\epsilon^{c}_i 
+     \end{align*}
+   \begin{gather}\label{aniquilacionx}
+        \tilde{peace}_i = \tau^{c} \cdot \tilde{victim}_i +  \gamma  \tilde{center}_i + \epsilon^{c}_i 
+    \end{gather}
+    donde $\tilde{center}_i=center_i - \textbf{x}_i \hat{\beta^{***}}$ si observaramos $center_i$.\\
+       
+    
+
+Entonces:
+
+\begin{align*}
+    \hat{\tau} &= \frac{\operatorname{cov}(\tilde{victim}, \tilde{peace})}{\operatorname{var}(\tilde{victim})} \qquad \text{(Por A1)}\\
+    &= \frac{\operatorname{cov}(\tilde{victim}, \hat{\tau}^c \tilde{victim} + \hat{\gamma} \tilde{center})}{\operatorname{var}(\tilde{victim}_i)} \qquad \text{(Usando \ref{aniquilacionx})} \\
+     &= \hat{\tau}^c \frac{\operatorname{var}(\tilde{victim})}{\operatorname{var}(\tilde{victim})} + \frac{\operatorname{cov}(\tilde{victim}, \hat{\gamma} \tilde{center})}{\operatorname{var}(\tilde{victim})} \\
+    &= \hat{\tau}^c + \hat{\gamma} \left( \frac{\operatorname{cov}(\tilde{victim}, \tilde{center})}{\operatorname{var}(\tilde{victim})} \right) \\
+    \intertext{Defina $ \hat{\delta} := \frac{\operatorname{cov}(\tilde{victim}, \tilde{center})}{\operatorname{var}(\tilde{victim})}$ entonces}
+    &= \hat{\tau}^c+ \hat{\gamma} \hat{\delta}
+\end{align*}
+Luego hemos mostrado que $\hat{\tau} =\hat{\tau}^c+ \hat{\gamma} \hat{\delta}$. Por tanto $\hat{\tau}$ tiene un sesgo respecto a $\hat{\tau}^c$  y la magnitud va a depender de la correlación entre ser victima y estar en el centro (descontando ya el efecto de los controles).
+
+    \end{proof}
+        \end{mdframed}
 
     \bigskip\item En este momento, debería tener dos factores que afectan al sesgo:
     
@@ -460,12 +718,18 @@ Usted cuenta con una base de datos de corte transversal a nivel de individuo con
     
     Interprete detalladamente estos factores y los mecanismos por los cuales pueden alterar la magnitud y/o la dirección del sesgo usando el caso de estudio como referencia para sus explicaciones. Puede resultarle útil apoyarse de regresiones auxiliares para explicar cada uno de los factores.
 
+    \begin{mdframed}
+        \textbf{Solución}
+        \begin{equation*} 
+        |\hat{sesgo}| = |\hat\tau - \hat\tau^c| = \hat{\gamma} \hat{\delta}
+    \end{equation*}
+       
+
+        \end{mdframed}
+      
+        
+
 \end{enumerate}
-
-
-
-
-
 %%%%%%%%%% Punto 3 %%%%%%%%%%%%%
 \section*{Tercer Ejercicio}
 Los problemas de alineación de incentivos en contextos de información incompleta han sido un tema ampliamente estudiado en la literatura económica (\href{https://www.nber.org/papers/w16343}{Chassang et al. (2010)}, \href{https://www.nber.org/papers/w27502}{Greenstone et al. (2020)}).\footnote{\footnotesize{Véase también el problema del principal-agente en el marco de Teoría de Juegos}} A través de enfoques tanto empíricos como teóricos, los investigadores han buscado identificar sistemas de incentivos que fomenten el esfuerzo y el cumplimiento de los objetivos entre los agentes que participan en el mercado. En los últimos años, el problema de la información asimétrica y la alineación de objetivos ha girado en torno al análisis del desempeño de las burocracias bajo diferentes sistemas de supervisión de sus empleados públicos (\href{https://academic.oup.com/jpart/article/31/2/259/5974047}{Rasul et al. (2021)}, \href{https://academic.oup.com/ej/article-abstract/128/608/413/5068981?redirectedFrom=fulltext}{Rasul et al. (2018)}). En este punto, utilizaremos datos de un Experimento Aleatorio Controlado realizado en Pakistán para responder a la pregunta: \textit{¿Es más eficiente para el gasto público el monitoreo continuo de las licitaciones o la autonomía de los servidores públicos en la asig
@@ -541,6 +805,22 @@ Usted cuenta con información del estado de tratamiento de cada oficina de gobie
             \end{tabular}
              {\footnotesize{\\Nota: Errores estándar entre paréntesis. La tabla muestra los resultados de una regresión múltiple a nivel de Oficina de Gobierno. La regresión incluye observaciones para 587 oficinas de Gobierno en 26 distritos de la región de Punjab, Pakistán.  La categoría de control en cada regresión corresponde a las oficinas asignadas al grupo de control en el Experimento.}}
 	\end{table}
+     \begin{mdframed}
+        \textbf{Solución:}
+        \[
+\text{Male} = \beta_0 + \beta_1 T_1 + \beta_2 T_2 + \beta_3 T_3
+\]
+
+Queremos decir:
+
+\[
+\begin{aligned}
+H_0 &: \beta_1 = \beta_2 = \beta_3 = 0. \\
+H_1 &: \text{Alguno distinto de } 0.
+\end{aligned}
+\]
+
+        \end{mdframed}
     
 
    \item Suponga que se cumplen lo supuestos listados en el numeral 2. Plantee una especificación que le permita recuperar el diferencial de cada tipo de tratamiento sobre el precio de compra respecto al grupo de control. Recuerde que la asignación al tratamiento fue estratificada.
@@ -587,3 +867,7 @@ Observaciones &  \\ \hline
 \end{enumerate}
 
 \end{document}
+
+ \begin{mdframed}
+        \textbf{Solución}
+    \end{mdframed}

@@ -5,6 +5,7 @@
 \newtheorem{definition}{Definición}
 \newtheorem{theorem}{Teorema}
 \usepackage{algorithm}
+\usepackage{algorithmic}
 \usepackage{algpseudocode}
 \usepackage{xcolor}
 \usepackage{graphicx}
@@ -116,7 +117,7 @@ Para cada alternativa podemos definir matemáticamente el mecanismo de asignaci�
 \FOR{cada investigador $i$}
     \FOR{cada tema de investigación $j$}
         \IF{investigador $i$ ha trabajado en tema $j$ antes}
-            \STATE $\pi_{ij}(D_i = 1) = 0$
+            \STATE $\pi_{ij}(D_i = 1) = 0$ 
         \ELSE
             \STATE $\pi_{ij}(D_i = 1) = p_j$
         \ENDIF

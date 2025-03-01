@@ -2,6 +2,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
 \usepackage{amsmath, amssymb, amsthm}
+\newtheorem{definition}{Definición}
+\newtheorem{theorem}{Teorema}
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{hyperref}
@@ -63,16 +65,40 @@ $$
 Y_i = Y_i(1)D_i + Y_i(0)(1-D_i)
 $$
 
+Por lo tanto, definimos el efecto de tratamiento individual (ITE) como:
+
+$$
+\tau_i = Y_i(1) - Y_i(0)
+$$
+
+Como nos interesa en realidad es la población y no solamente un individuo particular, definimos efectos agregados para toda la población usando el valor esperado de $\tau_i$ de tres formas distintas:  el efecto promedio del tratamiento (ATE), el efecto promedio del tratamiento en los tratados (ATT) y el efecto promedio del tratamiento en los no tratados (ATU) como:
+
+\begin{align}
+\tau_{\text{ATE}} =& E[Y_i(1) - Y_i(0)] \\
+\tau_{\text{ATU}} =& E[Y_i(1) - Y_i(0) | D_i = 0] \\
+\tau_{\text{ATT}} =& E[Y_i(1) - Y_i(0) | D_i = 1]
+\end{align}
 
 
+Sabemos que, como no observamos para una persona ambos resultados potenciales, no podemos calcular directamente los efectos individuales. Por lo tanto, una comparación "ingenua" de los promedios de los tratados y no tratados no nos dará una estimación válida de los efectos de tratamiento:
 
-\subsection{A2. Representación matemática de mecanismo de asignación}
-
-
+\begin{align*}
+\tau_{\text{ATE}} &\neq E[Y_i | D_i = 1] - E[Y_i | D_i = 0] \\
+\end{align*}
 
 \subsection{A3. }
 \subsection{A4. Demostración consistencia estimador}
 \subsection{A5. Análisis e interpretación ATE, ATT, ATU}
+\subsection{A2. Representación matemática de mecanismo de asignación}
+
+\colorbox{yellow}{esto no me convence}
+Dado que, como explicamos previamente, el problema de inferencia causal deriva por que la asignación al tratamiento \textit{puede} es desconocida, podemos definir el mecanismo de asignación para poder comparar con mayor precisión las dos alternativas propuestas.
+
+\begin{definition}
+    Un mecanismo de asignación es una función de probabilidad que describe la probabilidad de asignación al tratamiento condicional a los resultados potenciales y a las covariables:
+    $$\pi(D_i = 1 | Y_i(1), Y_i(0), X_i)$$
+\end{definition}
+
 
 \begin{enumerate}[label=A.\arabic*]
     \item Describa el problema de estimación usando el lenguaje de resultados potenciales.

@@ -1,7 +1,7 @@
 ## Data Files ##
 
 *.dta
-
+*.do.stswp
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/windows,stata,r,latex,macos,vim

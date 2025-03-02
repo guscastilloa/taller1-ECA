@@ -29,6 +29,10 @@
 \usepackage[final, colorlinks = true, 
             linkcolor = black, 
             citecolor = black]{hyperref} % For hyperlinks in the PDF
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\lhead}{Mi Encabezado}
+
 \usepackage{graphicx, multicol} % Enhanced support for graphics
 \usepackage{xcolor} % Driver-independent color extensions
 \usepackage{marvosym, wasysym} % 3More symbols
@@ -192,49 +196,58 @@ No obstante, el Profesor Melquíades discrepa con este método de asignación y 
 
     donde $N_1$ representa el número de individuos tratados y $N_0$ el número de individuos no tratados.
  \begin{mdframed}
-        \textbf{Solución}\\
-        \begin{proof}
-        Sea
-  \begin{align} \label{estmco}
-    Y_i &= \alpha + \tau D_i + u_i
-\end{align}
-
-Para los tratados $D_i=1$, el modelo es:
-
-\begin{align*}
-    Y_i &= \alpha + \tau + u_i
-\end{align*}
-
-Para los no tratados $D_i=0$, el modelo es:
-
-\begin{align*}
-    Y_i &= \alpha + u_i
-\end{align*}
-Entonces la diferencia de medias condicional entre tratados y no tratados es:
-\begin{align*}
-    E[Y_i | D_i = 1] - E[Y_i | D_i = 0] &= \alpha + \tau + E[u_i | D_i = 1]-\alpha -E[u_i | D_i = 0] \\ &= \tau + E[u_i | D_i = 1] -E[u_i | D_i = 0]
-\end{align*}
-
-Como estamos en el mundo de estimación por MCO, se supone exogeneidad, esto es que $E[u_i | D_i ]=0$. Por tanto no hay sesgo de selección y $ E[u_i | D_i = 1] - E[u_i | D_i = 0]=0$. \textcolor{red}{esto se puede suponer?}. Entonces, la diferencia de medias condicional identifica 
-efecto causal $\tau$:
-
+        \textbf{Solución} \\
+        Vamos a dividir la demostración en dos partes.\\ 
+        
+        I.  \textbf{Claim:} Sea el modelo lineal $Y_i = \alpha + \tau D_i + u_i$ entonces el estimador de MCO se puede escribir como $\hat\tau_{\scriptsize{MCO}} = \frac{Cov(D, Y)}{Var(D)}$
+        
+\begin{proof}
+Queremos minimizar la suma de errores al cuadrado. Entonces queremos:
 \begin{equation*}
-    E[Y_i | D_i = 1] - E[Y_i | D_i = 0]=\tau
+    \arg \min_{\alpha, \tau} \sum_{i=1}^{N} (Y_i - \hat{\alpha }- \hat{\tau} D_i)^2 
 \end{equation*}
-
-Usando la muestra, tenemos que:
-\begin{itemize}
-    \item $\hat\tau_{\scriptsize{MCO}}$ es el estimador por MCO de $\tau$ usando \ref{estmco}   
-    \item $\frac{1}{N_1}\sum_{{i : D_i = 1}} Y_i$ es el análogo muestral de $ E[Y_i | D_i = 1]$
-    \item $\frac{1}{N_0}\sum_{{i : D_i = 0}} Y_i$ es el análogo muestral de $E[Y_i | D_i = 0]$
-\end{itemize}
-Entonces:
- \begin{align*} \hat\tau_{\scriptsize{MCO}} &= \frac{1}{N_1}\sum_{{i : D_i = 1}} Y_i - \frac{1}{N_0}\sum_{{i : D_i = 0}} Y_i \\ &= \hat\tau_{\scriptsize{DM}} \end{align*}
+Usando condiciones de primer orden, tenemos:
+    \begin{align*}
+    [\hat{\alpha }]:  \frac{2}{N} \sum_{i=1}^{N} (Y_i - \hat{\alpha } - \hat{\tau} D_i) = 0\\
+    \Rightarrow  \quad \hat{\alpha } = \bar{Y} - \hat{\tau}\bar{D}  
+    \end{align*}
+Reemplazando esto en el problema original, tenemos:
+    \begin{align*}
+    & \frac{1}{N} \sum_{i=1}^{N} (Y_i - \bar{Y} + \hat{\tau} (\bar{D} - D_i))^2 \\ 
+    &= \sum (Y_i - \bar{Y})^2 + 2\hat{\tau} \sum (D_i - \bar{D})(Y_i - \bar{Y}) +\hat{\tau}^2 \sum (D_i - \bar{D})^2 \\  
+    [\hat{\tau}]: &  \hat{\tau}\sum (D_i - \bar{D})^2 + \sum (D_i - \bar{D})(Y_i - \bar{Y}) = 0 \\  
+    \Rightarrow & \quad \hat{\tau} = \frac{\sum (Y_i - \bar{Y})(D_i - \bar{D})}{\sum (D_i - \bar{D})^2} \\  
+    &= \frac{\text{Cov}(D, Y)}{\text{Var}(D)} 
+\end{align*}
 \end{proof}
-
-
-
+    Ahora, pasamos a mostrar la segunda parte de la demostración.\\
+     II.  \textbf{Claim:} $\frac{Cov(D, Y)}{Var(D)}= \frac{1}{N_1}\sum_{{i : D_i = 1}} Y_i - \frac{1}{N_0}\sum_{{i : D_i = 0}} Y_i $.\\
+     Sabemos
+     \begin{proof}
+      \begin{align*}
+    \hat{\tau}_{MCO} &= \frac{\text{Cov}(D, Y)}{\text{Var}(D)} \\
+    &=\frac{\sum (D_i - \bar{D})(Y_i - \bar{Y})}{\text{Var}(D)} 
+    \end{align*}
+    Desarrollamos primero el numerador. Tenemos que por la construcción de D,  $\bar{D}=\frac{N_1}{N}*1+ (1 - \frac{N_1}{N})*0 $. Descomponiendo la suma y aplicando lo anterior:
+    \begin{align*}
+\sum (D_i - \bar{D})(Y_i - \bar{Y})
+    &= \frac{1}{N} \sum_{i:D_i=1} (D_i - \bar{D})(Y_i - \bar{Y}) + \sum_{i:D_i=0} (D_i - \bar{D})(Y_i - \bar{Y}) \\  
+    &= \frac{1}{N} \left( \sum_{i:D_i=1} (1 - \frac{N_1}{N}) (Y_i - \bar{Y}) + \sum_{i:D_i=0} (0-\frac{N_1}{N}) (Y_i - \bar{Y}) \right) \\  
+    &= \frac{1}{N} \left[ \sum_{i:D_i=1} Y_i \frac{N_0}{N} - \frac{N_0}{N} \sum_{i:D_i=1} \bar{Y}- \sum_{i:D_i=0} \frac{N_1}{N} Y_i + \frac{N_1}{N} \sum_{i:D_i=0}\bar{Y} \right]  \\
+     &= \frac{1}{N} \left[ \sum_{i:D_i=1} Y_i \frac{N_0}{N} - \frac{N_0}{N} \bar{Y}N_1- \sum_{i:D_i=0} \frac{N_1}{N} Y_i + \frac{N_1}{N} \bar{Y}N_0 \right]\\ 
+     &= \frac{1}{N} \left[ \sum_{i:D_i=1} Y_i \frac{N_0}{N} - \sum_{i:D_i=0} \frac{N_1}{N} Y_i \right]\\ 
+     &= \frac{1}{N} \left[\frac{N_0}{N} \sum_{i:D_i=1} Y_i  - \frac{N_1}{N}\sum_{i:D_i=0}  Y_i \right]
+    \end{align*}
+    Para el denominador, tenemos que $\text{Var}(D) = \frac{N_1}{N} \frac{N_0}{N}$.Luego,
+    \begin{align*}
+    \hat{\tau}_{MCO} &= \frac{\frac{1}{N} \left(\frac{N_0}{N} \sum_{i:D_i=1} Y_i - \frac{N_1}{N} \sum_{i:D_i=0} Y_i \right)}{Var(D)}\\
+    &= \frac{\frac{1}{N} \left(\frac{N_0}{N} \sum_{i:D_i=1} Y_i  \right)}{\frac{N_1}{N} \frac{N_0}{N}} -\frac{\frac{1}{N} \left( \frac{N_1}{N} \sum_{i:D_i=0} Y_i \right)}{\frac{N_1}{N} \frac{N_0}{N}}\\
+    &= \frac{1}{N_1} \sum_{i:D_i=1} Y_i - \frac{1}{N_0} \sum_{i:D_i=0} Y_i\\ &= \hat{\tau}_{DM}
+    \end{align*}
+    \end{proof}
+     
 \end{mdframed}
+
     
 
     \item[4.] De ahora en adelante, e independientemente de su respuesta a la pregunta 2., suponga que la asignación al tratamiento es aleatoria. Demuestre que el estimador $\hat\tau_{DM}$ es consistente (y, por tanto, el estimador de MCO también lo es). Esto es, demuestre que
@@ -699,7 +712,7 @@ Entonces:
 
 \begin{align*}
     \hat{\tau} &= \frac{\operatorname{cov}(\tilde{victim}, \tilde{peace})}{\operatorname{var}(\tilde{victim})} \qquad \text{(Por A1)}\\
-    &= \frac{\operatorname{cov}(\tilde{victim}, \hat{\tau}^c \tilde{victim} + \hat{\gamma} \tilde{center})}{\operatorname{var}(\tilde{victim}_i)} \qquad \text{(Usando \ref{aniquilacionx})} \\
+    &= \frac{\operatorname{cov}(\tilde{victim}, \hat{\tau}^c \tilde{victim} + \hat{\gamma} \tilde{center})}{\operatorname{var}(\tilde{victim}_i)} \qquad \text{(Usando  la estimación de \ref{aniquilacionx})} \\
      &= \hat{\tau}^c \frac{\operatorname{var}(\tilde{victim})}{\operatorname{var}(\tilde{victim})} + \frac{\operatorname{cov}(\tilde{victim}, \hat{\gamma} \tilde{center})}{\operatorname{var}(\tilde{victim})} \\
     &= \hat{\tau}^c + \hat{\gamma} \left( \frac{\operatorname{cov}(\tilde{victim}, \tilde{center})}{\operatorname{var}(\tilde{victim})} \right) \\
     \intertext{Defina $ \hat{\delta} := \frac{\operatorname{cov}(\tilde{victim}, \tilde{center})}{\operatorname{var}(\tilde{victim})}$ entonces}
@@ -871,3 +884,6 @@ Observaciones &  \\ \hline
  \begin{mdframed}
         \textbf{Solución}
     \end{mdframed}
+
+
+    

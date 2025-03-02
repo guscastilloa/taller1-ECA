@@ -421,13 +421,14 @@ Estos resultados dan intuición sobre la presencia de un posible sesgo que esté
     \end{align*}
    Como $\theta > 0$ entonces se tiene que $\text{plim } \hat{\tau}^*_{MCO}=\tau + \theta >\tau$.
         \end{proof}
-        Ahora, como empíricamente obtuvimos $\hat{\tau}^*_{MCO} \approx 5.16$ y teóricamente $\tau \approx 4$ entonces el tenemos que el sesgo $\theta$ es $\approx 1.16$, Esto es consistente con los resultados obtenidos en cuanto el estimador empírico es mayor que el estimador teórico.
+        Ahora, como empíricamente obtuvimos $\hat{\tau}^*_{MCO} \approx 5.16$ y teóricamente $\tau \approx 4$ entonces el tenemos un sesgo, ahora bien este podría ser incluso mayor a $\approx 1.16$, pues hay una variable omitida importante, que es hacer colaborado o no.  Esto es congruente con los resultados obtenidos en cuanto el estimador empírico es mayor que el estimador teórico.
         \end{mdframed}
 
     \item[9.] Proponga una metodología para recuperar estimadores consistentes de $\tau$ y de $\theta$. 
 
     \begin{itemize}
         \item[a.] Escriba detalladamente la especificación que va a estimar.
+        
 
         \item[b.] Justifique por qué su propuesta será exitosa.
 
@@ -439,7 +440,109 @@ Estos resultados dan intuición sobre la presencia de un posible sesgo que esté
 
     \end{itemize}
      \begin{mdframed}
-        \textbf{Solución}
+        \textbf{Solución}\\
+        a.)Sea C una variable dummy tal que:
+        \[
+C_i =
+\begin{cases} 
+1, & \text{si el proyecto del investigador } i \text{ es colaborativo} \\
+0, & \text{de lo contrario}
+\end{cases}
+\]
+Se propone estimar la regresión: $
+\begin{gather}\label{sinsesgoautores}
+    Y_i = \alpha+\tau D_i + \theta C_i D_i+ e_i
+\end{gather}
+
+
+       
+
+
+        b.) Esta propuesta será exitosa porque permite aislar el efecto de solamente publicar en un trending research topic, cuando el proyecto no es colaborativo.\textcolor{red}{revisar}. \\
+          
+        
+        Note que para los investigadores que escriben en trending research topics y que colaboran tendremos que:
+       \[
+\mathbb{E}[Y \mid D=1, C=1] = \alpha + \tau + \theta +\mathbb{E}[e \mid D, C]
+\]
+Mientras que si escriben en trending research topics pero no colaboran tendremos que:
+       \[
+\mathbb{E}[Y \mid D=1, C=0] = \alpha + \tau +\mathbb{E}[e \mid D, C]  
+\]
+Finalmente, si no escriben en trending reserach topic (ergo no colaboran en trending reserach topic, pues solo es posible colaborar cuando se trabaja en un trending research topic) tenemos:
+  \[
+\mathbb{E}[Y \mid D=0, C=0] = \alpha +\mathbb{E}[e \mid D, C]  
+\]
+Luego, suponiendo que hay una correcta aleatorización entre el grupo de tratados y el grupo de control, tendremos que:
+\begin{itemize}
+    \item El efecto de solamente publicar en un trending research topic versus no publicar, sobre el número de citas que recibe un investigador está dado por:
+    \[
+\mathbb{E}[Y \mid D=1, C=0]- \mathbb{E}[Y \mid D=0, C=0] =  \tau   
+\]
+
+    \item El efecto de publicar en un trending research topic versus no publicar, y además colaborar, sobre el número de citas que recibe un investigador está dado por:
+    \[
+\mathbb{E}[Y \mid D=1, C=1]- \mathbb{E}[Y \mid D=0, C=0] = \tau +\theta
+\]
+
+
+\end{itemize}
+
+c.)\begin{table}[H]
+    \centering
+    \caption{Efecto de \textit{trending\_topic} sobre \textit{author\_citations}}
+    \label{tab:resultados}
+    \begin{tabular}{l c}
+        \toprule
+        & Número total de citaciones\\
+        \midrule
+        \textbf{Trending Topic} & 5.167*** \\
+        & (0.051) \\
+        \textbf{Constante} & 12.120*** \\
+        & (0.023) \\
+        \midrule
+        Observaciones & 10,381 \\
+        Controles & No \\
+        R cuadrado ajustado & 0.4958 \\
+        \bottomrule
+    \end{tabular}
+    
+    \vspace{0.3cm}
+    \footnotesize{*** p$<$0.01, ** p$<$0.05, * p$<$0.1. \\
+    Errores estándar robustos a heterocedasticidad entre paréntesis.}
+\end{table}
+
+El coeficiente estimado de $\tau$ es 5.167. Indica que en promedio, los investigadores que publican en trending research topic reciben 5.167 más citas que los que no lo hacen. Este valor es  mayor que el valor teórico esperado de 4, lo cual indica que el sesgo es positivo y que tiene una magnitud de $\approx 1.167$.
+
+        d.)
+        \begin{table}[H]
+    \centering
+    \caption{Efecto de \textit{trending\_topic} y su interacción con \textit{collaborative} sobre \textit{author\_citations}}
+    \label{tab:resultados}
+    \begin{tabular}{l c}
+        \toprule
+        & Número total de citaciones \\
+        \midrule
+        \textbf{Trending Topic} & 3.895*** \\
+        & (0.066) \\
+        \textbf{Trending Topic $\times$ Collaborative} & 2.552*** \\
+        & (0.088) \\
+        \textbf{Constante} & 12.120*** \\
+        & (0.022) \\
+        \midrule
+        Observaciones & 10,381 \\
+        R-cuadrado ajustado & 0.5338 \\
+        Root MSE & 2.0232 \\
+        \bottomrule
+    \end{tabular}
+    
+    \vspace{0.3cm}
+    \footnotesize{*** p$<$0.01, ** p$<$0.05, * p$<$0.1. \\
+    Errores estándar en paréntesis.}
+\end{table}
+Note que el sesgo por variable omitida no era simplemente restar el valor teórico del empírico obtenido inicialmente, sino que es más complejo porque también afecta los errores residuales.
+\textcolor{red}{pero el sesgo no deberia ser como 1.5 algo?}
+        
         \end{mdframed}
     
 

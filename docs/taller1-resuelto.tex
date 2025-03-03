@@ -223,10 +223,105 @@ P' &= \left( X (X'X)^{-1} X' \right)' \\
 \subsection{B2. Regresión particionada: derivación y demostración.}
 
 
+Sea $\boldsymbol{y} = \boldsymbol{X}\boldsymbol{\beta}$ el vector de valores predichos y recordemos que el estimador de MCO matricial es $\boldsymbol{\hat{\beta}} = (\boldsymbol{X}'\boldsymbol{X})^{-1}\boldsymbol{X}'\boldsymbol{y}$. 
+
+\begin{align*}
+    \boldsymbol{\hat{\beta}} &= (\boldsymbol{X}'\boldsymbol{X})^{-1}\boldsymbol{X}'\boldsymbol{y} \\
+    % premultiplicar por X
+    \boldsymbol{X}\boldsymbol{\hat{\beta}} &= \boldsymbol{X}(\boldsymbol{X}'\boldsymbol{X})^{-1}\boldsymbol{X}'\boldsymbol{y} \\
+    % simplificar por valores predichos
+    \boldsymbol{\hat{y}} &= \boldsymbol{X}(\boldsymbol{X}'\boldsymbol{X})^{-1}\boldsymbol{X}'\boldsymbol{\beta} \\
+    % simplificar por matriz de proyección 
+    \boldsymbol{\hat{y}} &= \mathbf{P} \boldsymbol{\beta} \\
+
+
+\end{align*}
+
+
+               
+Veamos que $\boldsymbol{\hat{y}} = \boldsymbol{X}\boldsymbol{\hat{\beta}}$ es la proyección de $\boldsymbol{y}$ sobre el espacio generado por $\boldsymbol{X}$. Para ello, debemos demostrar que $\boldsymbol{y} - \boldsymbol{\hat{y}}$ es ortogonal a $\boldsymbol{X}$.
+
+% ██████  ██████  
+% ██   ██      ██ 
+% ██████   █████  
+% ██   ██      ██ 
+% ██████  ██████  
+
+Ahora veamos que la matriz $P_1 = X_1(X_1'X_1)^{-1}X_1'$ es una proyección ortogonal. Para ello debemos ver si esta es idempotente y simétrica
+
+\textbf{Idempotencia:}
+\begin{proof}
+\begin{align*}
+    P_1^2 &= X_1(X_1'X_1)^{-1}X_1'X_1(X_1'X_1)^{-1}X_1' \\
+    &= X_1(X_1'X_1)^{-1}X_1' \\
+    &= P_1
+\end{align*}
+\end{proof}
+
+\textbf{Simetría:}
+\begin{proof}
+\begin{align*}
+    P_1' &= \left( X_1(X_1'X_1)^{-1}X_1' \right)' \\
+    &= X_1 \left( (X_1'X_1)^{-1} \right)' X_1' \\
+    &= X_1 \left( (X_1'X_1)' \right)^{-1} X_1' \\
+    &= X_1 (X_1'X_1)^{-1} X_1' \\
+    &= P_1
+\end{align*}
+\end{proof}
+
+Por otro lado, veamos que la matriz de aniquilación $M_1 = I - P_1$ es una proyección ortogonal. Para ello debemos ver si esta es idempotente y simétrica.
+
+\textbf{Idempotencia:}
+\begin{proof}
+\begin{align*}
+    M_1^2 &= (I - P_1)(I - P_1) \\
+    &= I - P_1 - P_1 + P_1^2 \\
+    &= I - P_1 - P_1 + P_1 \\
+    &= I - P_1
+    &= M_1
+\end{align*}
+\end{proof}
+
+\textbf{Simetría:}
+\begin{proof}
+\begin{align*}
+    M_1' &= (I - P_1)' \\
+    &= I' - P_1' \\
+    &= I - P_1 \\
+    &= M_1
+\end{align*}
+\end{proof}
+
+\bigskip
+
+
+% ██████  ██████      █████  
+% ██   ██      ██    ██   ██ 
+% ██████   █████     ███████ 
+% ██   ██      ██    ██   ██ 
+% ██████  ██████  ██ ██   ██ 
+                           
+Ahora veamos que $M_1$ aniquila a $X_1$. Para ello, debemos demostrar que $M_1X_1 = \boldsymbol{0}$.
+\begin{proof}
+\begin{align*}
+    M_1X_1 &= (I - P_1)X_1 \\
+    &= X_1 - P_1X_1 \\
+    &= X_1 - X_1(X_1'X_1)^{-1}X_1'X_1 \\
+    &= X_1 - X_1 \\
+    &= \boldsymbol{0}
+\end{align*}
+\end{proof}
 
 
 
-
+% ██████  ██████     ██████  
+% ██   ██      ██    ██   ██ 
+% ██████   █████     ██████  
+% ██   ██      ██    ██   ██ 
+% ██████  ██████  ██ ██████  
+                           
+Por otro lado, veamos que $M_1\epsilon = \epsilon$. Esta propiedad nos dice que la matriz de aniquilación $M_1$ no afecta a $\epsilon$.
+Para ello, debemos demostrar que $M_1\epsilon = \epsilon$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ▗▄▄▖  ▗▄▖ ▗▄▄▖▗▄▄▄▖▗▄▄▄▖     ▗▄▄▖

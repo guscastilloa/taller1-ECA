@@ -10,11 +10,19 @@
 %----------------------------------------------------------------------------------------
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
+\usepackage{amsmath}   % For mathematical formatting and equations
+\usepackage{amsthm, amsmath, amssymb} % Mathematical typesetting
+\newtheorem{definition}{Definición}
+\newtheorem{theorem}{Teorema}
+\newtheorem{lemma}{Lema}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
 %\usepackage de{quiz}
 \usepackage{threeparttable}
 \usepackage{framed}
 \usepackage{xcolor}
-\usepackage{amsmath}   % For mathematical formatting and equations
 \usepackage{hyperref}  % For hyperlinks and clickable references
 \usepackage{enumitem}  % For customizing lists
 \usepackage{subcaption}
@@ -24,7 +32,6 @@
 \usepackage[utf8]{inputenc} % Use UTF-8 encoding
 \usepackage{microtype} % Slightly tweak font spacing for aesthetics
 \usepackage[english, spanish, es-nodecimaldot]{babel} % Language hyphenation and typographical rules
-\usepackage{amsthm, amsmath, amssymb} % Mathematical typesetting
 \usepackage{float} % Improved interface for floating objects
 \usepackage[final, colorlinks = true, 
             linkcolor = black, 
@@ -541,7 +548,7 @@ El coeficiente estimado de $\tau$ es 5.167. Indica que en promedio, los investig
     Errores estándar en paréntesis.}
 \end{table}
 Note que el sesgo por variable omitida no era simplemente restar el valor teórico del empírico obtenido inicialmente, sino que es más complejo porque también afecta los errores residuales.
-\textcolor{red}{pero el sesgo no deberia ser como 1.5 algo?}
+\textcolor{red}{pero el sesgo no deberia ser como 1.5 algo horario?}
         
         \end{mdframed}
     
@@ -633,6 +640,133 @@ El teorema de Frisch-Waugh-Lovell es uno de los resultados más importantes en e
     \end{equation}
 
     \bigskip
+
+\begin{mdframed}
+\textbf{Solución} \\
+
+\begin{lemma}
+La transpuesta de la matríz particionada  \( X = [X_1, X_2] \) es
+\[
+X^\top = 
+\begin{bmatrix}
+X_1^\top \\
+X_2^\top
+\end{bmatrix}
+\]
+   
+\end{lemma}
+
+\begin{definition}
+La matríz Gram de una matriz \( X \) es 
+    
+\[
+G = X^\top X.
+\]
+\end{definition}
+
+The ordinary least squares estimator is given by:
+\[
+\hat{\beta}_{OLS} = (X^\top X)^{-1} X^\top y.
+\]
+
+Using Lemma 1, we rewrite:
+\[
+\hat{\beta}_{OLS} = 
+\left( 
+\begin{bmatrix}
+X_1^\top \\
+X_2^\top
+\end{bmatrix}
+[X_1, X_2]
+\right)^{-1} 
+\begin{bmatrix}
+X_1^\top \\
+X_2^\top
+\end{bmatrix} y.
+\]
+
+Premultiplying both sides by the Gram matrix of \( X \), which is:
+\[
+G = X^\top X = 
+\begin{bmatrix}
+X_1^\top \\
+X_2^\top
+\end{bmatrix}
+[X_1, X_2],
+\]
+
+we obtain:
+\[
+\begin{bmatrix}
+X_1^\top \\
+X_2^\top
+\end{bmatrix}
+[X_1, X_2] \hat{\beta}_{OLS} =
+\begin{bmatrix}
+X_1^\top \\
+X_2^\top
+\end{bmatrix} y.
+\]
+
+By partitioning the vector \( \hat{\beta}_{OLS} \) into blocks:
+\[
+\hat{\beta}_{OLS} =
+\begin{bmatrix}
+\hat{\beta}_1 \\
+\hat{\beta}_2
+\end{bmatrix},
+\]
+
+we get the desired result:
+\[
+\begin{bmatrix}
+X_1^\top \\
+X_2^\top
+\end{bmatrix}
+[X_1, X_2]
+\begin{bmatrix}
+\hat{\beta}_1 \\
+\hat{\beta}_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+X_1^\top \\
+X_2^\top
+\end{bmatrix} y.
+\]
+
+\textbf{Expanding the previous expression}
+
+\[
+\begin{bmatrix}
+X_1^\top X_1 & X_1^\top X_2 \\
+X_2^\top X_1 & X_2^\top X_2
+\end{bmatrix}
+\begin{bmatrix}
+\hat{\beta}_1 \\
+\hat{\beta}_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+X_1^\top \\
+X_2^\top
+\end{bmatrix} y.
+\]
+
+From which we derive the following system:
+
+\[
+X_1^\top X_1 \hat{\beta}_1 + X_1^\top X_2 \hat{\beta}_2 = X_1^\top y,
+\]
+
+\[
+X_2^\top X_1 \hat{\beta}_1 + X_2^\top X_2 \hat{\beta}_2 = X_2^\top y.
+\]
+
+\(\square\)
+
+\end{mdframed}
+
 
     \item Demuestre que la matriz $\textbf{P}_1 \equiv \textbf{X}_1(\textbf{X}_1'\textbf{X}_1)^{-1}\textbf{X}_1'$ es una matriz de proyección ortogonal y defina la matriz de aniquilación $\textbf{M}_1$ asociada a $\textbf{X}_1$. Demuestre que $\textbf{M}_1$ también es una matriz de proyección ortogonal. Así mismo, demuestre que 
 
@@ -745,7 +879,10 @@ Usted cuenta con una base de datos de corte transversal a nivel de individuo con
     \item Bajo el contexto dado, ¿cuál es el principal obstáculo para la identificación del efecto causal? Adicionalmente, argumente si la propuesta de su co-autora~\eqref{eq:no_z} logra capturar dicho efecto.
     \begin{mdframed}
         \textbf{Solución}\\
-        El principal obstáculo para identificar el efecto causal de ser victima sobre la voluntad de firmar la paz $\tau$ sería la presencia la presencia de confounders o variable omitida. Esto porque se estaría originando un sesgo por la variable omitida. Este confounder o variable omitida, entraría en el error indebidamente. La razón importante detrás es que el confounder va a estar afectando tanto el ser victima como la voluntad de firmar la paz, por lo tanto la estimación de $\tau$ va a estar contaminada por el efecto de este confounder, impidiendo la identificación del verdadero efecto causal. Por lo tanto, en el contexto particular de la violencia en Dafur se requiere controlar por los posibles confounders para aislar el efecto causal y garantizar que $\tau$ refleje únicamente el efecto causal de ser victima sobre la voluntad de firmar la paz.  En este sentido, el problem se soluciona si hay disponibilidad de datos del confounder. Sin embargo, si no es posible observar esta variable, la credibilidad de la regresión quedaría en riesgo pues no se podría incluir como control.\\
+        El principal obstáculo para identificar el efecto causal de ser victima sobre la voluntad de firmar la paz $\tau$ es que se incumpla el supuesto de unconfoundedness. El detrás de esto es la falta de una correcta aleatorización entre el grupo de tratados y de control, lo que hace que no sean comparables. Al existir un confounder, no hay garantía de que su dristribución sea igual para los tratados y para los no tratados, esto porque entra al error a alterar los resultados.\\
+        
+        
+        Esto es preocupante en cuanto la presencia la presencia de confounders o variable omitida estaría originando un sesgo por la variable omitida, haciendo que el grupo de tratados (victimas) sea distinto al grupo de no tratados (no victimas). Este confounder o variable omitida, entraría en el error indebidamente. La razón importante detrás es que el confounder va a estar afectando tanto el ser victima como la voluntad de firmar la paz, por lo tanto la estimación de $\tau$ va a estar contaminada por el efecto de este confounder, impidiendo la identificación del verdadero efecto causal. Por lo tanto, en el contexto particular de la violencia en Dafur se requiere controlar por los posibles confounders para aislar el efecto causal y garantizar que $\tau$ refleje únicamente el efecto causal de ser victima sobre la voluntad de firmar la paz.  En este sentido, el problem se soluciona si hay disponibilidad de datos del confounder. Sin embargo, si no es posible observar esta variable, la credibilidad de la regresión quedaría en riesgo pues no se podría incluir como control.\\
 
         Un ejemplo de un posible confounder podría ser estar en el centro. Estar en el centro y ser victima podrían estar correlacionados porque podría ser que los bombardeos dirigidos al centro tiendan a ser más letales porque se invierte más maquinaria, precisamente porque el centro está más poblado usualmente y es más fácil acceso para los bombardeos. Por otro lado, estar en el centro podría estar correlacionado con la voluntad de firmar la paz bajo la teoría de que las personas del centro suelen tener opiniones distintas que las personas de las periferia, se podría argumentar que habría una mayor voluntad de firmar la paz precisamente porque se vive una mayor intranquilidad. Lo clave es que pueden existir diferencias sistemáticas entre la voluntad de firmar la paz que tienen las personas del centro y la voluntad de firmar la paz que tienen personas de la periferia.\\
 
@@ -770,7 +907,7 @@ Usted cuenta con una base de datos de corte transversal a nivel de individuo con
 
   \begin{mdframed}
         \textbf{Solución}\\
-        La preocupación de mi coautora puede ser un obstáculo en la identificación del efecto causal en cuanto que apoya la idea de que existe un confounder, en este caso sería la variable center. Como center no es observable, entonces no se podría estimar la  estimar la regresión \eqref{eq:center}. Si no hay otra alternativa, tocaría estimar \ref{eq:no_z} pero prendería alarmas sobre la credibilidad del estimador $\tau$ pues este está mal estimado, no capturaría el efecto causal que queremos (ser victima sobre la voluntad de firmar paz) y esto se da precisamente porque se tenía que meter center como control pero no fue posible. \\
+        La preocupación de mi coautora puede ser un obstáculo en la identificación del efecto causal en cuanto que apoya la idea de que hay una mala aleatorización, en el sentido de que existe un confounder, en este caso sería la variable center. Como center no es observable, entonces no se podría estimar la  estimar la regresión \eqref{eq:center}. Si no hay otra alternativa, tocaría estimar \ref{eq:no_z} pero prendería alarmas sobre la credibilidad del estimador $\tau$ pues este está mal estimado, no capturaría el efecto causal que queremos (ser victima sobre la voluntad de firmar paz) y esto se da precisamente porque se tenía que meter center como control pero no fue posible. \\
         Esto también abre la discusión a que así como center, puede haber otras variables que se están omitiendo, por ejemplo también incluir una variable dummy ('neighbhor') que sea 1 si se vive en el mismo barrio de alguien del gobierno o de un familiar de hasta tercer grado de alguien del gobierno y 0 de lo contrario, etc.\\
         
     Vamos a mostrar que en este caso, el estimador  $\hat\tau^c$ tendría un sesgo con respecto al estimador $\hat\tau$. Para ello, vamos a computar $\hat\tau$

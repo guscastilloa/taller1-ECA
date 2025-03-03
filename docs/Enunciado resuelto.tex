@@ -27,6 +27,29 @@
 \usepackage{enumitem}  % For customizing lists
 \usepackage{subcaption}
 \usepackage{mdframed}
+% Define a custom style that mimics the tcolorbox settings:
+\mdfdefinestyle{solutionstyle}{%
+  backgroundcolor=gray!5,                % light gray background
+  linecolor=green!70!black!50,            % frame color
+  linewidth=1pt,                         % thickness of the frame lines
+  roundcorner=0pt,                       % no rounded corners (arc=0mm)
+  frametitle={\bfseries Solución},        % title of the box
+  frametitlerule=true,                   % draw a rule below the title
+  frametitlerulewidth=0.4pt,              % thickness of the title rule
+  frametitlebackgroundcolor=gray!20,      % background behind the title
+  frametitlealignment=\raggedright,       % title alignment
+  innerleftmargin=10pt,                  % inner margins
+  innerrightmargin=10pt,
+  innertopmargin=5pt,
+  innerbottommargin=5pt,
+  skipabove=\baselineskip,               % vertical space before and after the box
+  skipbelow=\baselineskip,
+  breakable=true                         % allow page breaks
+}
+
+\newenvironment{solucion}
+  {\begin{mdframed}[style=solutionstyle]}
+  {\end{mdframed}}
 \usepackage{blindtext} % Package to generate dummy text
 \usepackage{charter} % Use the Charter font
 \usepackage[utf8]{inputenc} % Use UTF-8 encoding
@@ -128,8 +151,8 @@ Por el momento, suponga que el mecanismo de asignación de áreas de estudio (es
 
     \begin{itemize}
         \item[a.] Usando el contexto del caso de estudio, describa los resultados potenciales.
-        \begin{mdframed}
-        \textbf{Solución}
+        
+        \begin{solucion}
       
     \begin{align*}
     Y_i^1 &= \quad \text{Número total de citas recibidas por el investigador i} \\
@@ -139,7 +162,8 @@ Por el momento, suponga que el mecanismo de asignación de áreas de estudio (es
 \end{align*}
 
 
-        \end{mdframed}
+        \end{solucion}
+        
         \item[b.] Describa brevemente cuál es el problema de inferencia causal en función del contexto dado.  
 \begin{mdframed}
 \textbf{Solución}
@@ -1216,10 +1240,6 @@ Observaciones &  \\ \hline
 \end{enumerate}
 
 \end{document}
-
- \begin{mdframed}
-        \textbf{Solución}
-    \end{mdframed}
 
 
     

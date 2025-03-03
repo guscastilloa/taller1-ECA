@@ -239,60 +239,7 @@ Sea $\boldsymbol{y} = \boldsymbol{X}\boldsymbol{\beta}$ el vector de valores pre
 
 
                
-Veamos que $\boldsymbol{\hat{y}} = \boldsymbol{X}\boldsymbol{\hat{\beta}}$ es la proyección de $\boldsymbol{y}$ sobre el espacio generado por $\boldsymbol{X}$. Para ello, debemos demostrar que $\boldsymbol{y} - \boldsymbol{\hat{y}}$ es ortogonal a $\boldsymbol{X}$.
 
-% ██████  ██████  
-% ██   ██      ██ 
-% ██████   █████  
-% ██   ██      ██ 
-% ██████  ██████  
-
-Ahora veamos que la matriz $P_1 = X_1(X_1'X_1)^{-1}X_1'$ es una proyección ortogonal. Para ello debemos ver si esta es idempotente y simétrica
-
-\textbf{Idempotencia:}
-\begin{proof}
-\begin{align*}
-    P_1^2 &= X_1(X_1'X_1)^{-1}X_1'X_1(X_1'X_1)^{-1}X_1' \\
-    &= X_1(X_1'X_1)^{-1}X_1' \\
-    &= P_1
-\end{align*}
-\end{proof}
-
-\textbf{Simetría:}
-\begin{proof}
-\begin{align*}
-    P_1' &= \left( X_1(X_1'X_1)^{-1}X_1' \right)' \\
-    &= X_1 \left( (X_1'X_1)^{-1} \right)' X_1' \\
-    &= X_1 \left( (X_1'X_1)' \right)^{-1} X_1' \\
-    &= X_1 (X_1'X_1)^{-1} X_1' \\
-    &= P_1
-\end{align*}
-\end{proof}
-
-Por otro lado, veamos que la matriz de aniquilación $M_1 = I - P_1$ es una proyección ortogonal. Para ello debemos ver si esta es idempotente y simétrica.
-
-\textbf{Idempotencia:}
-\begin{proof}
-\begin{align*}
-    M_1^2 &= (I - P_1)(I - P_1) \\
-    &= I - P_1 - P_1 + P_1^2 \\
-    &= I - P_1 - P_1 + P_1 \\
-    &= I - P_1
-    &= M_1
-\end{align*}
-\end{proof}
-
-\textbf{Simetría:}
-\begin{proof}
-\begin{align*}
-    M_1' &= (I - P_1)' \\
-    &= I' - P_1' \\
-    &= I - P_1 \\
-    &= M_1
-\end{align*}
-\end{proof}
-
-\bigskip
 
 
 % ██████  ██████      █████  

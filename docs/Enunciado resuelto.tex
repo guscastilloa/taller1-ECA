@@ -747,7 +747,7 @@ El teorema de Frisch-Waugh-Lovell es uno de los resultados más importantes en e
 
     Partiendo de las condiciones de primer orden del estimador de mínimos cuadrados ordinarios (MCO), demuestre que:
 
-    \begin{align*}\label{EQ:particionado}
+    \begin{align}
         \begin{bmatrix}
             \textbf{X}_{1}' \\
             \textbf{X}_{2}'
@@ -761,8 +761,8 @@ El teorema de Frisch-Waugh-Lovell es uno de los resultados más importantes en e
             \textbf{X}_{1}' \\
             \textbf{X}_{2}'
         \end{bmatrix}
-        \textbf{y},
-    \end{align*}
+        \textbf{y},\label{EQ:particionado}
+    \end{align}
 
      y realice la expansión correspondiente para obtener un sistema lineal de dos ecuaciones: 
 
@@ -777,15 +777,30 @@ El teorema de Frisch-Waugh-Lovell es uno de los resultados más importantes en e
 
 \begin{solucion}
 
+\begin{lemma}\label{lma1}
+La transpuesta de la matríz particionada  \( X = [X_1, X_2] \) es
+\[
+X^\top = 
+\begin{bmatrix}
+X_1^\top \\
+X_2^\top
+\end{bmatrix}
+\]
+   
+\end{lemma}
+
 Primero veamos cómo llegar a  \ref{EQ:particionado} partiendo de \ref{EQ:modelParticionado}
+
 \begin{proof}  
+
 Nota: En la demostración omitiremos el uso de símbolos en negrilla para simplificar la notación.\\
+
 Si escribimos el vector de residuales como:
 \begin{equation}
 \hat{\epsilon} = y - X\hat{\beta} \label{eq:residuales}
 \end{equation}
 
-y, antes de reemplazar la matriz $X$ y el vector $\beta{hat}$ por sus respectivas versiones particionadas, recordemos que las condiciones de primer orden del estimador de MCO partiendo de \ref{eq:residuales} son:
+y, antes de reemplazar la matriz $X$ y el vector $\hat{\beta}$ por sus respectivas versiones particionadas, recordemos que las condiciones de primer orden del estimador de MCO partiendo de \ref{eq:residuales} son:
 
 \begin{align}
 \frac{\partial \hat{\epsilon}'\hat{\epsilon}}{\partial \hat{\beta} } &= -2X'y + 2X'X\hat{\beta} = 0 \notag \qquad (\text{factorizando el 2}) \\
@@ -794,7 +809,7 @@ X'X\hat{\beta} - X'y &= 0 \notag \qquad (\text{restando $X'y$ a ambos lados})  \
 X'X\hat{\beta} &= X'y \label{eq:condiciones} 
 \end{align}
 
-Ahora, reemplazamos $X$ y $\hat{\beta}$ por sus versiones particionadas, y teniendo cuidado de que la dimensión $k$ respete $k_1 + k_2 = k$:
+Ahora, reemplazamos $X$ y $\hat{\beta}$ por sus versiones particionadas, y teniendo cuidado de que la dimensión $k$ respete $k_1 + k_2 = k$, y siguiendo el Lema \ref{lma1}:
 
 \begin{align}
 \begin{bmatrix}
@@ -818,97 +833,6 @@ y
 y llegamos a la expresión deseada. $\square$
 \end{proof}
 
-
-\begin{lemma}
-La transpuesta de la matríz particionada  \( X = [X_1, X_2] \) es
-\[
-X^\top = 
-\begin{bmatrix}
-X_1^\top \\
-X_2^\top
-\end{bmatrix}
-\]
-   
-\end{lemma}
-
-\begin{definition}
-La matríz Gram de una matriz \( X \) es 
-    
-\[
-G = X^\top X.
-\]
-\end{definition}
-
-The ordinary least squares estimator is given by:
-\[
-\hat{\beta}_{OLS} = (X^\top X)^{-1} X^\top y.
-\]
-
-Using Lemma 1, we rewrite:
-\[
-\hat{\beta}_{OLS} = 
-\left( 
-\begin{bmatrix}
-X_1^\top \\
-X_2^\top
-\end{bmatrix}
-[X_1, X_2]
-\right)^{-1} 
-\begin{bmatrix}
-X_1^\top \\
-X_2^\top
-\end{bmatrix} y.
-\]
-
-Premultiplying both sides by the Gram matrix of \( X \), which is:
-\[
-G = X^\top X = 
-\begin{bmatrix}
-X_1^\top \\
-X_2^\top
-\end{bmatrix}
-[X_1, X_2],
-\]
-
-we obtain:
-\[
-\begin{bmatrix}
-X_1^\top \\
-X_2^\top
-\end{bmatrix}
-[X_1, X_2] \hat{\beta}_{OLS} =
-\begin{bmatrix}
-X_1^\top \\
-X_2^\top
-\end{bmatrix} y.
-\]
-
-By partitioning the vector \( \hat{\beta}_{OLS} \) into blocks:
-\[
-\hat{\beta}_{OLS} =
-\begin{bmatrix}
-\hat{\beta}_1 \\
-\hat{\beta}_2
-\end{bmatrix},
-\]
-
-we get the desired result:
-\[
-\begin{bmatrix}
-X_1^\top \\
-X_2^\top
-\end{bmatrix}
-[X_1, X_2]
-\begin{bmatrix}
-\hat{\beta}_1 \\
-\hat{\beta}_2
-\end{bmatrix}
-=
-\begin{bmatrix}
-X_1^\top \\
-X_2^\top
-\end{bmatrix} y.
-\]
 
 \textbf{Expanding the previous expression}
 
@@ -1046,7 +970,7 @@ Para ello, debemos demostrar que $M_1\epsilon = \epsilon$.
 \end{proof}
 
 \textbf{NOTA:}
-Sabemos que, por supuesto, tenemos exogeneidad de los predictores y el término de error no observado. 
+Tenemos por supuesto del modelo de regresión lineal que las variables independientes no tienen información para predecir $\epsilon$, lo que llamamos \textbf{exogeneidad estricta}, que implica exogeneidad débil.
 
 \end{solucion}
 

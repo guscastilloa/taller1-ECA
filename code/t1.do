@@ -6,8 +6,7 @@
 * * * * * * * * * * * 
 
 * Cargar base de datos
- use "C:\Users\HP\Downloads\researchers (1).dta" , clear
-use "C:\Users\HP\Desktop\Econometría avanzada 2025-1\talleres\t1\researchers.dta", clear
+use "$data_dir/researchers.dta", clear
 
 * Punto 7
 set seed 12 // Para replicabilidad
@@ -49,14 +48,18 @@ rename beta_hat beta_hat
 twoway (scatter beta_hat log_n, msymbol(O) mcolor(blue)) ///
        (line beta_hat log_n, lcolor(red) lwidth(medium)) ///
        , yline(4, lcolor(black) lpattern(dash)) /// Línea horizontal en y = 4
-    xlabel(, grid) ylabel(0(1) 20, grid) /// Etiquetas en el eje Y de 0 a 10 en pasos de 1
+    xlabel(, grid) ylabel(0(1) 8, grid) /// Etiquetas en el eje Y de 0 a 10 en pasos de 1
     title("Tendencia del estimador MCO con el tamaño de muestra") ///
     xtitle("Log del tamaño de la muestra") ytitle("Estimador MCO (β̂)") ///
     legend(order(1 "Estimaciones" 2 "Tendencia")) 
 
+
+// Save the graph
+graph export "$figures_dir/graficosininter.png", replace
+
 * 9c
 reg author_citations trending_topic 
-	outreg2 using "$mydir/resultadosp1.txt", replace
+	outreg2 using "$output_dir/resultadosp1.txt", replace
 
 * 9d 
 bysort article (article): gen count = _N

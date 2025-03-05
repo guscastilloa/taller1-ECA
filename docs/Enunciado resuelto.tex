@@ -200,20 +200,22 @@ Por el momento, suponga que el mecanismo de asignación de áreas de estudio (es
         
         \item[b.] Describa brevemente cuál es el problema de inferencia causal en función del contexto dado.  
 \begin{solucion}
-
-El problema de inferencia causal en este contexto es determinar cuál es el efecto de publicar en trending topic versus no hacerlo, sobre el número de citaciones que recibe un investigador \textcolor{red}{Revisar}
+Ciertamente aquellos investigadores que publican en \textit{trending topics} (TT) son sistemáticamente diferentes a aquellos que no lo hacen, y es sensato considerar que estas diferencias deriven de características no observadas o no observables. En otras palabras, ante el desconocimiento del mecanismo de asignación de ``publicar o no'' en TT, seguramente las características no observadas terminan confundiendo (\textit{confounding}) la influencia del tratamiento en cuestión. Como no observamos ambos resultados potenciales, determinar cuál es el efecto de publicar en \textit{trending topic} versus no hacerlo radica entonces en un problema de datos faltantes.
         \end{solucion}
         \item[c.] Escriba en lenguaje matemático el ATE, el ATT y el ATU. Interprete estos conceptos de acuerdo al contexto del caso.
         \begin{solucion}
         
         \begin{itemize}
+    Primero, definamos el efecto individual del tratamiento (ITE) para $i$ como la diferencia entre los resultados potenciales $\tau_i=Y_i^1-Y_i^0$, y diríamos que publicar en un TT cambia en $\tau_i$ las citaciones del investigador $i$ relativo a no publicar en TT. Sin embargo, quisiéramos agregar este efecto de tres formas: para toda la población de interés, para los tratados, y para los no tratados.
     \item \textbf{Efecto total:} \( \text{ATE} = E[Y_i^1] - E[Y_i^0] \) \\
-    Es el efecto causal promedio sobre el número de citaciones que recibieron los investigadores como consecuencia de haber escrito sobre un trending reserach topic \textcolor{red}{versus no hacerlo?}
+    Son las citas promedio recibidas por publicar en TT versus no hacerlo, para toda la población. 
+    % Es el efecto causal promedio sobre el número de citaciones que recibieron los investigadores como consecuencia de haber escrito sobre un trending reserach topic \textcolor{red}{versus no hacerlo?}
     \item \textbf{Efecto sobre tratados:} \( \text{ATT} = E[Y_i^1 | D_i = 1] - E[Y_i^0 | D_i = 1] \)\\
-     Es el efecto causal promedio sobre el número de citaciones que recibieron los investigadores que efectivamente escribieron sobre un trending reserach topic versus  si no  hubiesen escrito sobre el trending reserach topic 
+    Representa el efecto de publicar en TT (versus no hacerlo) para los individuos que, en efecto, publicaron en TT. Puntualmente, son las citas promedio recibidas por el grupo tratado.
+     % Es el efecto causal promedio sobre el número de citaciones que recibieron los investigadores que efectivamente escribieron sobre un trending reserach topic versus  si no  hubiesen escrito sobre el trending reserach topic 
     
     \item \textbf{Efecto sobre no tratados:} \( \text{ATU} = E[Y_i^1 | D_i = 0] - E[Y_i^0 | D_i = 0] \)\\
-          Es el efecto causal promedio sobre el número de citaciones que recibieron los investigadores que efectivamente no escribieron sobre un trending reserach topic versus  si sí hubiesen escrito sobre el trending reserach topic 
+    Son las citas promedio (efecto del tratamiento) que recibieron los investigadores que efectivamente no escribieron sobre un TT (versus  si,) sí lo hubiesen hecho.
 \end{itemize}
 
         \end{solucion}
@@ -480,9 +482,9 @@ La universidad le ha dado a usted una base de datos denominada \texttt{researche
 
 \begin{itemize}
     \item[6.] Compare esta nueva situación con el efecto considerado previamente (incisos 1-5). ¿De qué manera el efecto adicional de publicar en un proyecto colaborativo podría afectar la identificación causal planteada? Justifique. \textit{(Máximo 200 palabras)}.
-     \begin{solucion}
-        
-        \end{solucion}
+    \begin{solucion}
+    @bookmark
+    \end{solucion}
 
     \item[7.] Elabore una gráfica que ilustre el comportamiento del estimador MCO, denotado como $\hat{\tau}_{MCO}$, para ocho sub-muestras aleatorias diferentes de la base de datos\footnote{Se recomienda utilizar sub-muestras de tamaño 50, 100, 500, 1'000, 5'000, 10'000, 50'000 y, finalmente, la muestra completa.}. Tenga en cuenta las siguientes indicaciones:  
 

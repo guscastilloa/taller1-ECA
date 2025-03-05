@@ -173,8 +173,13 @@ tabulate District, summarize(district_effects)
 
 *6
 use "C:\Users\HP\Desktop\Econometría avanzada 2025-1\talleres\t1\02.Results_PK.dta" , clear
-*pregunta: se incluyen controles?
-reghdfe  lUnitPrice IncentivesY2 AutonomyY2 BothY2 NewItemID##lQuantity Year2 ExpInCtrl, absorb(NewItemID,CostCenter) cluster(cluster_var)
+gen newitem_lquantity=NewItemID*lQuantity
+
+* toca declarar que es un panel de datos: pregunta horario??
+sort NewItemID CostCenterCode
+*
+reghdfe lUnitPrice IncentivesY2 AutonomyY2 BothY2, absorb(CostCenterCode) 
+reghdfe lUnitPrice IncentivesY2 AutonomyY2 BothY2 i.NewItemID#c.lQuantity Year2 [aweight=ExpInCtrl], absorb(NewItemID CostCenterCode) cluster(CostCenterCode)
 *7
 
 *8

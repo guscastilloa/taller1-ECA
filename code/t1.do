@@ -8,6 +8,11 @@
 * Cargar base de datos
 use "$data_dir/researchers.dta", clear
 
+* Añadir etiquetas
+label var author_citations "Número total de citas"
+label var trending_topic "Trending Topic"
+
+
 * Punto 7
 set seed 12 // Para replicabilidad
 
@@ -59,15 +64,30 @@ graph export "$figures_dir/graficosininter.png", replace
 
 * 9c
 reg author_citations trending_topic 
-	outreg2 using "$output_dir/resultadosp1.txt", replace
+outreg2 using "$tables_dir/resultadosp1.tex", ctitle("") replace nor2 label ///
+	addtext("Observaciones", `e(N)', "Controles","No") noobs nonotes ///
+	addstat("R cuadrado ajustado", e(r2_a)) ///
+	addnote("Errores estandar en parentesis. * p<0.01, ** p<0.05, * p<0.1")
+	
+//	
+// 	addstat("Controles", "No", "R2 ajustado", e(r2_a)) ///
+//     ctitle("","Trending Topic")
+//   
 
 * 9d 
-bysort article (article): gen count = _N
-gen collaborative = (count != 1)
+capture bysort article (article): gen count = _N
+capture gen collaborative = (count != 1)
 
 
 reg author_citations trending_topic c.trending_topic#c.collaborative
-
+outreg2 using "$tables_dir/resultadosp1.tex", append ctitle("") nor2 nonotes label ///
+	addtext("Observaciones", `e(N)', "Controles","No") noobs ///
+	addstat("R cuadrado ajustado", e(r2_a)) ///
+	addnote("Errores estandar en parentesis. * p<0.01, ** p<0.05, * p<0.1")
+	
+	
+	
+	rename(c.trending_topic#c.collaborative, "Trending Topic × Colaborativo")
 
 reg author_citations c.trending_topic if collaborative == 0
 

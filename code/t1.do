@@ -172,7 +172,7 @@ tabulate District, summarize(district_effects)
 
 
 *6
-use "C:\Users\HP\Desktop\Econometría avanzada 2025-1\talleres\t1\02.Results_PK.dta" , clear
+use "${data_dir}/02.Results_PK.dta" , clear
 gen newitem_lquantity=NewItemID*lQuantity
 
 * toca declarar que es un panel de datos: pregunta horario??

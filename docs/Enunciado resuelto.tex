@@ -706,22 +706,22 @@ El teorema de Frisch-Waugh-Lovell es uno de los resultados más importantes en e
 
     Considere las siguientes definiciones: \\ 
     
-    \begin{solucion}
+    \begin{mdframed}
         \textbf{Def.\ (Proyección ortogonal):} Se dice que una matriz cuadrada \( \mathbf{P} \) de valores reales es una matriz de proyección ortogonal si cumple las siguientes propiedades:
         \begin{enumerate}
             \item \( \mathbf{P}^2 = \mathbf{P} \) (idempotencia).
             \item \( \mathbf{P}' = \mathbf{P} \) (simetría).
         \end{enumerate}
-    \end{solucion}
+     \end{mdframed}
     \vspace{1em}
     
-    \begin{solucion}
+    \begin{mdframed}
     \textbf{Def.\ (Matriz de aniquilación):} Sea \( \mathbf{X} \) una matriz de tamaño \( n \times k \) de rango completo. La matriz de aniquilación asociada a \( \mathbf{X} \) es una matriz \( \mathbf{M} \) definida como:
     \[
     \mathbf{M} = \mathbf{I}_n - \mathbf{P},
     \]
     donde \( \mathbf{I}_n \) es la matriz identidad de tamaño \( n \times n \) y \( \mathbf{P} \) es la matriz de proyección ortogonal sobre el espacio columna de \( \mathbf{X} \).
-    \end{solucion}
+    \end{mdframed}
     \vspace{1em}
     
     De forma intuitiva, una \textbf{matriz de proyección ortogonal} es una herramienta que nos permite ``proyectar'' un vector sobre un subespacio, de modo que el resultado es el punto del subespacio más cercano al vector original. El término ``ortogonal'' significa que la diferencia entre el vector original y su proyección (es decir, el ``residuo'' de la proyección) es perpendicular al subespacio. Esto se traduce en que la proyección minimiza la distancia entre el vector original y el subespacio.
@@ -1186,21 +1186,31 @@ Usando nuestras definiciones tenemos que
 &= X_2' M_1 \qquad \text{Por la simetría de $M_1$ }.
 \end{align*}
 
+
 Procedemos: 
 
-\begin{aligned*}
+\begin{align*}
 \hat{\beta}_2 
  &= (\tilde{X}_2^\prime \tilde{X}_2)^{-1} \tilde{X}_2^\prime \tilde{y}\\
- &= (\tilde{X}_2^\prime \tilde{X}_2)^{-1} \tilde{X}_2^\prime M_1 M_1\,y\\
- &= (\tilde{X}_2^\prime \tilde{X}_2)^{-1} \tilde{X}_2^\prime M_1\,y
+ &= (\tilde{X}_2^\prime \tilde{X}_2)^{-1} X_2^\prime M_1 M_1\,y \text{ (Usando que $M_1\,y=\tilde{y}$, $M_1\,X_2=\tilde{X}_2$)}\\
+ &= (\tilde{X}_2^\prime \tilde{X}_2)^{-1} X_2^\prime M_1\,y
  \quad (\text{por }M_1^2 = M_1)\\
- &= (X_2^\prime M_1 X_2)^{-1} X_2^\prime M_1\,y
-\quad (\text{pues } \tilde{X}_2 = M_1 X_2 \text{ y } \tilde{X}_2^\prime = X_2^\prime M_1)\\
- &= (\tilde{X}_2^\prime \tilde{X}_2)^{-1} \tilde{X}_2^\prime y 
-\end{aligned*}
+ &= (\tilde{X}_2^\prime \tilde{X}_2)^{-1} \tilde{X}_2^\prime \,y
+\quad (\text{pues }  \tilde{X}_2^\prime = X_2^\prime M_1)
+\end{align*}
 
 
 \textbf{Interpretación Diferencia}
+Al usar \( \tilde{y} \), se elimina cualquier influencia de \( X_1 \) en la variable dependiente \( y \). Lo que se obtiene es la estimación de \( \beta_2 \) después de haber controlado por \( X_1 \) tanto en el lado de las variables dependientes como en el lado de las independientes. En el segundo término, se usa el vector \( y \) original, sin residualizar. En este caso, el vector \( y \) no se ajusta explícitamente por \( X_1 \), pero el hecho de que \( \tilde{X}_2 \) ya sea residualizado (es decir, ya se haya controlado \( X_1 \) en el lado de las variables independientes) controla indirectamente el efecto de \( X_1 \) en \( y \).
+
+En términos de covarianzas, la estimación de \( \beta_2 \) se puede expresar de la siguiente forma:
+
+\[
+\hat{\beta}_2 = \frac{\text{cov}(\tilde{y}, \tilde{X}_2)}{\text{var}(\tilde{X}_2)} \quad \text{y} \quad \hat{\beta}_2 = \frac{\text{cov}(y, \tilde{X}_2)}{\text{var}(\tilde{X}_2)}.
+\]
+
+Los numeradores de ambas expresiones son equivalente por el hecho de que \( \tilde{X}_2 \) no tiene niguna influencia de \( X_2 \) entonces no importa si no se descuenta la influencia de \( X_1 \) sobre \( y \) en el resultado de este inciso, porque \( X_1 \) no va a ejercer ninguna influencia sobre la relación entre 
+$\text{cov}(y, \tilde{X}_2)$
 
 \colorbox{yellow}{HELP!!!}
 
@@ -1221,13 +1231,13 @@ y que su interpretación geométrica es la proyección ortogonal de \(\mathbf{y}
 \mathbf{P} = \mathbf{X}(\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'.
 \]
 
-\begin{solucion}
+\begin{mdframed}
 \textbf{Teorema \textit{Gauss-Markov}}
 Bajo los supuestos del modelo clásico lineal, \(\hat{\beta}\) es el \emph{Best Linear Unbiased Estimator} (BLUE), es decir
 \begin{align}
    \text{Var}(\hat{\beta}) \geq \sigma^2 (\mathbf{X}' \mathbf{X})^{-1}    \tag{Gauss-Markov}
 \end{align}
-\end{solucion}
+\end{mdframed}
 
 \begin{itemize}
     \item[a)] Utilizando el Teorema de Frisch-Waugh-Lovell, demuestre que la estimación de \(\beta\) mediante la proyección ortogonal (es decir, mediante \(\hat{\beta} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\mathbf{y}\)) garantiza que toda variación en \(\mathbf{y}\) que no esté contenida en el espacio de \(\mathbf{X}\) es eliminada. En otras palabras, demuestre que los residuos
@@ -1235,6 +1245,31 @@ Bajo los supuestos del modelo clásico lineal, \(\hat{\beta}\) es el \emph{Best 
 \hat{\boldsymbol\epsilon} = \mathbf{y} - \mathbf{P}\mathbf{y} = (\mathbf{I}_n - \mathbf{P})\mathbf{y}
 \]
 son ortogonales a todo vector en dicho espacio.
+
+ \begin{solucion}
+  \begin{proof}
+     Sea el vector \(\vec{v}  \in Span \{\ \vec{X_1}, \vec{X_2},.., \vec{X_k} \}\). Es decir $\vec{v}$ es un vector en el espacio generado por \( \vec{X_1}, \vec{X_2},.., \vec{X_k} \). Queremos mostrar que \( v \) es ortogonal a los residuos \( \hat{\epsilon} \). Es decir, que \( v^\top \hat{\epsilon} = 0 \).
+
+Sabemos que \( X \) es una matriz de tamaño \( n \times k \), cuya \( i \)-ésima fila está dada por \( x_i = (x_{i1}, x_{i2}, \dots, x_{ik}) \).
+Dado que \( v \) está en el espacio generado por las columnas de la matriz \( X = [\vec{X_1}, \vec{X_2},.., \vec{X_k}] \), entonces existe un vector de reales \( c = (c_1, c_2, \dots, c_k)^\top \) tal que:
+
+\[
+v = X c
+\]
+
+Entonces:
+\begin{align*}
+    v^\top \hat{\epsilon} & = (X c)^\top \hat{\epsilon}\\
+    & = (Xc)^\top (I_n - P) y \quad \text{(Usando que $\hat{\epsilon}=My=(I_n - P)y$ )} \\
+     & = c^\top X^\top y - c^\top X^\top P y \\
+                       &= c^\top X^\top y - c^\top X^\top y \quad \text{(Usando que $X^\top P=(P X)^\top=X^\top$ )}\\
+                       &= 0
+\end{align*}
+
+\end{proof}
+La clave en esta prueba es que $X^\top P=X^\top$. Esto es porque  \( P = X (X^\top X)^{-1} X^\top \), y la propiedad de la proyección ortogonal implica que proyectar \( X \) sobre el espacio generado por sus columnas no cambia las columnas de \( X \).  La estimación de \( \beta \) mediante la proyección ortogonal \( \hat{\beta} = (X'X)^{-1} X'y \) garantiza que toda la variación de \( y \) que no está contenida en el espacio columna de \( X \) se elimina. Los residuos \( \hat{\epsilon} = (I_n - P)y \) son ortogonales a todo vector en dicho espacio.\textcolor{red}{revisar}
+
+ \end{solucion}
 
 
     \item[b)] Sea \(\tilde{\beta} = \mathbf{A}\mathbf{y}\) un estimador lineal arbitrario de \(\beta\) (con \(\mathbf{A}\) una matriz no necesariamente igual a \((\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}'\)). Demuestre que si \(\tilde{\beta}\) no se obtiene mediante la proyección ortogonal (es decir, si \(\mathbf{A}\) no ``elimina'' la variación irrelevante contenida en \(\mathbf{y}\)), entonces su varianza es mayor que la de \(\hat{\beta}\); esto es,
@@ -1257,6 +1292,7 @@ Luego, exprese \(\tilde{\beta} = \hat{\beta} + \mathbf{C}\mathbf{y}\) y demuestr
     \end{enumerate}
 
     \bigskip
+
 
 \Large\textbf{Parte práctica: Exposición a la violencia en Darfur}
 
@@ -1426,7 +1462,7 @@ Usted cuenta con información del estado de tratamiento de cada oficina de gobie
 
 \begin{mdframed}[backgroundcolor=moraditoClaro]
     
-Caveat: en realidad cuando lo incorporamos al modelo, control es la categoría base y creamos 3 variables de asignación al tratamiento
+\textbf{Caveat:} en realidad cuando lo incorporamos al modelo, control es la categoría base y creamos 3 variables de asignación al tratamiento
 \begin{equation*}
 D_{i1} =
 \begin{cases}
@@ -1464,7 +1500,7 @@ Los resultados potenciales $Y_{ig}(D_i)$ para la oficina $i$ y el producto $g$ e
 \end{equation*}
 
 \begin{mdframed}[backgroundcolor=moraditoClaro]
-Caveat:   de manera congruente a como definimos las dummies en el anterior caveat, tenemos que los resultados potenciales $Y_{ig}(D_i)$ para la oficina $i$ y el producto $g$ en cada posible estado del tratamiento son:
+\textbf{Caveat:}   de manera congruente a como definimos las dummies en el anterior caveat, tenemos que los resultados potenciales $Y_{ig}(D_i)$ para la oficina $i$ y el producto $g$ en cada posible estado del tratamiento son:
 \begin{equation*}
  Y_{ig}(D_i) = \begin{cases}
         Y_{ig}^0, & \text{si $D_i = 0$ (grupo de control)} \\
@@ -1500,7 +1536,7 @@ P(D_i = 0 \mid Y_{ig}^0, Y_{ig}^1, Y_{ig}^2, Y_{ig}^3) = P(D_i = 0)
 \end{gather*}
 
 \begin{mdframed}[backgroundcolor=moraditoClaro]
-Caveat: Ahora, la aleatorización podría ser condicional o estratificada en cuyo caso la asignación del tratamiento puede depender de variables observadas \(X_{ig}\).Matemáticamente \[
+\textbf{Caveat:} Ahora, la aleatorización podría ser condicional o estratificada en cuyo caso la asignación del tratamiento puede depender de variables observadas \(X_{ig}\).Matemáticamente \[
 Y_{ig}^0, Y_{ig}^1, Y_{ig}^2, Y_{ig}^3 \perp\!\!\!\perp D_i \mid X_i
 \]
 Es decir,

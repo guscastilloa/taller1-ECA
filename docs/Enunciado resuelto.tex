@@ -686,7 +686,7 @@ El coeficiente estimado de $\tau$ es 5.167. Indica que en promedio, los investig
 \end{table}
 Note que el sesgo por variable omitida no era simplemente restar el valor teórico del empírico obtenido inicialmente, sino que es más complejo porque también afecta los errores residuales.
 \textcolor{red}{pero el sesgo no deberia ser como 1.5 algo horario?}
-        
+
         \end{solucion}
     
 
@@ -1214,6 +1214,93 @@ Luego, exprese \(\tilde{\beta} = \hat{\beta} + \mathbf{C}\mathbf{y}\) y demuestr
 \] 
 
 ¿Qué puede concluir a partir de sus resultados?
+
+\begin{solucion}
+
+En este procedimiento omitiremos las negrillas para simplificar la notación, pero a menos de que especifique lo contrario, las mayúsculas hacen referencia a matrices y las minúsculas a vectores.
+\begin{proof}
+    
+    Supongamos que $\tilde{\beta}$ es insesgado. Entonces
+
+    \begin{align}
+        \mathbb{E}[\tilde{\beta}] &= \beta \notag \\
+        \mathbb{E}[Ay] &= \notag \\
+        \mathbb{E}[A(X\beta+\epsilon)] &= \notag \\ 
+        \mathbb{E}[AX\beta+A\epsilon] &= \notag \\
+        \mathbb{E}[AX\beta]+\mathbb{E}[A\epsilon] &= \notag \\
+        AX\beta+A\mathbb{E}[\epsilon] &= \notag \qquad (\mathbb{E}[\epsilon]=0) \\
+        AX\beta&=\beta \label{eq:betatilde_id}
+    \end{align}
+   Note que \ref{eq:betatilde_id} solamente se puede cumplir si 
+   $$
+   AX = I_k.
+   $$
+   Ahora, como sabemos que para otra matriz $C$, $CX=0$:
+
+   \begin{align}
+       AX &= I_k + 0 \notag \\
+       AX &= (X'X)^{-1}X'X + CX \notag \\
+       AX &= [(X'X)^{-1}X' + C]X \notag \\
+       &\Rightarrow A=(X'X)^{-1}X'+C.  \label{betatilde_A}
+   \end{align}
+   Como sabemos que el estimador de MCO es $\hat{\beta}=(X'X)^{-1}X'y$:
+   \begin{align}
+       \tilde{\beta} &=Ay \notag \\
+       \tilde{\beta} &=((X'X)^{-1}X'+C)y \notag \\
+       \tilde{\beta} &=(X'X)^{-1}X'y+Cy \notag \\
+       \tilde{\beta} &=\hat{\beta} +Cy \label{betatilde_bias}.
+   \end{align}
+
+   Ahora simplifiquemos $\tilde{\beta}$. Primero simplifiquemos el estimador MCO:
+
+   \begin{align}
+       \hat{\beta} &= (X'X)^{-1}X'y \notag \\
+       &= (X'X)^{-1}X'(X\beta+\epsilon) \notag \\
+       &= (X'X)^{-1}X'X\beta+(X'X)^{-1}X'\epsilon \notag \\
+       &= \beta+(X'X)^{-1}X'\epsilon \label{ols_simple} 
+   \end{align}
+   Reemplazamos \ref{ols_simple} en \ref{betatilde_bias}, y reemplazamos $y$:
+
+   \begin{align}
+       \tilde{\beta} &= \beta+(X'X)^{-1}X'\epsilon +C(X\beta+\epsilon) \notag \\
+       \tilde{\beta} &= \beta+(X'X)^{-1}X'\epsilon +CX\beta+C\epsilon \qquad (CX=0) \\
+       \tilde{\beta} &= \beta+(X'X)^{-1}X'\epsilon+C\epsilon \notag \\
+       \tilde{\beta} &= \beta+[(X'X)^{-1}X'+C]\epsilon  \label{betatilde_simple}
+   \end{align}
+   
+   Como $\beta$ es una constante no contribuye a la varianza y podemos ignorarlo para calcular $\mathbb{V}(\tilde{\beta})$:
+   
+   \begin{align}
+   \mathbb{V}(\tilde{\beta}) &= \mathbb{V}([(X'X)^{-1}X'+C]\epsilon) \qquad (A=(X'X)^{-1}X'+C) \notag \\ 
+    &= \mathbb{V}(A\epsilon) \qquad (\text{varianza de una matriz constante}) \notag \\
+    &= A\mathbb{V}(\epsilon)A' \qquad (\mathbb{V}(\epsilon)=\sigma^2I_n) \notag \\
+    &= \sigma^2 AA' \qquad (\text{definamos } X^\dagger=(X'X)^{-1}X' ) \notag \\
+    &= \sigma^2(X^\dagger+C )(X^\dagger+C)' \notag \\
+    &= \sigma^2(X^\dagger+C )\left((X^\dagger)'   +C'\right) \notag \\
+    &= \sigma^2(X^\dagger(X^\dagger)' + X^\dagger C' + C(X^\dagger)' + CC'  ) \label{var_betatilde1}
+   \end{align} 
+   Recordemos que $CX=0$, es decir $(X'C')=0 = (CX)'$. Por lo tanto 
+   \begin{itemize}
+       \item $X^\dagger C'= (X'X)^{-1}X'C'=0$
+       \item $C(X^\dagger)'=CX(X'X)^{-1}=0$,
+       \item y además $X^\dagger(X^\dagger)'=(X'X)^{-1}X'X(X'X)^{-1}=(X'X)^{-1}$
+   \end{itemize}
+   así \ref{var_betatilde1} se reduce a 
+
+   \begin{align}
+       \mathbb{V}(\tilde{\beta}) &= \sigma^2(X'X)^{-1} + \sigma^2CC'
+   \end{align}
+   como queríamos.
+\end{proof}
+
+\textbf{Conclusión:}
+
+\colorbox{yellow}{NO CLUE!!!}
+
+
+\end{solucion}
+
+
 
 \end{itemize}
     \end{enumerate}

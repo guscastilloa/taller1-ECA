@@ -37,6 +37,42 @@
 \newpage
 
 
+\section{AAAAAAAAAA}
+\begin{algorithm}
+\caption{Alternativa 1}
+\begin{algorithmic}
+\FOR{cada investigador $i$}
+    \FOR{cada tema de investigación $j$}
+        \IF{investigador $i$ ha trabajado en tema $j$ antes}
+            \STATE $\pi_{ij}(D_i = 1) = 0$
+            \COMMENT{¿con subíndices o no?}
+        \ELSE
+            \STATE $\pi_{ij}(D_i = 1) = p_j$
+            \COMMENT{tiene sentido que sea $p_j$?}
+        \ENDIF
+    \ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+donde $p_j$ es la probabilidad de asignación al tema $j$ cuando el investigador es elegible.
+
+\begin{algorithm}
+\caption{Alternativa 2}
+\begin{algorithmic}
+\FOR{cada investigador $i$}
+    \FOR{cada tema de investigación $j$}
+        \IF{investigador $i$ ha trabajado en tema $j$ antes}
+            \STATE $\pi_{ij}(D_i = 1 | X_i) = 0$
+        \ELSE
+            \STATE $\pi_{ij}(D_i = 1 | X_i) = f(\epsilon_i)$
+        \ENDIF
+    \ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+              
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ▗▄▄▖  ▗▄▖ ▗▄▄▖▗▄▄▄▖▗▄▄▄▖     ▗▄▖ 
@@ -177,9 +213,6 @@ Sea $\boldsymbol{y} = \boldsymbol{X}\boldsymbol{\beta}$ el vector de valores pre
 
 
 \end{align*}
-
-
-               
 
 
 

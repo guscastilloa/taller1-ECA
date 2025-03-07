@@ -16,9 +16,10 @@
 \newtheorem{definition}{Definición}
 \newtheorem{theorem}{Teorema}
 \newtheorem{lemma}{Lema}
+
 \usepackage{algorithm}
 \usepackage{algorithmic}
-\usepackage{algpseudocode}
+% \usepackage{algpseudocode}
 
 \usepackage{xcolor}
 %\usepackage de{quiz}
@@ -292,6 +293,34 @@ Ahora podemos definir la probabilidad de asignación al tratamiento para cada al
 
  
     \end{solucion}
+
+
+
+
+\begin{algorithm}
+\caption{Alternativa 2}
+\begin{algorithmic}
+\FOR{cada investigador $i$}
+    \FOR{cada tema de investigación $j$}
+        \IF{investigador $i$ ha trabajado en tema $j$ antes}
+            \STATE $\pi_{ij}(D_i = 1 | X_i) = 0$
+        \ELSE
+            \STATE $\pi_{ij}(D_i = 1 | X_i) = f(\epsilon_i)$
+        \ENDIF
+    \ENDFOR
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+
+
+
+
+
+
+
+
+
     
     \begin{itemize}
         \item ¿Considera usted que la \textbf{alternativa 1} es aleatoria? Justifique. \textit{(Máximo 150 palabras)}.

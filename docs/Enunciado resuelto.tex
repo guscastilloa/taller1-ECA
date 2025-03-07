@@ -467,15 +467,38 @@ E[Y_i | D_i = 1] - E[Y_i | D_i = 0] &= E[Y_i | D_i = 1] - E[Y_i | D_i = 1] \\&=\
 
     \begin{itemize}
         \item[a.] $\tau = \text{ATT}+\left( \mathbb{E}[Y^{0}_{i}|D_i=1]-\mathbb{E}[Y^{0}_{i}|D_i=0] \right)$
-         \begin{solucion}
          
-             consideremos
-         \end{solucion}
+          \begin{solucion}
+         \begin{proof}
+        Definimos  $ \tau = E[Y_i^1| D_i=1] - E[Y_i^0| D_i=0]$. Sabemos que  ATT =$E[Y_i^1 - Y_i^0 | D_i=1]$. Entonces:
+        \begin{align*}
+         \tau &= E[Y_i^1| D_i=1] - E[Y_i^0| D_i=0]\\
+         &= E[Y_i^1| D_i=1] - E[Y_i^0| D_i=0] \quad \text{(Sumando y restando $E[Y_i^0| D_i=1]$ )} \\ &+E[Y_i^0| D_i=1] - E[Y_i^0| D_i=1]  \\
+       &=  E[Y_i^1| D_i=1]-E[Y_i^0| D_i=1] +E[Y_i^0| D_i=1]- E[Y_i^0| D_i=0]  \quad \text{(reorganizando)} \\
+     &=  \text{ATT}+\left( \mathbb{E}[Y^{0}_{i}|D_i=1]-\mathbb{E}[Y^{0}_{i}|D_i=0] \right)\\
+     \end{align*}
+\end{proof}
+\begin{mdframed}[backgroundcolor=moraditoClaro]
+\textbf{Caveat:} Note que usando el supuesto de que el experimento es aleatorio, del literal 4, tenemos entonces $\tau$ es igual al $\tau_{ingenua}$ ya que el sesgo de selección es 0. Trivialmente con nuestro supuesto de efectos homogéneos $\tau = E[Y_i^1] - E[Y_i^0]= ATT$ pues $ \mathbb{E}[Y^{0}_{i}|D_i=0] = \mathbb{E}[Y^{0}_{i}|D_i=1]= \mathbb{E}[Y^{0}_{i}] $ y  $ \mathbb{E}[Y^{1}_{i}|D_i=0] = \mathbb{E}[Y^{1}_{i}|D_i=1]= \mathbb{E}[Y^{1}_{i}] $ 
 
-        \item[b.] $\tau= \text{ATU}+\left( \mathbb{E}[Y^{1}_{i}|D_i=1]-\mathbb{E}[Y^{1}_{i}|D_i=0] \right)$
+ \end{mdframed} 
+         \end{solucion}
+        \item[b.]  $\tau= \text{ATU}+\left( \mathbb{E}[Y^{1}_{i}|D_i=1]-\mathbb{E}[Y^{1}_{i}|D_i=0] \right)$
          \begin{solucion}
-        
-        \end{solucion}
+         \begin{proof}
+        Definimos  $ \tau = E[Y_i^1| D_i=1] - E[Y_i^0| D_i=0]$. Sabemos que  ATU =$E[Y_i^1 - Y_i^0 | D_i=0]$. Entonces:
+        \begin{align*}
+         \tau &= E[Y_i^1| D_i=1] - E[Y_i^0| D_i=0]\\
+         &= E[Y_i^1| D_i=1] - E[Y_i^0| D_i=0] \quad \text{(Sumando y restando $E[Y_i^1| D_i=0]$ )} \\ &+E[Y_i^1| D_i=0] - E[Y_i^1| D_i=0]  \\
+       &=  E[Y_i^1| D_i=0]-E[Y_i^0| D_i=0] +E[Y_i^1| D_i=1]- E[Y_i^1| D_i=0]  \quad \text{(reorganizando)} \\
+     &=  \text{ATU}+\left( E[Y_i^1| D_i=1]- E[Y_i^1| D_i=0]  \right)\\
+     \end{align*}
+\end{proof}
+\begin{mdframed}[backgroundcolor=moraditoClaro]
+\textbf{Caveat:}Note que usando el supuesto de que el experimento es aleatorio, del literal 4, tenemos entonces $\tau$ es igual al $\tau_{ingenua}$ ya que el sesgo de selección es 0. Trivialmente con nuestro supuesto de efectos homogéneos $\tau = E[Y_i^1] - E[Y_i^0]= ATT$ pues $ \mathbb{E}[Y^{0}_{i}|D_i=0] = \mathbb{E}[Y^{0}_{i}|D_i=1]= \mathbb{E}[Y^{0}_{i}] $ y  $ \mathbb{E}[Y^{1}_{i}|D_i=0] = \mathbb{E}[Y^{1}_{i}|D_i=1]= \mathbb{E}[Y^{1}_{i}] $ 
+
+ \end{mdframed} 
+         \end{solucion}
 
         \item[c.] $\text{ATE}=\pi \,\text{ATT}+(1-\pi)\text{ATU}$ \quad donde $\pi \equiv \mathbb{P}(D_i=1)$
          \begin{solucion}
@@ -624,7 +647,7 @@ C_i =
 \]
 Se propone estimar la regresión: 
 \begin{gather}\label{sinsesgoautores}
-    Y_i = \alpha+\tau D_i + \theta C_i D_i+ e_i
+    Y_i = \alpha+\tau D_i + \theta' C_i D_i+ e_i
 \end{gather}
 
 
@@ -636,7 +659,7 @@ Se propone estimar la regresión:
         
         Note que para los investigadores que escriben en trending research topics y que colaboran tendremos que:
        \[
-\mathbb{E}[Y \mid D=1, C=1] = \alpha + \tau + \theta +\mathbb{E}[e \mid D, C]
+\mathbb{E}[Y \mid D=1, C=1] = \alpha + \tau + \theta' +\mathbb{E}[e \mid D, C]
 \]
 Mientras que si escriben en trending research topics pero no colaboran tendremos que:
        \[
@@ -713,8 +736,7 @@ El coeficiente estimado de $\tau$ es 5.167. Indica que en promedio, los investig
     \footnotesize{*** p$<$0.01, ** p$<$0.05, * p$<$0.1. \\
     Errores estándar en paréntesis.}
 \end{table}
-Note que el sesgo por variable omitida no era simplemente restar el valor teórico del empírico obtenido inicialmente, sino que es más complejo porque también afecta los errores residuales.
-\textcolor{red}{pero el sesgo no deberia ser como 1.5 algo horario?}
+Un aspecto relevante, es que el valor del sesgo no es simplemente el coeficiente de la interacción entre la variable de tratamiento (trending topic) y colaborar con coatures (collaborative). Como mostramos en la parte práctica del segundo ejericio, el sesgo en realidad será $\theta' \frac{\operatorname{cov}(\tilde{trending topic}, \tilde{colaborative})}{\operatorname{var}(\tilde{trending topic})}$, 
 
         \end{solucion}
     

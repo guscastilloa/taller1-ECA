@@ -125,7 +125,7 @@
     linecolor=blue!50,          % Borde azul más oscuro
     linewidth=2pt,              % Grosor del borde
     leftmargin=10pt,            % Margen izquierdo
-    rightmargin=10pt,           % Margen derecho
+    rightmargin=8pt,           % Margen derecho
     topline=true,              % Sin línea superior
     bottomline=true,            % Línea inferior activada
     roundcorner=10pt,           % Esquinas redondeadas
@@ -696,12 +696,12 @@ El coeficiente estimado de $\tau$ es 5.167. Indica que en promedio, los investig
         \toprule
         & Número total de citaciones \\
         \midrule
-        \textbf{Trending Topic} & 3.895*** \\
-        & (0.066) \\
+        \textbf{Trending Topic} & 3.93*** \\
+        & (0.069) \\
         \textbf{Trending Topic $\times$ Collaborative} & 2.552*** \\
         & (0.088) \\
-        \textbf{Constante} & 12.120*** \\
-        & (0.022) \\
+        \textbf{Constante} & 12.084*** \\
+        & (0.031) \\
         \midrule
         Observaciones & 10,381 \\
         R-cuadrado ajustado & 0.5338 \\
@@ -762,10 +762,68 @@ El teorema de Frisch-Waugh-Lovell es uno de los resultados más importantes en e
     
     \begin{enumerate}
         \item Demuestre que \(\mathbf{P} \equiv \mathbf{X}(\mathbf{X'}\mathbf{X})^{-1}\mathbf{X'}\) es una matriz de proyección ortogonal.
+         \begin{solucion}
+ Claim: \(\mathbf{P} \equiv \mathbf{X}(\mathbf{X'}\mathbf{X})^{-1}\mathbf{X'}\) es una proyección ortogonal. Esto es, P es idempotente y simétrica.\\
+\textbf{Idempotencia:}
+\begin{proof}
+\begin{align*}
+    P' &= \left( X(X'X)^{-1}X' \right)' \\
+    &= X \left( (X'X)^{-1} \right)' X' \\
+    &= X \left( (X'X)' \right)^{-1} X' \\
+    &= X (X'X)^{-1} X' \\
+    &= P
+\end{align*}
+\end{proof}
+
+\textbf{Simetría:}
+\begin{proof}
+\begin{align*}
+    P' &= \left( X(X'X)^{-1}X' \right)' \\
+    &= X \left( (X'X)^{-1} \right)' X' \\
+    &= X \left( (X'X)' \right)^{-1} X' \\
+    &= X (X'X)^{-1} X' \\
+    &= P
+\end{align*}
+\end{proof}
+
+\end{solucion}
+        
         \item Sea \(\mathbf{\hat{y}} = \mathbf{X}\hat\beta\) el vector de valores predichos de \(\mathbf{y}\), donde \(\hat\beta\) es el estimador de MCO de \(\beta\). Demuestre que \(\mathbf{\hat{y}} = \mathbf{P}\mathbf{y}\).
+\begin{solucion}
+        Claim: $\mathbf{\hat{y}} = \mathbf{P}\mathbf{y}$ 
+
+Veamos que $\boldsymbol{\hat{y}} = \boldsymbol{X}\boldsymbol{\hat{\beta}}$ es la proyección de $\boldsymbol{y}$ sobre el espacio generado por $\boldsymbol{X}$. Sabemos $\hat{\beta} =(X'X)^{-1} X' y.$ \quad Luego: 
+\begin{proof}
+\begin{align*}
+    \hat{y} &= X \hat{\beta} \\
+    \hat{y} &= X (X'X)^{-1} X' y  \\
+    &= Py \quad \text{(pues $P=\mathbf{X}(\mathbf{X'}\mathbf{X})^{-1}\mathbf{X'}$)}
+\end{align*}
+\end{proof}
+
+
+\end{solucion}
+        
         \item Sea \(\hat{\epsilon} = \mathbf{y} - \mathbf{\hat{y}}\) el vector de residuales de la regresión. Demuestre que \(\hat{\epsilon} = \mathbf{M} \mathbf{y}\).
+\begin{solucion}
+  Claim: \(\hat{\epsilon} = \mathbf{M} \mathbf{y}\)
+  \begin{proof} Sabemos que  $\hat{\epsilon} = y - \hat{y}$ y que $
+    y= X\beta + \epsilon$. Luego:
+  \begin{align*}
+    \hat{\epsilon} &=y - \hat{y} \\
+    &= X\beta + \epsilon - X\hat{\beta}_{\text{mco}} \\
+    &= X\beta + \epsilon - X (X'X)^{-1} X' y \\
+    &= X\beta + \epsilon - X (X'X)^{-1} X' (X\beta + \epsilon) \\
+    &= X\beta + \epsilon - X (X'X)^{-1} X' X \beta - X (X'X)^{-1} X' \epsilon \\
+    &= (I_n - X (X'X)^{-1} X') (X\beta + \epsilon)\\
+     &= My
+     \end{align*}
+    \end{proof}
+\end{solucion}
     \end{enumerate}
     \bigskip
+
+   
 
     \item Considere el modelo \eqref{EQ:modelInicial} bajo la siguiente partición de $\mathbf{X}$\footnote{Una partición de una matriz se denota con el uso de corchetes cuadrados $\mathbf{X} = [\mathbf{X}_1 \, \mathbf{X}_2]$. Note que esto no es un producto de matrices, sino simplemente una forma de decir que hay dos grupos de interés distintos.}:
 
@@ -806,6 +864,7 @@ El teorema de Frisch-Waugh-Lovell es uno de los resultados más importantes en e
     \end{equation}
 
     \bigskip
+  
 
 \begin{solucion}
 
@@ -866,7 +925,7 @@ y llegamos a la expresión deseada. $\square$
 \end{proof}
 
 
-\textbf{Expanding the previous expression}
+\textbf{Ampliando la expresión anterior}
 
 \[
 \begin{bmatrix}
@@ -884,7 +943,7 @@ X_2^\top
 \end{bmatrix} y.
 \]
 
-From which we derive the following system:
+De donde derivamos el siguiente sistema:
 
 \[
 X_1^\top X_1 \hat{\beta}_1 + X_1^\top X_2 \hat{\beta}_2 = X_1^\top y,
@@ -896,6 +955,45 @@ X_2^\top X_1 \hat{\beta}_1 + X_2^\top X_2 \hat{\beta}_2 = X_2^\top y.
 
 \(\square\)
 
+\begin{mdframed}[backgroundcolor=moraditoClaro]
+\textbf{Caveat:} Note que de manera alterna, usted puede llegar a estas ecuaciones, haciendo la minimización del error. Esto es: 
+\begin{align*}
+    S(\hat{\beta})&= (y - X_1 \hat{\beta}_1 - X_2 \hat{\beta}_2)'(y - X_1 \hat{\beta}_1 - X_2 \hat{\beta}_2) \\
+    &= y'y - y'X_1 \hat{\beta}_1 - y'X_2 \hat{\beta}_2 - \hat{\beta}_1'X_1' y + \hat{\beta}_1'X_1'X_1\hat{\beta}_1 + X_2' \hat{\beta}_2 X_2 \hat{\beta}_2 \\
+    &\quad - X_2' \hat{\beta}_2 y + X_2' \hat{\beta}_2 X_1 \hat{\beta}_1 + X_2' \hat{\beta}_2 X_2 \hat{\beta}_2
+\end{align*}
+
+Derivando respecto a \( \beta_1 \):
+
+\begin{align*}
+    \frac{\partial S(\hat{\beta})}{\partial \beta_1} &= - 2 X_1' y + 2 X_1' X_1 \hat{\beta}_1 + 2 X_1' X_2 \hat{\beta}_2 = 0 \\
+    &\Rightarrow X_1' y = X_1' X_1 \hat{\beta}_1 + X_1' X_2 \hat{\beta}_2
+\end{align*}
+Derivando respecto a \( \beta_2 \):
+
+\begin{align*}
+    \frac{\partial S(\hat{\beta})}{\partial \beta_2} &= - 2 X_2' y + 2 X_2' X_1 \hat{\beta}_1 + 2 X_2' X_2 \hat{\beta}_2 = 0 \\
+    &\Rightarrow X_2' y = X_2' X_1 \hat{\beta}_1 + X_2' X_2 \hat{\beta}_2
+\end{align*}
+Armando el sistema de ecuaciones de forma matricial, esto es: 
+\[
+\begin{bmatrix}
+X_1^\top X_1 & X_1^\top X_2 \\
+X_2^\top X_1 & X_2^\top X_2
+\end{bmatrix}
+\begin{bmatrix}
+\hat{\beta}_1 \\
+\hat{\beta}_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+X_1^\top \\
+X_2^\top
+\end{bmatrix} y.
+\]
+
+ \end{mdframed} 
+
 \end{solucion}
 
 
@@ -906,20 +1004,11 @@ X_2^\top X_1 \hat{\beta}_1 + X_2^\top X_2 \hat{\beta}_2 = X_2^\top y.
 %██████  ██████  
                 
             
-    \item Demuestre que la matriz $\textbf{P}_1 \equiv \textbf{X}_1(\textbf{X}_1'\textbf{X}_1)^{-1}\textbf{X}_1'$ es una matriz de proyección ortogonal y defina la matriz de aniquilación $\textbf{M}_1$ asociada a $\textbf{X}_1$. Demuestre que $\textbf{M}_1$ también es una matriz de proyección ortogonal. Así mismo, demuestre que 
-
-    \begin{enumerate}\label{aniquiladoranotaciona}
-        \item $M_1\textbf{X}_1 = \textbf{0}$ (es por esta razón que la matriz se denomina como aniquiladora).
-        \item $M_1\boldsymbol\epsilon = \boldsymbol\epsilon$.
-    \end{enumerate}
-
+    \item Demuestre que la matriz $\textbf{P}_1 \equiv \textbf{X}_1(\textbf{X}_1'\textbf{X}_1)^{-1}\textbf{X}_1'$ es una matriz de proyección ortogonal y defina la matriz de aniquilación $\textbf{M}_1$ asociada a $\textbf{X}_1$. Demuestre que $\textbf{M}_1$ también es una matriz de proyección ortogonal.
 
 \begin{solucion}
 
-Veamos que $\boldsymbol{\hat{y}} = \boldsymbol{X}\boldsymbol{\hat{\beta}}$ es la proyección de $\boldsymbol{y}$ sobre el espacio generado por $\boldsymbol{X}$. Para ello, debemos demostrar que $\boldsymbol{y} - \boldsymbol{\hat{y}}$ es ortogonal a $\boldsymbol{X}$.
-
-Ahora veamos que la matriz $P_1 = X_1(X_1'X_1)^{-1}X_1'$ es una proyección ortogonal. Para ello debemos ver si esta es idempotente y simétrica
-
+ I Claim: $P_1 = X_1(X_1'X_1)^{-1}X_1'$ es una proyección ortogonal. Esto es, P es idempotente y simétrica.\\
 \textbf{Idempotencia:}
 \begin{proof}
 \begin{align*}
@@ -940,7 +1029,8 @@ Ahora veamos que la matriz $P_1 = X_1(X_1'X_1)^{-1}X_1'$ es una proyección orto
 \end{align*}
 \end{proof}
 
-Por otro lado, veamos que la matriz de aniquilación $M_1 = I - P_1$ es una proyección ortogonal. Para ello debemos ver si esta es idempotente y simétrica.
+
+II. Claim:  la matriz de aniquilación $M_1 = I - P_1$ es una proyección ortogonal. Esto es, es idempotente y simétrica.
 
 \textbf{Idempotencia:}
 \begin{proof}
@@ -965,13 +1055,12 @@ Por otro lado, veamos que la matriz de aniquilación $M_1 = I - P_1$ es una proy
 
 \bigskip
 
-% ██████  ██████      █████  
-% ██   ██      ██    ██   ██ 
-% ██████   █████     ███████ 
-% ██   ██      ██    ██   ██ 
-% ██████  ██████  ██ ██   ██ 
-                           
-Ahora veamos que $M_1$ aniquila a $X_1$. Para ello, debemos demostrar que $M_1X_1 = \boldsymbol{0}$.
+\end{solucion}
+ Así mismo, demuestre que 
+    \begin{enumerate}\label{aniquiladoranotaciona}
+        \item $M_1\textbf{X}_1 = \textbf{0}$ (es por esta razón que la matriz se denomina como aniquiladora).
+        \begin{solucion}
+ Claim: $M_1$ aniquila a $X_1$. Para ello, debemos demostrar que $M_1X_1 = \boldsymbol{0}$.
 \begin{proof}
 \begin{align*}
     M_1X_1 &= (I - P_1)X_1 \\
@@ -981,31 +1070,30 @@ Ahora veamos que $M_1$ aniquila a $X_1$. Para ello, debemos demostrar que $M_1X_
     &= \boldsymbol{0}
 \end{align*}
 \end{proof}
+ 
+\end{solucion}
+        \item $M_1\boldsymbol\epsilon = \boldsymbol\epsilon$.
+        \begin{solucion}
+ Claim:  $M_1\epsilon = \epsilon$. Esta propiedad nos dice que la matriz de aniquilación $M_1$ no afecta a $\epsilon$, pues este es aleatorio y no debería contener información de las $X$
 
-
-
-% ██████  ██████     ██████  
-% ██   ██      ██    ██   ██ 
-% ██████   █████     ██████  
-% ██   ██      ██    ██   ██ 
-% ██████  ██████  ██ ██████  
-                           
-Por otro lado, veamos que $M_1\epsilon = \epsilon$. Esta propiedad nos dice que la matriz de aniquilación $M_1$ no afecta a $\epsilon$.
-Para ello, debemos demostrar que $M_1\epsilon = \epsilon$.
 
 \begin{proof}
-    \begin{align}
+    \begin{align*}
         M_1\epsilon &= (I - P_1)\epsilon \\
         &= \epsilon - P_1\epsilon \qquad (\text{por exogeneidad débil}) \\
         &= \epsilon 
-    \end{align}
+    \end{align*}
 \end{proof}
 
 \textbf{NOTA:}
 Tenemos por supuesto del modelo de regresión lineal que las variables independientes no tienen información para predecir $\epsilon$, lo que llamamos \textbf{exogeneidad estricta}, que implica exogeneidad débil.
-
+ 
 \end{solucion}
+    \end{enumerate}
 
+  
+
+       
     \item Sean:
     
     \begin{itemize}\label{aniquiladoranotacion}
@@ -1031,7 +1119,7 @@ Tenemos por supuesto del modelo de regresión lineal que las variables independi
 \textbf{Paso 1: Interpretación}
 
 \begin{itemize}
-    \item $P_1$ proyecta cualquier vector sobre el espacio generado por $\mathbf{X_1}$. El hecho de que le llamen a la matriz de proyección ortogonal "matriz sombrero" o \textit{hat matrix} es precisamente porque lleva a los valores predichos. Usando la matriz completa (no la particionada) sabemos que $\hat{\mathbf{y}}=\mathbf{Py}$, porque además de "ponerle el sombrero" a las $y$'s también extrae la parte que es explicada por los Xs. En el contexto de la $P_1$ esta extrae la parte del vector explicada por $\mathbf{X}_1$.
+    \item $P_1$ proyecta cualquier vector sobre el espacio generado por $\mathbf{X_1}$. El hecho de que le llamen a la matriz de proyección ortogonal ``matriz sombrero''  o \textit{hat matrix} es precisamente porque lleva a los valores predichos. Usando la matriz completa (no la particionada) sabemos que $\hat{\mathbf{y}}=\mathbf{Py}$, porque además de "ponerle el sombrero" a las $y$'s también extrae la parte que es explicada por los Xs. En el contexto de la $P_1$ esta extrae la parte del vector explicada por $\mathbf{X}_1$.
     \item Dado que $P_1$ extrae de un vector el componente del espacio columna de $\mathbf{X}_1$,  entonces $M_1$ elimina o "aniquila" el componente de $X_1$, dejándo solo aquello que es ortogonal a $\mathbf{X}_1$, precisamente la razón por la cual $M_1\mathbf{X}_1=0$. 
 \end{itemize}
 
@@ -1243,36 +1331,57 @@ Luego, exprese \(\tilde{\beta} = \hat{\beta} + \mathbf{C}\mathbf{y}\) y demuestr
 \] 
 
 ¿Qué puede concluir a partir de sus resultados?
+\end{itemize}
+\end{enumerate}
 
 \begin{solucion}
 
-En este procedimiento omitiremos las negrillas para simplificar la notación, pero a menos de que especifique lo contrario, las mayúsculas hacen referencia a matrices y las minúsculas a vectores.
+En este procedimiento omitiremos las negrillas para simplificar la notación, pero a menos de que especifique lo contrario, las mayúsculas hacen referencia a matrices y las minúsculas a vectores. La prueba se dvidirá en varias partes. Así:\\
+
+I. Claim: \(\mathbf{A}\mathbf{X} = \mathbf{I}_k\)
 \begin{proof}
-    
-    Supongamos que $\tilde{\beta}$ es insesgado. Entonces
+    Supongamos que $\tilde{\beta}$ es insesgado. Esto es $ \mathbb{E}[\tilde{\beta}] = \beta \notag$. Luego 
 
     \begin{align}
-        \mathbb{E}[\tilde{\beta}] &= \beta \notag \\
-        \mathbb{E}[Ay] &= \notag \\
-        \mathbb{E}[A(X\beta+\epsilon)] &= \notag \\ 
-        \mathbb{E}[AX\beta+A\epsilon] &= \notag \\
-        \mathbb{E}[AX\beta]+\mathbb{E}[A\epsilon] &= \notag \\
-        AX\beta+A\mathbb{E}[\epsilon] &= \notag \qquad (\mathbb{E}[\epsilon]=0) \\
-        AX\beta&=\beta \label{eq:betatilde_id}
+         \mathbb{E}[\tilde{\beta}] &= \beta \notag\\
+         \iff
+        \mathbb{E}[Ay] &= \beta  \notag \\
+         \iff\mathbb{E}[A(X\beta+\epsilon)] &= \beta \notag \\ 
+         \iff\mathbb{E}[AX\beta+A\epsilon] &= \beta  \notag\\
+         \iff\mathbb{E}[AX\beta]+\mathbb{E}[A\epsilon] &= \beta  \notag\\
+         \iff AX\beta+A\mathbb{E}[\epsilon] &=   \beta  \qquad (\mathbb{E}[\epsilon]=0) \notag \\
+        \iff AX\beta&=\beta \label{eq:betatilde_id}
     \end{align}
-   Note que \ref{eq:betatilde_id} solamente se puede cumplir si 
+   Note que \ref{eq:betatilde_id} solamente se puede cumplir si y solo si: 
    $$
    AX = I_k.
    $$
-   Ahora, como sabemos que para otra matriz $C$, $CX=0$:
+\end{proof}
 
-   \begin{align}
-       AX &= I_k + 0 \notag \\
-       AX &= (X'X)^{-1}X'X + CX \notag \\
-       AX &= [(X'X)^{-1}X' + C]X \notag \\
-       &\Rightarrow A=(X'X)^{-1}X'+C.  \label{betatilde_A}
-   \end{align}
-   Como sabemos que el estimador de MCO es $\hat{\beta}=(X'X)^{-1}X'y$:
+II. Claim: \(\mathbf{A}\mathbf{X} = \mathbf{I}_k \implies  \mathbf{A} = (\mathbf{X}'\mathbf{X})^{-1}\mathbf{X}' + \mathbf{C}, \quad \text{con } \mathbf{C}\mathbf{X} = \mathbf{0}\)
+\begin{proof}
+Sea una matriz $\mathbf{C}$ tal que $\mathbf{C}\mathbf{X}=0$. Luego partiendo convenientemente, tenemos:
+
+ \begin{align*}
+ I_k  &=(X'X)^{-1}X'X\notag \\
+ &= (X'X)^{-1}X'X + CX \quad \text{(Como $CX=0$)}\notag \\
+        &= [(X'X)^{-1}X' + C]X \notag \\
+\end{align*}
+Por el claim anterior $I_k=A X$ luego:
+\begin{align*}
+        A X &=[(X'X)^{-1}X' + C]X \\
+       &\Rightarrow A=(X'X)^{-1}X'+C
+  \end{align*}
+  \end{proof}
+ 
+
+III. Claim: Sea \(\tilde{\beta} = \hat{\beta} + \mathbf{C}\mathbf{y}\) entonces
+$
+\mathrm{Var}(\tilde{\beta}) = \sigma^2 (\mathbf{X}'\mathbf{X})^{-1} + \sigma^2\,\mathbf{C}\mathbf{C}'.
+$ 
+   \begin{proof}
+   
+   Como sabemos, el estimador de MCO es $\hat{\beta}=(X'X)^{-1}X'y$. Ahora, sea $ \tilde{\beta} =Ay$.Luego:
    \begin{align}
        \tilde{\beta} &=Ay \notag \\
        \tilde{\beta} &=((X'X)^{-1}X'+C)y \notag \\
@@ -1297,17 +1406,21 @@ En este procedimiento omitiremos las negrillas para simplificar la notación, pe
        \tilde{\beta} &= \beta+[(X'X)^{-1}X'+C]\epsilon  \label{betatilde_simple}
    \end{align}
    
-   Como $\beta$ es una constante no contribuye a la varianza y podemos ignorarlo para calcular $\mathbb{V}(\tilde{\beta})$:
-   
-   \begin{align}
-   \mathbb{V}(\tilde{\beta}) &= \mathbb{V}([(X'X)^{-1}X'+C]\epsilon) \qquad (A=(X'X)^{-1}X'+C) \notag \\ 
-    &= \mathbb{V}(A\epsilon) \qquad (\text{varianza de una matriz constante}) \notag \\
-    &= A\mathbb{V}(\epsilon)A' \qquad (\mathbb{V}(\epsilon)=\sigma^2I_n) \notag \\
-    &= \sigma^2 AA' \qquad (\text{definamos } X^\dagger=(X'X)^{-1}X' ) \notag \\
-    &= \sigma^2(X^\dagger+C )(X^\dagger+C)' \notag \\
+   Como $\beta$ es una constante, no contribuye a la varianza y podemos ignorarlo para calcular $\mathbb{V}(\tilde{\beta})$. Por el mismo motivo, como $Cov(\beta, [(X'X)^{-1}X'+C]\epsilon)$ también es 0. Así:
+
+\begin{align}
+   \mathbb{V}(\tilde{\beta} \mid X) &= \mathbb{V}([(X'X)^{-1}X'+C]\epsilon \mid X)  \notag \\
+    &= \mathbb{V}(A\epsilon \mid X) \qquad \qquad (A=(X'X)^{-1}X'+C)
+   \notag \\
+    &= A\mathbb{V}(\epsilon \mid X)A' \qquad ( \text{Como A es constante)  }\notag \\
+    &= \sigma^2 AA' \qquad (\text{ por supuesto de MCO, }  \mathbb{V}(\epsilon \mid X)=\sigma^2I_n) ) \notag 
+    \end{align}
+    Definamos ahora $ X^\dagger=(X'X)^{-1}X'$. Entonces $A=X^\dagger+C$. Luego:
+    \begin{align}
+    \sigma^2 AA' &=\sigma^2(X^\dagger+C )(X^\dagger+C)' \notag \\
     &= \sigma^2(X^\dagger+C )\left((X^\dagger)'   +C'\right) \notag \\
     &= \sigma^2(X^\dagger(X^\dagger)' + X^\dagger C' + C(X^\dagger)' + CC'  ) \label{var_betatilde1}
-   \end{align} 
+   \end{align}
    Recordemos que $CX=0$, es decir $(X'C')=0 = (CX)'$. Por lo tanto 
    \begin{itemize}
        \item $X^\dagger C'= (X'X)^{-1}X'C'=0$
@@ -1316,23 +1429,27 @@ En este procedimiento omitiremos las negrillas para simplificar la notación, pe
    \end{itemize}
    así \ref{var_betatilde1} se reduce a 
 
+   \begin{align*}
+       \mathbb{V}(\tilde{\beta} \mid X) &= \sigma^2(X'X)^{-1} + \sigma^2CC'
+   \end{align*}
+   Ahora aplicando la ley de varianza total:
    \begin{align}
-       \mathbb{V}(\tilde{\beta}) &= \sigma^2(X'X)^{-1} + \sigma^2CC'
-   \end{align}
-   como queríamos.
+   \mathbb{V}(\tilde{\beta}) &= \mathbb{E}[\mathbb{V}(\tilde{\beta} \mid X)] + \mathbb{V}[\mathbb{E}(\tilde{\beta} \mid X)]  \notag \\
+   &= \mathbb{E}[\sigma^2(X'X)^{-1} + \sigma^2CC'] \qquad (\text{ el argumento del segundo término no varía) } \notag \\
+    &= \sigma^2(X'X)^{-1} + \sigma^2CC' \qquad (\text{ es constante) }
+   \label{law_total_variance}
+\end{align}
+como queríamos.
 \end{proof}
 
 \textbf{Conclusión:}
-
-\colorbox{yellow}{NO CLUE!!!}
+Podemos concluir que el estimador por MCO es el estimador MELI, es decir es el mejor estimador insesgado y es el mejor porque es el que tiene la mínima varianza. Esto lo vemos con la varianza de $\tilde{\beta}$  la cual siempre será mayor que la de $\beta$ porque el segundo término es mayor que 0.
 
 
 \end{solucion}
 
 
-
-\end{itemize}
-    \end{enumerate}
+   
 
     \bigskip
 
@@ -1660,8 +1777,66 @@ donde:
 
     \begin{enumerate}
         \item ¿Por qué este tipo de ejercicio permite dar evidencia a favor de la correcta aleatorización del tratamiento? (Menos de 100 palabras)
+
+          \begin{solucion}
+Una prueba de diferencia de medias de cada grupo respecto al grupo de control permite  dar evidencia de una correcta aleatorización del tratamiento porque permite ver si hay diferencias entre las características del grupo de control y los de los grupos de tratamiento.
+            Bajo una correcta aleatorización, no deberían existir diferencias entre los dos grupos ya que deberían ser comparables y no presentar diferencias en sus características observadas. Esto también implica que el estado del tratamiento no es explicado por las X's. \\ Matemáticamente, lo que hacemos es que para cada variable estamos buscando que cuando construimos 
+            $
+var_i = \beta_0 + \beta_{incentives} D_{i1} + \beta_{automnomy} D_{i2} +  \beta_{both} D_{i3} + \varepsilon_i$, los coeficientes asociados a cada estado del tratamiento sean estadísticamentes iguales a 0.Luego cuando sacamos los valores esperados para cada grupo de tratamiento i.e. $E[var \mid D_{i1}=1], E[var \mid D_{i2}=1],E[var \mid D_{i3}=1], E[var \mid D_{i1}=0, D_{i2}=0, D_{i3}=0]$, queremos que estos sean estadísticamente iguales, que es lo que hacemos con una prueba de diferencia de medias. Ahondaremos sobre esto en c).
+
+        \end{solucion}
+    
         \item En la práctica, ¿una asignación aleatoria al tratamiento garantiza inequívocamente el cumplimiento de correcto balance muestral? (Menos de 100 palabras)
+          \begin{solucion}
+  No  necesarimente. Esto porque siempre hay una posibilidad de rechazar la hipótesis nula aún cuando sea verdadera. Este es el error tipo 1 ($\alpha$). Este es usualmente $1\%, 5\% \quad o \quad 10\%$ entonces siempre existirá algo de incertidumbre.
+        \end{solucion}
+    
         \item Con base en sus resultados, ¿hay evidencia de una correcta aleatorización del tratamiento en el caso de Punjab? (Menos de 150 palabras)
+          \begin{solucion}
+          \begin{table}[H]
+	\centering
+	\caption{Balance Muestral}
+	\label{tab2:balancetemplacte}
+	\begin{tabular}{lcccccc}
+		\toprule
+		\multicolumn{1}{c}{Treatment} & \multicolumn{1}{c}{\textit{Physical Assets}} & \multicolumn{1}{c}{\textit{Public Bodies}} & \multicolumn{1}{c}{\textit{Age}} & \multicolumn{1}{c}{\textit{Gender}} & \multicolumn{1}{c}{\textit{Bachelor's Degree}}  \\
+		\multicolumn{1}{c}{(1)} & (2) & (3) & (4) & (5) & (6) \\ \toprule
+		  \addlinespace 
+		Incentives &  -0.0046457 &  0.0344701 & -0.5869438 & -0.0088349 & 0.0406147 \\
+		& (0.0121769) & (0.019686) & (0.9321901) & (0.0571911) & (0.0418916) \\
+		Autonomy & -0.0045755 & -0.0098719 & -1.155587 & 0.0234708 & 0.0202991 \\
+		& (0.0121956) & (0.0197162) & (0.9206007) & (0.0565864) & (0.0413226) \\
+		Both & -0.0077523 & 0.0145196 & 0.3269247 & 0.0105868 & 0.0692992 \\
+		& (0.0120896) & (0.0195449) & (0.9219913) & (0.0564232) & (0.0411826) \\ \midrule
+		$P>F$ & 0.9371 & 0.1162 & 0.3687 & 0.9468 & 0.3713 \\
+		Obs. & 585 & 585 & 516 & 529 & 511 \\ \bottomrule
+	\end{tabular}
+	{\footnotesize{\\Nota: Errores estándar entre paréntesis. La tabla muestra los resultados de una regresión múltiple a nivel de Oficina de Gobierno. La regresión incluye observaciones para 587 oficinas de Gobierno en 26 distritos de la región de Punjab, Pakistán. La categoría de control en cada regresión corresponde a las oficinas asignadas al grupo de control en el Experimento.}}
+\end{table}
+   Sí, con un nivel de confianza del $95\%$ hay evidencia de una correcta aleatorización en este experimento. Esto se puede ver ya que al realizar la prueba conjunta para cada variable $j\in \{\text{ Physical Assets, Number of Public Bodies, Bachelors Degree, Male y Age} \} $ tenemos que :
+           
+
+            
+
+         
+
+
+\begin{itemize}
+    \item \textbf{Hipótesis nula} (\(H_0\)): Todas las medias poblacionales son iguales entre los tres niveles del tratamiento
+    \[
+    H_0: \mu_{incentives}^j = \mu_{autonomy}^j  = \mu_{both}^j = \mu_{control}^j
+    \]
+   
+    
+    \item \textbf{Hipótesis alternativa} (\(H_1\)): Al menos una media es diferente.
+ 
+\end{itemize}
+
+
+Para evaluar esta hipótesis, utilizamos el análisis de varianza (ANOVA), con el estadístico $F^j$ para ver la significancia conjunta.Como en todos los casos \( p^j > 0.05 \), concluimos que no hay evidencia suficiente para rechazar \( H_0 \) para la variable \( j \), lo que sugiere que los grupos tienen medias similares en esa variable. Es decir que hay correcta aleatorización para cada una de las \( j \) variables. 
+
+        \end{solucion}
+    
          \end{enumerate}
         \bigbreak
         \textbf{Pista:} Recuerde que la asignación al tratamiento fue aleatoria \textbf{condicional} en el distrito. Tenga esto en cuenta al momento de correr sus regresiones. 
@@ -1682,89 +1857,7 @@ donde:
             \end{tabular}
              {\footnotesize{\\Nota: Errores estándar entre paréntesis. La tabla muestra los resultados de una regresión múltiple a nivel de Oficina de Gobierno. La regresión incluye observaciones para 587 oficinas de Gobierno en 26 distritos de la región de Punjab, Pakistán.  La categoría de control en cada regresión corresponde a las oficinas asignadas al grupo de control en el Experimento.}}
 	\end{table}
-     \begin{solucion}
-  
-\begin{table}[H]
-	\centering
-	\caption{Balance Muestral}
-	\label{tab2:balancetemplacte}
-	\begin{tabular}{lcccccc}
-		\toprule
-		\multicolumn{1}{c}{Treatment} & \multicolumn{1}{c}{\textit{Physical Assets}} & \multicolumn{1}{c}{\textit{Public Bodies}} & \multicolumn{1}{c}{\textit{Age}} & \multicolumn{1}{c}{\textit{Gender}} & \multicolumn{1}{c}{\textit{Bachelor's Degree}}  \\
-		\multicolumn{1}{c}{(1)} & (2) & (3) & (4) & (5) & (6) \\ \toprule
-		  \addlinespace 
-		Incentives &  -0.0046457 &  0.0344701 & -0.5869438 & -0.0088349 & 0.0406147 \\
-		& (0.0121769) & (0.019686) & (0.9321901) & (0.0571911) & (0.0418916) \\
-		Autonomy & -0.0045755 & -0.0098719 & -1.155587 & 0.0234708 & 0.0202991 \\
-		& (0.0121956) & (0.0197162) & (0.9206007) & (0.0565864) & (0.0413226) \\
-		Both & -0.0077523 & 0.0145196 & 0.3269247 & 0.0105868 & 0.0692992 \\
-		& (0.0120896) & (0.0195449) & (0.9219913) & (0.0564232) & (0.0411826) \\ \midrule
-		$P>F$ & 0.9371 & 0.1162 & 0.3687 & 0.9468 & 0.3713 \\
-		Obs. & 585 & 585 & 516 & 529 & 511 \\ \bottomrule
-	\end{tabular}
-	{\footnotesize{\\Nota: Errores estándar entre paréntesis. La tabla muestra los resultados de una regresión múltiple a nivel de Oficina de Gobierno. La regresión incluye observaciones para 587 oficinas de Gobierno en 26 distritos de la región de Punjab, Pakistán. La categoría de control en cada regresión corresponde a las oficinas asignadas al grupo de control en el Experimento.}}
-\end{table}
-
-        \begin{enumerate}
-            \item Una prueba de diferencia de medias de cada grupo respecto al grupo de control permite  dar evidencia de una correcta aleatorización del tratamiento porque permite ver si hay diferencias entre las características del grupo de control y los de los grupos de tratamiento.
-            Bajo una correcta aleatorización, no deberían existir diferencias entre los dos grupos ya que deberían ser comparables y no presentar diferencias en sus características observadas. Esto también implica que el estado del tratamiento no es explicado por las X's. \\ Matemáticamente, lo que hacemos es que para cada variable estamos buscando que cuando construimos 
-            $
-var_i = \beta_0 + \beta_{incentives} D_{i1} + \beta_{automnomy} D_{i2} +  \beta_{both} D_{i3} + \varepsilon_i$, los coeficientes asociados a cada estado del tratamiento sean estadísticamentes iguales a 0.Luego cuando sacamos los valores esperados para cada grupo de tratamiento i.e. $E[var \mid D_{i1}=1], E[var \mid D_{i2}=1],E[var \mid D_{i3}=1], E[var \mid D_{i1}=0, D_{i2}=0, D_{i3}=0]$, queremos que estos sean estadísticamente iguales, que es lo que hacemos con una prueba de diferencia de medias. Ahondaremos sobre esto en c).
-
-            
-            \item No  necesarimente. Esto porque siempre hay una posibilidad de rechazar la hipótesis nula aún cuando sea verdadera. Este es el error tipo 1 ($\alpha$). Este es usualmente $1\%, 5\% \quad o \quad 10\%$ entonces siempre existirá algo de incertidumbre.
-            \item Sí, con un nivel de confianza del $95\%$ hay evidencia de una correcta aleatorización en este experimento. Esto se puede ver ya que al realizar la prueba conjunta para cada variable $j\in \{\text{ Physical Assets, Number of Public Bodies, Bachelors Degree, Male y Age} \} $ tenemos que :
-           
-
-            
-
-         
-
-
-\begin{itemize}
-    \item \textbf{Hipótesis nula} (\(H_0\)): Todas las medias poblacionales son iguales entre los tres niveles del tratamiento
-    \[
-    H_0: \mu_{incentives}^j = \mu_{autonomy}^j  = \mu_{both}^j = \mu_{control}^j
-    \]
-   
-    
-    \item \textbf{Hipótesis alternativa} (\(H_1\)): Al menos una media es diferente.
- 
-\end{itemize}
-
-
-
-Para evaluar esta hipótesis, utilizamos el análisis de varianza (ANOVA), con el estadístico $F^j$ para ver la significancia conjunta.Como en todos los casos \( p^j > 0.05 \), concluimos que no hay evidencia suficiente para rechazar \( H_0 \) para la variable \( j \), lo que sugiere que los grupos tienen medias similares en esa variable. Es decir que hay correcta aleatorización para cada una de las \( j \) variables.
-   
-        \end{enumerate}
-       
-
-        \end{solucion}
-    
-
-   \item Suponga que se cumplen lo supuestos listados en el numeral 2. Plantee una especificación que le permita recuperar el diferencial de cada tipo de tratamiento sobre el precio de compra respecto al grupo de control. Recuerde que la asignación al tratamiento fue estratificada.
-   \begin{solucion}
-   Se plantea la especificación
-   $$
-Y_{igj} = \beta_0 + \beta_{incentives} D_{i1} + \beta_{automnomy} D_{i2} +  \beta_{both} D_{i3} + X_{ig}'\beta + \theta_{j}+  \varepsilon_{igj}$$
-donde:
- 
-
-\begin{itemize}
-    \item \( Y_{igj} \) el precio de compra pagado por el oficial $i$ en cada compra realizada  $g$ en el distrito $j$.
-    \item \( D_{i1} \), \( D_{i2} \) y \( D_{i3} \) son variables indicadoras (\textit{dummies}) que representan los distintos tratamientos. ( Acá se supone que el tratamiento se recibe a nivel ofical por tanto \( D_{ig} =  D_{igl} , l=1,2,3)\)):
-        \begin{itemize}
-            \item \( D_{i1} \) = 1 si el oficial \( i \) recibió incentivos.
-            \item \( D_{i2} \) = 1 si el oficial \( i \) recibió autonomía.
-            \item \( D_{i3} \) = 1 si el oficial \( i \) recibió incentivos y autonomía.
-        \end{itemize}
-    \item \( X_{ig} \) representa un conjunto de variables de control para el funcionario \( i \) por la compra \( g \).
-    
-    \item \( district_{igj} = district_{j} \) busca capturar los efectos fijos por distrito. El oficial \( i \) realiza la compra \( g \) en el distrito \( j \).
-    \item \( \varepsilon_{igj} \) es el término de error.
-\end{itemize}
-Así \( \beta_{\text{incentives}} \), \( \beta_{\text{autonomy}} \) y \( \beta_{\text{both}} \) captura los efectos de cada tratamiento en comparación con el grupo de control
-   \end{solucion}
+     
 
 
    \item Después de la toma de datos en línea base, el Gobierno de Punjab aplica junto a usted el experimento planteado en los numerales a)-d) descrito al principio. Dos años después de su implementación, el Gobierno le comparte la base \textit{02.Results\_PK.dta} el precio a nivel de producto para todas las compras realizadas por los 587 oficiales de compra que participaron en el experimento. Ejecute la regresión planteada en el numeral anterior y reporte sus resultados.
@@ -1792,55 +1885,228 @@ Observaciones &  \\ \hline
 \multicolumn{2}{c}{ *** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
 \end{tabular}
     \end{table}
+
+      \begin{solucion}
+     \begin{table}[H]
+    \centering
+    \caption{Efecto de los tratamientos sobre el Precio Unitario sin covariables}
+    \begin{tabular}{lc} \hline
+    & (1) \\
+    Variables & ln(Precio Unitario) \\ \hline
+    &  \\
+    Incentivos & -0.140 \\
+    & (0.091) \\
+    Autonomía & -0.117 \\
+    & (0.083) \\
+    Incentivos + Autonomía & -0.163* \\
+    & (0.089) \\
+    Constante & 2.561*** \\
+    & (0.030) \\
+    &  \\
+    R\textsuperscript{2} & 0.0864 \\
+    Observaciones & 21,171 \\ \hline
+    \multicolumn{2}{c}{ Errores Estándar en Paréntesis} \\
+    \multicolumn{2}{c}{ *** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Efecto de los tratamientos sobre el Precio Unitario con covariables}
+    \begin{tabular}{lc} \hline
+    & (1) \\
+    Variables & ln(Precio Unitario) \\ \hline
+    &  \\
+    Incentivos & -0.046 \\
+    & (0.048) \\
+    Autonomía & -0.125** \\
+    & (0.047) \\
+    Incentivos + Autonomía & -0.102** \\
+    & (0.050) \\
+    Año 2 & 0.092** \\
+    & (0.036) \\
+    Constante & 4.540*** \\
+    & (0.038) \\
+    &  \\
+    R\textsuperscript{2} & 0.9691 \\
+    Observaciones & 21,171 \\
+    Clusters (Centro de compra) & 585 \\ \hline
+    \multicolumn{2}{c}{ Errores Estándar robustos en paréntesis} \\
+    \multicolumn{2}{c}{ *** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
+    \end{tabular}
+\end{table}
+   \end{solucion}
     Además, responda:
    \begin{enumerate}
         \item Dado el cumplimiento de correcta aleatorización de tratamiento, ¿por qué es deseable incluir controles adicionales como los especificados arriba? (Menos de 100 palabras)
-       \item ¿Cuál es el mejor mecanismo para reducir el precio de los productos comprados?\footnote{\footnotesize{Los resultados que usted va a calcular en este punto se derivan de las bases oficiales del experimento aplicado en Punjab por \href{https://academic.oup.com/qje/article-abstract/136/4/2195/6354797?redirectedFrom=fulltext}{Bandiera at al. (2021)}. Los resultados son consistentes (no idénticos) con las estimaciones encontradas en este artículo.}}(Menos de 150 palabras)
-       \item En su opinión, ¿Cuál es la validez externa de las conclusiones?¿Son los resultados del experimento extrapolables a contextos como el colombiano? (Menos de 100 palabras)
-   \end{enumerate}
-   \begin{solucion}
-     \begin{table}[H]
-        \centering
-        \begin{tabular}{lc} \hline
- & (1) \\
-Variables & ln(Precio Unitario) \\ \hline
- &  \\
-Incentivos &  \\
- & () \\
-Autonomía &  \\
- & () \\
- Incentivos + Autonomía&  \\
- & () \\
-Constante &  \\
- & () \\
- &  \\
-R² &  \\
-Observaciones &  \\ \hline
-\multicolumn{2}{c}{ Errores Estándar en Paréntesis} \\
-\multicolumn{2}{c}{ *** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
-\end{tabular}
-    \end{table}
-     \begin{enumerate}
-     \item Suponiendo que hay correcta aleatorización, incluir controles permite reducir la varianza de los estimadores y tener pruebas estadísticas más precisas. Esto porque cuando se incluye un buen control, la fuente de variación que captura el error disminuye, luego $\sigma^2$ disminuye.Ahora, la varianza de los estimadores es proporcional  $\sigma^2$ entonces queremos estimadores mucho más precisos, con menor variabilidad.
-     
-     \item De acuerdo con los resultados presentados en la tabla, el mejor mecanismo para reducir el precio de los productos comprados es tener una combinación entre autonomía e incentivos \textcolor{red}{revisar}
-     
-      \item Estas conclusiones podrían ser extendibles al caso colombiano .Esto porque en Colombia existe una figura similar a los AGO, que son los administradores de compras. Estos son quienes planean, organizan, dirigen y controlan las actividades de compras y adquisiciones de una empresa u organización; desarrollan e implementan políticas de compras(Mintrabajo, 2025). Bajo este contexto, también es conocida la alta burocracia y centralización en la oficinas gubernamentales en Colombia. 
-    Por tanto, en nuestra opinión el experimento también es replicable para el caso colombiano y sus conclusiones serían consistentes.Ahora bien, hay aspectos que toca tener en cuenta.
-    \end{enumerate}
+         \begin{solucion}
+           Suponiendo que hay correcta aleatorización, incluir controles permite reducir la varianza de los estimadores y tener pruebas estadísticas más precisas. Esto porque cuando se incluye un buen control, la fuente de variación que captura el error disminuye, luego $\sigma^2$ disminuye.Ahora, la varianza de los estimadores es proporcional  $\sigma^2$ entonces queremos estimadores mucho más precisos, con menor variabilidad.
    \end{solucion}
+       \item ¿Cuál es el mejor mecanismo para reducir el precio de los productos comprados?\footnote{\footnotesize{Los resultados que usted va a calcular en este punto se derivan de las bases oficiales del experimento aplicado en Punjab por \href{https://academic.oup.com/qje/article-abstract/136/4/2195/6354797?redirectedFrom=fulltext}{Bandiera at al. (2021)}. Los resultados son consistentes (no idénticos) con las estimaciones encontradas en este artículo.}}(Menos de 150 palabras)
+       \begin{solucion}
+           De acuerdo con los resultados presentados en la tabla, el mejor mecanismo para reducir el precio de los productos comprados es la autonomía. \textcolor{red}{completar}
+      \end{solucion}
+     
+       \item En su opinión, ¿Cuál es la validez externa de las conclusiones?¿Son los resultados del experimento extrapolables a contextos como el colombiano? (Menos de 100 palabras)
+       \begin{solucion}
+     Estas conclusiones podrían ser extendibles al caso colombiano .Esto porque en Colombia existe una figura similar a los AGO, que son los administradores de compras. Estos son quienes planean, organizan, dirigen y controlan las actividades de compras y adquisiciones de una empresa u organización; desarrollan e implementan políticas de compras(Mintrabajo, 2025). Bajo este contexto, también es conocida la alta burocracia y centralización en la oficinas gubernamentales en Colombia. 
+    Por tanto, en nuestra opinión el experimento también es replicable para el caso colombiano y sus conclusiones serían consistentes.Ahora bien, hay aspectos que toca tener en cuenta.
+    \end{solucion}
+   \end{enumerate}
+   
+    
 
     
    \item La validez de los resultados en el numeral anterior depende del cumplimiento del \textit{Stable Unit Treatment Value Assumption} (SUTVA). Luego del aplicar el experimento, el Gobierno de Punjab le indica que sospecha que los supervisores del proceso de compra en la \textit{Accountant General's Office}, ante la reducción de la recepción de coimas por parte de los oficiales de compra que recibieron autonomía por parte del experimento, aumentaron la exigencia de comisiones ilegales -financiadas por mayores precios en el producto- en las oficinas en el grupo de control que aún requerían su autorización para cada compra. ¿Cómo puede afectar la ocurrencia de este comportamiento oportunista de los supervisores de la \textit{Accountant General's Office} sobre los resultados hallados en el numeral 6? ¿Estaría sub-estimado o sobre-estimando el efecto? (Menos de 200 palabras)
    \begin{solucion}
+   Este comportamiento oportunista por parte de los AGO es moralmente lamentable. Además de ser una malversación de los fondos destinados para hacer las compras que se requieren en las oficinas estatales, este comportamiento ocasiona que los efectos estimados en el experimento estén sobre-estimados. La razón detrás es que los precios de compra que se observarían en las oficinas del grupo de control serían aún más altos de lo normal. Nótese que en el contexto de este experimento, las estrategias son i) aumentar la libertad en el proceso de compra de los oficiales de compras, ii) establecer incentivos monetarios a los oficiales de compra con mejor desempeño y iii) combinar las dos anteriores. Y lo  que se espera de cada una de ellas, es que de algún modo ayuden a reducir el precio de compra (esto es lo que se entiende por eficiencia del gasto). Luego las respectivas diferencias entre los diferentes grupos de tratamiento y el de control serían aún mayores, sobre-estimando así el efecto de las estrategias sobre la efectividad del gasto público.
    \end{solucion}
 
    
 
     \item El experimento realizado por usted dependió del monitoreo del gasto público realizado por las 587 oficinas participantes a través de la plataforma \textit{Punjab Online Procurement System (POPS)}, la cual se creó de manera específica para el experimento. En este contexto, explique: ¿Puede la introducción de este sistema de monitoreo haber generado cambios de comportamiento en los oficiales de compra?¿Cuál de los 4 tipos de cambios de comportamiento puede inducirse por esta plataforma?\footnote{\footnotesize{Efecto Placebo, \textit{Experimenter Demand Effect}, Hawthorne, o John Henry}} (Menos 200 palabras)
      \begin{solucion}
+     Sí, este sistema inducir cambios en el comportamiento de los oficiales. En particular, entre los 4 efectos mencionado, el que se pudo haber inducido es el efecto Hawthorne. La razón es que los oficiales de compra que recibieron el tratamiento (bien sea haber recibido incentivos, autonomía o ambos), pueden tratar de ser mucho más eficientes con el gasto, por ejemplo pedir descuentos, comparar precios antes de comprar, entre otros. Los tratados saben que están monitoreados, pues registran los datos en la plataforma. El punto clave es la reputación de los oficiales. Suponiendo que un oficial tratado y uno no tratado realizan la misma compra, si el registro del oficial tratado es a un precio mayor o igual que el del oficial no tratado, sería bastante vergonzoso y pondría en tela de juicio su competencia e idoneidad para ser oficial de compras. En este sentido, los oficiales tratados se van a esforzar al máximo para que eso no ocurra.  Por otro lado, algo extremadamente interesante con base en el literal anterior, es que en este contexto ocurre el inverso del efecto John Henry. En vez de esforzarse más para compensar el efecto, los no tratados se vuelven más negligentes.
+     
    \end{solucion}
 \end{enumerate}
+
+
+\section*{Anexo: Código en Stata}
+
+\begin{verbatim}
+* Do file taller 1 econometría avanzada
+
+
+* * * * * * * * * * * 
+* * *  punto 2  * * * 
+* * * * * * * * * * * 
+
+* Cargar base de datos
+ use "C:\Users\HP\Downloads\researchers (1).dta" , clear
+use "C:\Users\HP\Desktop\Econometría avanzada 2025-1\talleres\t1\researchers.dta", clear
+
+* Punto 7
+set seed 123 // Para replicabilidad
+
+local sizes 50 100 500 1000 5000 10000 
+*Se omite el valor de 50.000 porque la muestra tiene 10.381 observaciones
+local n_sizes = wordcount("`sizes'") + 1  // Incluye muestra completa
+
+* Crear matriz para almacenar resultados
+matrix results = J(`n_sizes', 2, .) // Matriz vacía con 2 columnas (log_n, beta_hat)
+
+local i = 1
+foreach n of local sizes {
+    preserve
+    sample `n', count // Toma `n' observaciones
+    reg author_citations trending_topic
+    matrix results[`i',1] = log(`n') // Guardar log(n)
+    matrix results[`i',2] = _b[trending_topic] // Guardar coeficiente estimado
+    restore
+    local i = `i' + 1
+}
+
+di "Regresión con la muestra completa"
+reg author_citations trending_topic //, noconstant
+matrix results[`i',1] = log(_N)  // Log del tamaño total
+matrix results[`i',2] = _b[trending_topic]  // Coeficiente con muestra completa
+
+
+matrix list results
+* Convertir matriz en variables sin modificar base original
+matrix colnames results = log_n beta_hat
+
+* Graficar resultados
+clear
+svmat results, names(col)  // Convierte la matriz en variables
+rename log_n log_n
+rename beta_hat beta_hat
+
+twoway (scatter beta_hat log_n, msymbol(O) mcolor(blue)) ///
+       (line beta_hat log_n, lcolor(red) lwidth(medium)) ///
+       , yline(4, lcolor(black) lpattern(dash)) /// Línea horizontal en y = 4
+    xlabel(, grid) ylabel(0(1) 20, grid) /// Etiquetas en el eje Y de 0 a 10 en pasos de 1
+    title("Tendencia del estimador MCO con el tamaño de muestra") ///
+    xtitle("Log del tamaño de la muestra") ytitle("Estimador MCO (β̂)") ///
+    legend(order(1 "Estimaciones" 2 "Tendencia")) 
+
+* 9c
+reg author_citations trending_topic 
+	outreg2 using "$mydir/resultadosp1.txt", replace
+	
+	
+*9d 
+egen freq = count(article), by(article)
+
+gen collaborative2 = (freq != 1)
+
+reg author_citations trending_topic i.collaborative i.trending_topic#i.collaborative2
+	
+* * * * * * * * * * * 
+* * *  punto 3  * * * 
+* * * * * * * * * * * 
+
+*1  
+ 
+*2  
+*3  
+use "C:\Users\HP\Desktop\Econometría avanzada 2025-1\talleres\t1\01.Treatment_PK.dta", clear 
+
+tabulate Treatment
+
+
+*4
+
+label list 
+*cambiar la categoria base
+fvset base 4 Treatment
+reghdfe bShareA091415 i.Treatment, absorb(District)
+reghdfe NActiveCCs i.Treatment, absorb(District)
+reghdfe age i.Treatment, absorb(District)
+reghdfe dMale i.Treatment, absorb(District)
+reghdfe Bachelors i.Treatment, absorb(District)
+
+
+** Diferencia de medias conjunta para number of publicy bodies
+reghdfe NActiveCCs i.Treatment, absorb(District)
+ 
+** Diferencia de medias conjunta para physical assets
+reghdfe bShareA091415 i.Treatment, absorb(District) 
+
+* Diferencia de medias para Bachelors
+reghdfe Bachelors i.Treatment, absorb(District) 
+
+* Diferencia de medias para dMale
+reghdfe dMale i.Treatment, absorb(District) 
+
+* Diferencia de medias para age
+reghdfe age i.Treatment, absorb(District) 
+
+* Mostrar los coeficientes de los efectos fijos de cada distrito
+predict district_effects, u
+tabulate District, summarize(district_effects)
+
+*5 
+
+*6
+use "C:\Users\HP\Desktop\Econometría avanzada 2025-1\talleres\t1\02.Results_PK.dta" , clear
+
+
+* toca declarar que es un panel de datos: pregunta horario??
+sort NewItemID CostCenterCode
+
+reghdfe lUnitPrice IncentivesY2 AutonomyY2 BothY2, absorb(CostCenterCode) 
+
+reghdfe lUnitPrice IncentivesY2 AutonomyY2 BothY2 i.NewItemID#c.lQuantity Year2 [aweight=ExpInCtrl], absorb(NewItemID CostCenterCode) cluster(CostCenterCode)
+
+*7
+*8
+*9
+*10
+*11
+*12
+\end{verbatim}
 
 \end{document}
 

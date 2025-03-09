@@ -105,7 +105,6 @@
 \newcommand{\note}[1]{\marginpar{\scriptsize \textcolor{red}{#1}}} % Enables comments in red on margin
 \DeclareMathOperator*{\plim}{plim}
 \usepackage[most]{tcolorbox}
-\usepackage{cancel}
 \usepackage{adjustbox}
 \addto\captionsspanish{
 \def\listtablename{\'Indice de tablas}%
@@ -135,6 +134,11 @@
     innertopmargin=10pt         % Margen superior
   ]%
   \begin{tcolorbox}[colframe=blue!50!black, colback=blue!50, coltitle=white, sharp corners=all, boxrule=1mm, width=\textwidth, halign=left, valign=center, top=0mm, bottom=0mm, left=0mm, right=0mm] \textbf{Solución} \end{tcolorbox} }{\end{mdframed}}
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\sVar}{\widehat{\mathrm{var}}}
+\newcommand{\Cov}{\mathrm{cov}}
+\newcommand{\sCov}{\widehat{\mathrm{cov}}}
 \begin{document}
 
 %-------------------------------
@@ -201,7 +205,10 @@ Por el momento, suponga que el mecanismo de asignación de áreas de estudio (es
         
         \item[b.] Describa brevemente cuál es el problema de inferencia causal en función del contexto dado.  
 \begin{solucion}
-Ciertamente aquellos investigadores que publican en \textit{trending topics} (TT) son sistemáticamente diferentes a aquellos que no lo hacen, y es sensato considerar que estas diferencias deriven de características no observadas o no observables. En otras palabras, ante el desconocimiento del mecanismo de asignación de ``publicar o no'' en TT, seguramente las características no observadas terminan confundiendo (\textit{confounding}) la influencia del tratamiento en cuestión. Como no observamos ambos resultados potenciales, determinar cuál es el efecto de publicar en \textit{trending topic} versus no hacerlo radica entonces en un problema de datos faltantes.
+El problema de inferencia causal en este contexto es que no podemos observar al mismo investigador en los dos estados posibles, esto es escribiendo en un \textit{trending topics} (TT) y escribiendo sobre otro tema que no sea un TT. Así solo podemos observar uno de los resultados potenciales. Es decir, solo podemos observar el número de citas que recibió dado que escribió o no en un TT. Como esto ocurre, determinar cuál es el efecto de publicar en \textit{trending topic} versus no hacerlo radica entonces en un problema de no tener universos paralelos, luego radica en un problema de datos faltantes. \\
+
+Ahora bien, una vez conscientes del problema fundamental de inferencia causal que tenemos, podemos subsanarlo y bajo ciertas condiciones podríamos recuperar el efecto causal de escribir en un TT versus no hacerlo, sobre el número de citas. Por ejemplo, una condición es que los investigadores que publican en (TT) no sean sistemáticamente diferentes a aquellos que no lo hacen. Esto porque los unos podrían servirnos como un contrafactual de los otros. Sin embargo, en este contexto particular, esto puede suponer un problema, ya que ambos grupos podrían ser sistemáticamente diferentes.Es sensato considerar que estas diferencias deriven de características no observadas o no observables. En otras palabras, ante el desconocimiento del mecanismo de asignación de ``publicar o no'' en TT, las características no observadas podrían terminan confundiendo (\textit{confounding}) la influencia del tratamiento en cuestión.
+
         \end{solucion}
         \item[c.] Escriba en lenguaje matemático el ATE, el ATT y el ATU. Interprete estos conceptos de acuerdo al contexto del caso.
         \begin{solucion}
@@ -232,91 +239,82 @@ No obstante, el Profesor Melquíades discrepa con este método de asignación y 
 \bigskip
 \begin{itemize}
     \item[2.] Describa en lenguaje matemático cada asignación al tratamiento.
-    \begin{solucion}
+
+\begin{solucion}
+    Sea $D_i:$ la variable dummy de tratamiento tal que 
        \begin{definition}
-    Un mecanismo de asignación es una función de probabilidad que describe la probabilidad de asignación al tratamiento condicional a los resultados potenciales y a las covariables:
-    $$\pi(D_i = 1 | Y_i(1), Y_i(0), X_i)$$
+       \label{def:assignment_mechanism}
+    Un \textbf{mecanismo de asignación} es una función de probabilidad $\pi: \{0,1\}^N\times \mathbb{Y}^{2N}\times\mathbb{X}~N\rightarrow[0,1]$ que describe la probabilidad de asignación al tratamiento condicional a los resultados potenciales y a las covariables:
+    $$\pi(\mathbf{D} | \mathbf{Y}(1), \mathbf{Y}(0), \mathbf{X})$$
 \end{definition}
 
 \begin{definition}
-    Decimos que un mecanismo es aleatorio (\textit{unconfounded}) si la asignación al tratamiento es independiente de los resultados potenciales y de las covariables. Es decir:
+    \label{def:ignorable}
+    Decimos que un mecanismo es aleatorio o \textbf{ignorable} (\textit{unconfounded}) si la asignación al tratamiento es independiente de los resultados potenciales y de las covariables. Es decir:
+  $$\pi(D_i = 1 | Y_i(1), Y_i(0)) = \pi(D_i = 1 )$$
+    Ahora bien, el mecanismo podría ser aleatorio condicional en las X. Formalmente:
     $$\pi(D_i = 1 | Y_i(1), Y_i(0), X_i) = \pi(D_i = 1 | X_i)$$
 \end{definition}
 
 
-Para cada alternativa podemos definir matemáticamente el mecanismo de asignación así:
 
-\begin{algorithm}
-\caption{Alternativa 1}
-\begin{algorithmic}
-\FOR{cada investigador $i$}
-    \FOR{cada tema de investigación $j$}
-        \IF{investigador $i$ ha trabajado en tema $j$ antes}
-            \STATE $\pi_{ij}(D_i = 1) = 0$ (\colorbox{yellow}{¿con subíndices o no?})
-        \ELSE
-            \STATE $\pi_{ij}(D_i = 1) = p_j$ (\colorbox{yellow}{tiene sentido que sea $p_j$?})
-        \ENDIF
-    \ENDFOR
-\ENDFOR
-\end{algorithmic}
-\end{algorithm}
+
+Para describir las dos alternativas, primero preparemos una notación para describirlo.
+
+Definamos el conjunto de los temas de investigación disponibles como:
+
+\[
+R = \{r_1, r_2, \dots, r_M\}
+\]
+
+De estos temas, hay algunos que son \textit{trending research topics}, que denotaremos con el conjunto $T$, tal que:
+\[
+T \subsetneq R.
+\]
+Un investigador \( i \) ha trabajado algunos temas; estos constituyen una partición de \( R \):
+
+\[
+R_i := \{r \in R \mid i \text{ ha trabajado } r \text{ previamente} \}.
+\]
+
+Por lo tanto, tanto bajo la alternativa 1 como la 2, el agente encargado de elegir el tema \( r \) al investigado \( i \) se enfrenta al espacio de búsqueda:
+
+\[
+\mathcal{S}_i = R \setminus R_i.
+\]
+
+
+\textbf{Alternativa 1}:
+
+La probabilidad de que $i$ sea tratado ($D_i=1$), i.e. sea asignado a un \textit{trending research topic} es 
+\begin{equation}
+    \frac{|T|}{|\mathcal{S}_i|}. \label{eq:alt1_prob}
+\end{equation}
+
+\textbf{Alternativa 2}: 
+
+Ahora cada investigador $i$ debe escoger $r\in\mathcal{S_i}$ . Aún a pesar de que todo $r\in \mathcal{S_i}$ será nuevo para $i$, la probabilidad de que $i$ escoja un \textit{trending research topic} se podría representar como
+
+\begin{equation}
+    \label{eq:alt2_prob}
+    f(Y^1_i,Y^0_i,,\mathbf{X}_i,u_i)
+\end{equation}
+
+donde $f$ es una función de las características observables y no observables de $i$. 
+
+
+
+
 
 donde $p_j$ es la probabilidad de asignación al tema $j$ cuando el investigador es elegible.
 
-\begin{algorithm}
-\caption{Alternativa 2}
-\begin{algorithmic}
-\FOR{cada investigador $i$}
-    \FOR{cada tema de investigación $j$}
-        \IF{investigador $i$ ha trabajado en tema $j$ antes}
-            \STATE $\pi_{ij}(D_i = 1 | X_i) = 0$
-        \ELSE
-            \STATE $\pi_{ij}(D_i = 1 | X_i) = f(\epsilon_i)$
-        \ENDIF
-    \ENDFOR
-\ENDFOR
-\end{algorithmic}
-\end{algorithm}
 
 donde $f(\epsilon_i)$ es una función que depende de las características no observables del investigador.
 
-Antes de adentrarnos a explicar matemáticamente si la asignación es aleatoria o no, podemos ilustrar el problema con dos ejemplos.
 
-\textbf{Ejemplo 1:} Supongamos que un investigador $i$ deliberadamente ha escogido en su carrera trabajar en temas que nadie trabaja, que resultan ser (\textit{\textbf{not} trending research topics}) por razones no observables $\epsilon_i$. Por lo tanto no ha trabajado en el tema $j$ que resulta ser \textit{trending research topic} antes. Por lo tanto, bajo la Alternativa 1, es seguro (altamente probable) que $i$ sea asignado al tratamiento (si no le asignan $j$, tal vez le asignen $j'$ que, por su historial de elecciónes, también será \textit{trending research topic}). EN este caso la asignación al tratamiento está "contaminada" por características sistemáticas de $i$, haciéndole 
 
-En este caso, la probabilidad de asignación al tratamiento es $\pi_{ij}(D_i = 1, ) = 0$. Por lo tanto, el investigador no será asignado al tratamiento.
 
-\colorbox{orange}{END EJEMPLO 1}
-
-Ahora podemos definir la probabilidad de asignación al tratamiento para cada alternativa. Para la Alternativa 1, la probabilidad de asignación al tratamiento es:
-\colorbox{yellow}{HELP!!}
-
- 
     \end{solucion}
-
-
-
-
-\begin{algorithm}
-\caption{Alternativa 2}
-\begin{algorithmic}
-\FOR{cada investigador $i$}
-    \FOR{cada tema de investigación $j$}
-        \IF{investigador $i$ ha trabajado en tema $j$ antes}
-            \STATE $\pi_{ij}(D_i = 1 | X_i) = 0$
-        \ELSE
-            \STATE $\pi_{ij}(D_i = 1 | X_i) = f(\epsilon_i)$
-        \ENDIF
-    \ENDFOR
-\ENDFOR
-\end{algorithmic}
-\end{algorithm}
-
-
-
-
-
-
 
 
 
@@ -328,30 +326,31 @@ Ahora podemos definir la probabilidad de asignación al tratamiento para cada al
              
       Esta alternativa sí es aleatoria. La justificación es que la asignación al tratamiento no depende de los resultados potenciales esto es $\pi(D_i = 1 | Y_i(1), Y_i(0), X_i) = \pi(D_i = 1 | X_i)$. 
       
-      Cabe aclarar que tenemos dos supuestos importantes detrás. Primero, que existe más de un trending reserach topic en la base de datos y segundo que para cada investigador se considera que existe al menos un tema trending research topic en un área que no ha trabajado. Con esto en mente, entonces cada investigador va a tener una probabilidad mayor que 0 de que se le asigne un trending research topic.
+      Cabe aclarar que tenemos dos supuestos importantes detrás. Primero, que existe más de un \textit{trending reserach topic} en la base de datos y segundo que para cada investigador $i$ se considera que existe al menos un $r\in \mathcal{S_i}$. Con esto en mente, entonces cada investigador va a tener una probabilidad mayor que 0 de que se le asigne un trending research topic.
+
+      Como además nos indican que para cada investigador todos los temas tienen la misma probabilidad de ser asignados, y suponiendo que $|R|$ es grande, lo suficiente como para que $|\mathcal{S_i}|$ siga siéndolo, entonces esta probabilidad sigue una distribución uniforme y por lo tanto es aleatoria, y además no está relacionada con los resultados potenciales de $i$. 
       
-      Ahora bien, para cada investigador, esta probabilidad puede ser distinta, porque puede ser que por ejemplo, hayan 20 temas en la base de datos: 10 trending y 10 no trending. \begin{itemize}
-          \item Considere un investigador x, ha trabajado 9 de los trending research topics y ninguno de los no trending. Entonces como la probabilidad de asignación de los temas es uniforme, se tiene que la probabilidad de que le toque un trending va a ser de $1/11$ 
-          \item Considere ahora un investigador y, que ha trabajado 6 de los trending research topics y 3 de los no trending. Entonces como la probabilidad de asignación de los temas es uniforme, se tiene que la probabilidad de que le toque un trending va a ser de $4/11$
+      Ahora bien, para cada investigador, esta probabilidad puede ser distinta, porque puede ser que por ejemplo, haya $20$ temas en la base de datos: $10$ trending y $10$ no trending. \begin{itemize}
+          \item Considere un investigador $i$, ha trabajado $9$ de los trending research topics y ninguno de los no trending. Entonces como la probabilidad de asignación de los temas es uniforme, se tiene que la probabilidad de que le toque un trending va a ser de $1/11$ 
+          \item Considere ahora un investigador $j$, que ha trabajado $6$ de los trending research topics y $3$ de los no trending. Entonces como la probabilidad de asignación de los temas es uniforme, se tiene que la probabilidad de que le toque un trending va a ser de $4/11$
       \end{itemize}
       
-       En ese sentido, la alternativa es aleatoria pero el mecanismo no necesariamente va a estar perfectamente aleatorizado, porque la probabilidad de ser asignado al tratamiento podría ser muy baja para algunos investigadores mientras que muy alta para otros.Sin embargo, esto no depende de sus resultados potenciales.
-      
-         \end{solucion}
+       En ese sentido, la alternativa es aleatoria pero el mecanismo no necesariamente va a estar perfectamente aleatorizado, porque la probabilidad de ser asignado al tratamiento podría ser muy baja para algunos investigadores mientras que muy alta para otros; en cualquier caso esto \textbf{no depende} de sus resultados potenciales.
+       \end{solucion}
         
         \item ¿Considera usted que la \textbf{alternativa 2} es aleatoria? Justifique. \textit{(Máximo 150 palabras)}.
          \begin{solucion}
-            Esta alternativa no es aleatoria porque hay autoselección. Volviendo al caso del investigador x, este va a elegir lo más conveniente de acuerdo a sus resultados potenciales, lo mismo con el investigador y.
-            La alternativa es no aleatoria en cuanto es de esperarse que los investigadores elijan los trendings research topics mas parecidos a las areas que han trabajado, autoseleccionandose así. 
- Esto implica que hay un sesgo de selección y que por tanto el grupo de control será sistemáticamente distinto al grupo de tratamiento. Lo cual tiene efectos sobre el valor del $\tau$, como en nuestro ejemplo. \textcolor{red}{Revisar}
+            Esta alternativa no es aleatoria porque hay autoselección. Volviendo al caso del investigador $i$, este va a elegir lo más conveniente de acuerdo a sus resultados potenciales (no observados) y seguramente también de otros factores no observables, lo mismo con el investigador $j$, i.e. según $f(Y^1_i,Y^0_i,\mathbf{X}_i,u_i)$
+            La alternativa es no aleatoria en cuanto es de esperarse que los investigadores elijan los trendings research topics mas parecidos a las areas que han trabajado, autoseleccionandose así y maximizando una función que dependen de sus resultadsos potenciales. 
+ Esto implica que hay un sesgo de selección y que por tanto el grupo de control será sistemáticamente distinto al grupo de tratamiento. Lo cual tiene efectos sobre el valor del $\tau$, como en nuestro ejemplo. 
              
      
          \end{solucion}
         
         \item Siguiendo la pregunta que guía este ejercicio, ¿qué problemas de inferencia causal se pueden generar si la asignación no es aleatoria? \textit{(Máximo 150 palabras)}.
-        \begin{solucion}
+\begin{solucion}
             
-        Si la asignación no es aleatoria, el efecto causal promedio sobre el número de citaciones como consecuencia de publicar sobre un trending research versus no hacerlo  va a estar mal estimado. En particular, las alternativas 1 y 2 sugieren que el efecto va a estar subestimado, pues varios investigadores asignados al grupo de control, podrían ya ser populares por sus trabajos previos en los trendings reserach topics.
+        Si la asignación no es aleatoria, el principal problema que se podría generar es que no podríamos recuperar el efecto causal de interés de publicar en un \textit{trending research topic} a causa del sesgo de selección. Si consideramos la \textbf{Alternativa 2} el mecanismo no es ignorable y es probable que aquellos que terminaron seleccionando \textit{trending research topics} (se autoseleccionan al tratamiento) y aquellos que no (se autoseleccionan al control) serán \textbf{sistemáticamente diferentes}. Así, no podríamos tener contrafactuales válidos. La clave radica en que si no hay sesgo selección, podemos estimar el $ATT$ con la comparación ingenua que es $ \tau = E[Y_i^1| D_i=1] - E[Y_i^0| D_i=0]$.  
         \end{solucion}
     \end{itemize}
 
@@ -448,8 +447,12 @@ Reemplazando esto en el problema original, tenemos:
      \frac{E[ Y_i \mathbb{I}_{\{D_i=1\}}]}
      {E[\mathbb{I}_{\{D_i=1\}}] }  -\frac{E[ Y_i \mathbb{I}_{\{D_i=0\}}] }{E[\mathbb{I}_{\{D_i=0\}}]} \quad \text{(Usando la débil de los grandes números)} 
 \end{align*}
-Ahora, note que $\frac{E[ Y_i \mathbb{I}_{\{D_i=1\}}]}
-     {E[\mathbb{I}_{\{D_i=1\}}] }= E[ Y_i| D_i=1]$. Intuitivamente se ve con el análogo muestral : $\frac{\frac{\sum_i Y_i \mathbb{I}_{\{D_i=1\}}}{N}}{\frac{N_1}{N}}=\frac{\sum_i Y_i \mathbb{I}_{\{D_i=1\}}}{N_1}$. Vale tambien para el segundo término, entonces:
+Ahora, note que:
+\begin{gather}\label{referenciar}
+\frac{E[ Y_i \mathbb{I}_{\{D_i=1\}}]}
+     {E[\mathbb{I}_{\{D_i=1\}}] }= E[ Y_i| D_i=1]
+\end{gather}
+ Intuitivamente se ve con el análogo muestral : $\frac{\frac{\sum_i Y_i \mathbb{I}_{\{D_i=1\}}}{N}}{\frac{N_1}{N}}=\frac{\sum_i Y_i \mathbb{I}_{\{D_i=1\}}}{N_1}$. Vale también para el segundo término, entonces:
 \begin{align*}
 &=E[Y_i | D_i = 1] - E[Y_i | D_i = 0]\\&=E[Y_i^{1}  | D_i = 1] - E[Y_i^{0}  | D_i = 1] &\text{(Como $Y_i=Y_i^{0} (1-D_i)+ Y_i^{1} D_i$ )}
 \\&=E[Y_i^{1}  | D_i = 1] - E[Y_i^{0}  | D_i = 1] &\text{(Como experimento es aleatorio $E[Y_i^{0} | D_i = 0]=E[Y_i^{0} | D_i = 0] $ )}\\&=\mathbb{E}[Y^{1}_{i} - Y^{0}_{i} | D_i = 1]
@@ -502,14 +505,66 @@ E[Y_i | D_i = 1] - E[Y_i | D_i = 0] &= E[Y_i | D_i = 1] - E[Y_i | D_i = 1] \\&=\
 
         \item[c.] $\text{ATE}=\pi \,\text{ATT}+(1-\pi)\text{ATU}$ \quad donde $\pi \equiv \mathbb{P}(D_i=1)$
          \begin{solucion}
-       
+       \begin{proof}
+      
+       Vamos a partir de lado de la derecha. Sea $\pi = P(D_i=1)$. Entonces:
+\begin{align*}
+    & \pi ATT + (1 - \pi) ATU \\
+    &= P(D_i=1) \left[ \mathbb{E}[Y_i^1 | D_i=1] - \mathbb{E}[Y_i^0 | D_i=1] \right] \\
+    &\quad + P(D_i=0) \left[ \mathbb{E}[Y_i^1 | D_i=0] - \mathbb{E}[Y_i^0 | D_i=0] \right] 
+    \end{align*}
+    Mostramos en \ref{referenciar} que sin pérdida de generalidad $E[\mathbb{I}_{\{D_i=1\}}]  \mathbb{E}[Y_i^1 | D_i=1] =\mathbb{E}[Y_i^1 \mathbb{I}_{\{i: D_i=1\}}]$. Note que  $ P(D_i=1)=E[\mathbb{I}_{\{D_i=1\}}] =\frac{N_1}{N}$. Aplicando a los otros casos, entonces:
+    \begin{align*}
+    &= \mathbb{E}[Y_i^1 \mathbb{I}_{\{i: D_i=1\}}] - \mathbb{E}[Y_i^0 \mathbb{I}_{\{i: D_i=1\}}]  + \mathbb{E}[Y_i^1 \mathbb{I}_{\{i: D_i=0\}}] - \mathbb{E}[Y_i^0 \mathbb{I}_{\{i: D_i=0\}}] 
+\end{align*}
+Ahora, por la ley de esperanzas iteradas note que:
+\begin{align*}
+\mathbb{E}[Y_i^0] &=\mathbb{E}[\mathbb{E}[Y_i^0 | D]]\\
+    &=\mathbb{E}[Y_i^0 \mathbb{I}_{\{i: D_i=1\}}] +\mathbb{E}[Y_i^0 \mathbb{I}_{\{i: D_i=0\}}] 
+\end{align*}
+
+\begin{align*}
+\mathbb{E}[Y_i^1] &=\mathbb{E}[\mathbb{E}[Y_i^1 | D]]\\
+    &=\mathbb{E}[Y_i^1 \mathbb{I}_{\{i: D_i=1\}}] +\mathbb{E}[Y_i^1 \mathbb{I}_{\{i: D_i=0\}}] 
+\end{align*}
+Entonces
+\begin{align*}
+ & \mathbb{E}[Y_i^1 \mathbb{I}_{\{i: D_i=1\}}] - \mathbb{E}[Y_i^0 \mathbb{I}_{\{i: D_i=1\}}]  + \mathbb{E}[Y_i^1 \mathbb{I}_{\{i: D_i=0\}}] - \mathbb{E}[Y_i^0 \mathbb{I}_{\{i: D_i=0\}}] \\
+    &= \mathbb{E}[Y_i^1] - \mathbb{E}[Y_i^0] \\
+    &= \text{ATE}
+\end{align*}
+ \end{proof}
         \end{solucion}
     \end{itemize}
     
     Interprete las proposiciones de los sub-incisos a, b, y c. Finalmente, ¿es cierto que si $\tau = \text{ATT}$, entonces $\tau = \text{ATU}$? Si su respuesta es afirmativa, demuéstrelo. En caso contrario, dé un contra ejemplo con una situación de la vida real. 
 \end{itemize}
  \begin{solucion}
-       
+ \begin{itemize}
+     \item [a)] Interpretación general: El efecto causal promedio del tratamiento ($\tau$) se puede descomponer en dos componentes. El primero es el ATT (Average Treatment Effect on the Treated), que representa el efecto del tratamiento sobre aquellos que efectivamente lo recibieron. El segundo es el sesgo de selección en la variable de resultado sin tratamiento ($Y^0$), el cual corresponde a la diferencia en los valores esperados antes del tratamiento de $Y^0$ entre los tratados y los no tratados. Si los tratados y los no tratados hubieran tenido el mismo resultado en ausencia del tratamiento, es decir, si se cumple que $E[Y_i^0 \mid D_i=1] = E[Y_i^0 \mid D_i=0]$, entonces el efecto promedio del tratamiento sería igual al ATT.\\
+
+     En el caso de los investigadores, la ecuación hace referencia al efecto de sobre el número de citaciones de los investigadores que efectivamente publicaron en TT respecto a si estos mismos hubiesen publicado en un area que no era TT (ATT). El otro componente es un sesgo de selección que captura las diferencias promedios entre el numero de citas que hubiesen recibido los autores que publicaron en TT versus el numero de citas promedio que recibieron los autores que no publicaron en TT (Sesgo selección).
+
+      \item [b)] Interpretación general: El efecto causal promedio del tratamiento ($\tau$) se puede descomponer en dos componentes. El primero es el ATU que representa el efecto de ser tratado tratamiento sobre aquellos que no lo fueron. El segundo es el sesgo de selección en la variable de resultado con tratamiento ($Y^1$).\\
+
+     En el caso de los investigadores, la ecuación hace referencia al efecto de sobre el número de citaciones de los investigadores que efectivamente no publicaron en TT respecto a si estos mismos sí hubiesen publicado en un TT (ATU). El otro componente es un sesgo de selección que captura las diferencias promedios entre el numero de citas que recibieron los autores que efectivamente publicaron en TT versus el número de citas que hubiesen recibido los autores que no publicaron en TT(Sesgo selección).
+
+      \item [c)] Interpretación general: En palabras sencillas, esta ecuación dice que el efecto promedio del tratamiento en la población (\textit{ATE}) se expresa como un promedio ponderado de los efectos del tratamiento sobre los tratados (\textit{ATT}) y los no tratados (\textit{ATU})  pues  \(\pi \equiv P(D_i = 1)\) representa la proporción de individuos que recibieron el tratamiento. \\
+
+      En el caso de los investigadores, dice que el efecto de publicar en un TT sobre el número de citas promedios es un promedio ponderado entre el efecto que tuvo el experimento en los investigadores que publicaron en un TT y en los inveStigadores que publicaron en otra área que no era TT. 
+ \end{itemize}
+      
+
+      
+\textbf{Claim: $\tau = \text{ATT}$ no implica que $\tau = \text{ATU}$ }\\
+Note que lo primero implica que $\mathbb{E}[Y^{0}_{i}|D_i=1]=\mathbb{E}[Y^{0}_{i}|D_i=0]$ es decir, no habria diferencias entre los grupos antes de que se llevase a cabo el experimento. Pero eso no implica que no apareciesen diferencias entre los grupos si se aplicase el tratamiento (imagine por un momento que podemos observar a ambos grupos en los dos estados). \\
+
+Un contraejemplo sencillo es tener externalidades, en particular que se presente un efecto de tipo Hawthorne en donde los tratados cambian su comportamiento porque saben que están siendo tratados. Por ejemplo, continuemos con el caso de los investigadores. Suponga que todos los que participan en el experimento son profesores titulares de la facultad de Economía de la Universidad de los Andes, esto implica que todos cuenta con grandes capacidades y reputación en el ámbito acádemico, y parten de características iniciales muy parecidas, esto es:
+$$\mathbb{E}[Y^{0}_{i}|D_i=1]=\mathbb{E}[Y^{0}_{i}|D_i=0] $$
+
+Ahora, supongamos que se llevó a cabo el experimento, por ejemplo los del ala derecha van a escribir sobre trending reserach topics y los del ala izquierda sobre no trending reserach topics. Podría darse el caso, que los del ala derecha empiecen a tener más presión por recibir citas y empiecen a hacer más lobby en conferencias para hablar de sus trabajos, empiecen a usar más twitter, se vuelvan más comunicativos con sus ideas, entre otras; esto podría ser un tema de orgullo, en donde quieren demostrar que son capaces pues toda la facultad estará a la expectativa de la calidad de sus papers. Entonces:
+$$\mathbb{E}[Y^{1}_{i}|D_i=1] \neq \mathbb{E}[Y^{1}_{i}|D_i=0] $$
+
         \end{solucion}
 
 \subsection*{Co-autores y sus beneficios}
@@ -535,8 +590,7 @@ La universidad le ha dado a usted una base de datos denominada \texttt{researche
 \begin{itemize}
     \item[6.] Compare esta nueva situación con el efecto considerado previamente (incisos 1-5). ¿De qué manera el efecto adicional de publicar en un proyecto colaborativo podría afectar la identificación causal planteada? Justifique. \textit{(Máximo 200 palabras)}.
     \begin{solucion}
-        El efecto adicional indica que ahora nos importa, no solamente la asignación a TT, sino también si la publicación fue colaborativa o no. En ese sentido, el efecto causal promedio sobre el número de citaciones como consecuencia de publicar sobre un trending research topic versus no hacerlo sigue estando bien identificado, pero ahora el efecto adicional de publicar en un proyecto colaborativo podría afectar la identificación causal planteada, pues, según la especificación del caso podemos tomar $\theta$ como el coeficiente asociado a una variable dummy que indica si la publicación fue colaborativa o no. En particular, si no se controla por la colaboración, tendríamos sesgo de variable omitida pues la colaboración entraría en el error, violando el supuesto de exogeneidad de las covariables.
-        \colorbox{yellow}{VAN 157 PALABRAS}
+        El efecto adicional indica que ahora nos importa, no solamente la asignación a TT, sino también si la publicación fue colaborativa o no. En ese sentido, para identificar el efecto causal promedio (sobre el número de citaciones como consecuencia de publicar sobre un trending research topic versus no hacerlo) es clave considerar la variable de haber colaborado o no a fin de garantizar que se cumpla el supuesto de identificación: $E[u \mid X]=0$. Si no se incluyera en la especificacion del modelo, entonces el efecto adicional de publicar en un proyecto colaborativo podría afectar la identificación causal planteada, pues, según la especificación del caso podemos tomar $\theta$ como el coeficiente asociado a una variable dummy que indica si la publicación fue en \textit{trending topic} y colaborativa o no. En particular, si no se controla por la colaboración, tendríamos sesgo de variable omitida pues la colaboración entraría en el error, violando el supuesto de exogeneidad de las covariables.
     \end{solucion}
 
     \item[7.] Elabore una gráfica que ilustre el comportamiento del estimador MCO, denotado como $\hat{\tau}_{MCO}$, para ocho sub-muestras aleatorias diferentes de la base de datos\footnote{Se recomienda utilizar sub-muestras de tamaño 50, 100, 500, 1'000, 5'000, 10'000, 50'000 y, finalmente, la muestra completa.}. Tenga en cuenta las siguientes indicaciones:  
@@ -590,54 +644,142 @@ Estos resultados dan intuición sobre la presencia de un posible sesgo que esté
 \]
 
     Usando su demostración y la base de datos que tiene, de una estimación del valor de $\theta$. ¿Este estimador es coherente con los resultados que ha estado obteniendo?
-     \begin{solucion}
-       
-        \begin{proof}
-       Considere la regresión $Y_i =\alpha+ \tau^* D_i + u_i$. Sabemos 
-\begin{align*}
-    \hat{\tau}^*_{MCO} &=(X'X)^{-1} X' y \\
-    &= (X'X)^{-1} X' (X \tau^* + \epsilon) \\
-    &= (X'X)^{-1} X' (X (\tau + \theta) + \epsilon) \\
-    &= (X'X)^{-1} X' X \tau + (X'X)^{-1} X' X\theta + (X'X)^{-1} X' \epsilon \\
-    &= \tau + \theta + (X'X)^{-1} X' \epsilon \\
-    &= \tau + \theta + \left( \frac{X'X}{N} \right)^{-1} \left( \frac{X'\epsilon}{N} \right) \quad \text{(multiplicando y dividiendo por N)} \\
-    &= \tau + \theta + \left( \frac{1}{N} \sum_{i=1}^{N} x_i x_i' \right)^{-1} \left( \frac{1}{N} \sum_{i=1}^{N} x_i \epsilon_i \right).
-  \end{align*}
-  Ahora, aplicando el p-lim tenemos:
-  \begin{align*}
-    \text{plim } \hat{\tau}^*_{MCO} &= \text{plim} \left( \tau + \theta+ \left( \frac{1}{N} \sum_{i=1}^{N} x_i x_i' \right)^{-1} 
-    \left( \frac{1}{N} \sum_{i=1}^{N} x_i \epsilon_i \right) \right) \\
-    &= \text{plim } \tau + \text{plim } \theta +\text{plim} \left( \left( \frac{1}{N} \sum_{i=1}^{N} x_i x_i' \right)^{-1} 
-    \left( \frac{1}{N} \sum_{i=1}^{N} x_i \epsilon_i \right) \right) \\
-    &= \tau +\theta+ \text{plim} \left( \frac{1}{N} \sum_{i=1}^{N} x_i x_i' \right)^{-1} 
-    \cdot \text{plim} \left( \frac{1}{N} \sum_{i=1}^{N} x_i \epsilon_i \right) \\
-      &= \tau +\theta + \text{plim} E[x_i x_i'] ^{-1} \text{plim} E[x_i \epsilon_i] \qquad \text{(por ley débil de grandes números) }\\
-      &= \tau +\theta + \text{plim} E[x_i x_i'] ^{-1} 0 \qquad \text{(usando exogeneidad débil) }\\
-       &= \tau +\theta
-    \end{align*}
-   Como $\theta > 0$ entonces se tiene que $\text{plim } \hat{\tau}^*_{MCO}=\tau + \theta >\tau$.
-        \end{proof}
-        Ahora, como empíricamente obtuvimos $\hat{\tau}^*_{MCO} \approx 5.16$ y teóricamente $\tau \approx 4$ entonces el tenemos un sesgo, ahora bien este podría ser incluso mayor a $\approx 1.16$, pues hay una variable omitida importante, que es hacer colaborado o no.  Esto es congruente con los resultados obtenidos en cuanto el estimador empírico es mayor que el estimador teórico.\textcolor{red}{incluir valor del sesgo}
-        \end{solucion}
+    
+\begin{solucion}
+     \begin{proof}
+         
+    Sabemos que el modelo a estimar es 
+    
+    \begin{equation}
+    Y_i = \alpha + \tau D_i + u_i \label{eq:mod_omitvar},
+    \end{equation}
+
+    pero también sabemos que en este nuevo contexto en el que un \textit{trending research topic} puede ser colaborativo, es decir que estamos en el contexto de variable omitida relevante. Así el modelo real sería
+    \begin{equation}
+    Y_i = \alpha + \tau D_i + \theta' D_i C_i + \eta_i \label{eq:mod_real},
+    \end{equation}
+    donde sí presentamos exogeneidad de las variables con $\eta$ dado el mecanismo de asignación de la universidad que es \textit{unconfounded} o aleatorio. 
+    
+    Tomamos el estimador MCO de \ref{eq:mod_omitvar}:
+    
+    \begin{equation}
+    \hat{\tau} = \frac{\sCov(D,Y)}{\sVar(D)} \label{eq:tau_biased}
+    \end{equation}
+    
+    En \ref{eq:tau_biased} reemplazamos \ref{eq:mod_real}:
+    
+    \begin{equation}
+    \hat{\tau} = \frac{\sCov(D, \alpha + \tau D + \theta' D C + \eta)}{\sVar(D)}
+    \end{equation}
+    
+    Expandiendo la covarianza:
+    
+    \begin{equation}
+    \hat{\tau} = \frac{\sCov(D, D) \tau + \theta'\, \sCov(D, DC) + \sCov(D, \eta)}{\sVar(D)}.
+    \end{equation}
+    
+    Dado que $\sCov(D,D) = \sVar(D)$, y que por exogeneidad $\sCov (D,\eta)=0$, tenemos
+    
+    \begin{equation}
+    \hat{\tau} = \tau + \theta' \frac{\sCov (D, DC)}{\sVar(D)}.
+    \end{equation}
+    
+    Tomamos el límite en probabilidad de $\hat{\tau}$ y, por el Teorema de Slutsky:
+    
+    \begin{equation}
+    \text{plim } \hat{\tau} = \tau + \theta' \frac{\text{Cov}(D, DC)}{\text{Var}(D)} \label{eq:slutsky}
+    \end{equation}
+    
+    Sabemos que para dos variables aleatorias $Y$ y $X$, se cumple que:
+    
+    \begin{align}
+    \text{Cov}(X,Y) &= E[XY] - E[X]E[Y] \qquad (\text{tomando }X=D,\, Y=DC) \notag \\
+    \text{Cov}(DC,D) &= E[D^2C] - E[DC]E[D] \qquad (\text{Como D es Bernoulli, } D^2=D) \\
+    \text{Cov}(DC,D) &= E[DC] - E[DC]E[D] \qquad (\text{factornizando } \E[DC])  \\
+    \text{Cov}(DC,D) &= E[DC](1 - E[D])  \label{eq:covarianza_dcd}
+    \end{align}
+
+    Sabemos también que 
+
+    \begin{align}
+        \Var(D)=\E[D^2]- (\E[D])^2 \qquad (\text{como D es Bernoulli, } D^2=D ) \notag \\
+        \Var(D)=\E[D]- (\E[D])^2 \qquad (\text{factorizando } E[D])  \notag \\
+        \Var(D)=\E[D](1- \E[D]) \qquad (\text{factorizando } E[D])  \label{eq:varbernoulli}
+    \end{align}
+ 
+    Reemplazamos \ref{eq:covarianza_dcd} y \ref{eq:varbernoulli} en \ref{eq:slutsky}:
+
+    \begin{align}
+        \text{plim } \hat{\tau} &= \tau + \theta' \frac{\E[DC](1 - \E[D])}{\E[D](1- \E[D])} \notag  \\
+        \text{plim } \hat{\tau} &= \tau + \theta' \frac{\E[DC]}{\E[D]} \label{eq:tau_biased2}
+    \end{align}
+
+    Por la Ley de Esperanzas Iteradas (LEI) sabemos que 
+
+    \begin{equation}
+        \E[DC] = \E[\E[DC|D]],
+    \end{equation}
+
+    Como $D$ es Bernoulli, computemos $\E[DC|D]$ para ambos casos:
+    \begin{itemize}
+        \item Si $D=0$, $\E[DC|D=0]=0\times\E[C|D=0]=0$
+        \item Si $D=1$, $\E[C|D=1] = 1\times \E[C|DC=1]$
+    \end{itemize}
+    Por lo tanto la esperanza condicional se simplifica a 
+    \[
+    \E[DC|D]=\E[D\times\E[C|D=1]]
+    \]
+    Tomamos valor esperado sobre $D$ a ambos lados y como $\E[C|D=1]$ es constante con respecto a la esperanza sobre $D$ podemos factorizarlo:
+
+    \[
+    \E[DC] = \E[C|D=1]E[D]
+    \]
+
+    Remplazando esta expresión en \ref{eq:tau_biased2}:
+
+    \begin{align}
+        \text{plim } \hat{\tau} &= \tau + \theta' \frac{\E[C|D=1]\times E[D]}{\E[D]} \notag \\
+        &= \tau+\underbrace{\theta' \, \E[C|D=1]}_{\text{bias}(\hat{\tau}_{MCO})} \\
+        &> \tau
+    \end{align}
+
+    Por lo tanto asintóticamente es estimador sobreestima el efecto $\tau$.
+
+    Si queremos recuperar el parámetro $\theta$ podemos hacerlo pues tenemos los ingredientes necesarios:
+    \begin{itemize}
+        \item De la literatura $\tau\approx4$
+        \item De nuestra muestra $\E[C|D=1]=\frac{1}{N_{D=1}}\sum_{:D_i=1}C_i=0.498$
+        \item De nuestra estimación $\hat{\tau}_{MCO}=5.167$
+    \end{itemize}
+
+    De la expresión muestral del estimador:
+
+    \begin{equation}
+        \hat{\tau}_{MCO}= \tau+\theta'E[C|D=1] \label{eq:finding_theta}
+    \end{equation}
+
+    Despejando $\theta$ de \ref{eq:finding_theta}:
+
+    \begin{align}
+    \theta' &= \frac{\hat{\tau}_{MCO}-\tau}{\E[C|D=1]} \notag \\
+    \theta' &= \frac{5.167-4}{0.498} \notag \\
+    \theta' &= 2.34
+    \end{align}
+    
+    Este resultado es consistente con los resultados que estamos obteniendo, pues al considerar los resultados de la Tabla \ref{tab:resultados} el estimador está siempre sobre $4$. \\
+    Ahora, el sesgo no es $\theta' &= 2.34$ sino $\theta'*E[C|D=1]=1.16$. Lo cual es consistente con lo que se obtiene en la base de datos y con la gráfica mostrada anteriormente. 
+
+     \end{proof}
+       \end{solucion}
+      
 
     \item[9.] Proponga una metodología para recuperar estimadores consistentes de $\tau$ y de $\theta$. 
 
     \begin{itemize}
         \item[a.] Escriba detalladamente la especificación que va a estimar.
+        \begin{solucion}
         
-
-        \item[b.] Justifique por qué su propuesta será exitosa.
-
-        \item[c.] Estime la regresión $Y_i = \alpha + \tau D_i + u_i$.
-
-        \item[d.] Estime la especificación que usted propuso en el inciso a.
-
-        \item[e.] Reporte los resultados de los incisos c., y d.en una tabla, compárelos y concluya. 
-
-    \end{itemize}
-     \begin{solucion}
-        
-        a.)Sea C una variable dummy tal que:
+       Sea C una variable dummy tal que:
         \[
 C_i =
 \begin{cases} 
@@ -649,57 +791,51 @@ Se propone estimar la regresión:
 \begin{gather}\label{sinsesgoautores}
     Y_i = \alpha+\tau D_i + \theta' C_i D_i+ e_i
 \end{gather}
+Después de obtener $\theta'$, que es el coeficiente de la regresión. Se debe usar la ecuación \ref{eq:finding_theta} que derivamos en el literal anterior. Entonces $\theta= \theta'E[C|D=1]$, donde el último termino lo obtenemos hacer un promedio de los investigadores que colaboraron dado que escribieron sobre trending reserach topics. 
+\end{solucion}
 
 
-       
-
-
-        b.) Esta propuesta será exitosa porque permite aislar el efecto de solamente publicar en un trending research topic, cuando el proyecto no es colaborativo. Al incluir $C_i$ como control ``sacamos'' dicho efecto del error, resolviendo la variable omitida.  \textcolor{red}{revisar}. \\
-          
+        \item[b.] Justifique por qué su propuesta será exitosa.
+\begin{solucion}
         
-        Note que para los investigadores que escriben en trending research topics y que colaboran tendremos que:
-       \[
-\mathbb{E}[Y \mid D=1, C=1] = \alpha + \tau + \theta' +\mathbb{E}[e \mid D, C]
-\]
-Mientras que si escriben en trending research topics pero no colaboran tendremos que:
-       \[
-\mathbb{E}[Y \mid D=1, C=0] = \alpha + \tau +\mathbb{E}[e \mid D, C]  
-\]
-Finalmente, si no escriben en trending reserach topic (ergo no colaboran en trending reserach topic, pues solo es posible colaborar cuando se trabaja en un trending research topic) tenemos:
-  \[
-\mathbb{E}[Y \mid D=0, C=0] = \alpha +\mathbb{E}[e \mid D, C]  
-\]
-Luego, suponiendo que hay una correcta aleatorización entre el grupo de tratados y el grupo de control, tendremos que:
-\begin{itemize}
-    \item El efecto de solamente publicar en un trending research topic versus no publicar, sobre el número de citas que recibe un investigador está dado por:
-    \[
-\mathbb{E}[Y \mid D=1, C=0]- \mathbb{E}[Y \mid D=0, C=0] =  \tau   
-\]
 
-    \item El efecto de publicar en un trending research topic versus no publicar, y además colaborar, sobre el número de citas que recibe un investigador está dado por:
-    \[
-\mathbb{E}[Y \mid D=1, C=1]- \mathbb{E}[Y \mid D=0, C=0] = \tau +\theta
-\]
+        b.) Teóricamente, esta propuesta será exitosa porque permite aislar el efecto de solamente publicar en un trending research topic, cuando el proyecto no es colaborativo. Al incluir $C_i$ como control ``sacamos'' dicho efecto del error, resolviendo la variable omitida.Estos estimadores van a ser consistentes por la demostración del punto 8.\\
+        
+        Empíricamente, como mencionamos el sesgo de interés $\theta$ va a ser $\theta'E[C|D=1]$, el cual es coherente con los resultados obtenidos en las estimaciones usando la base de datos.\\
+    
+\end{solucion}
+        \item[c.] Estime la regresión $Y_i = \alpha + \tau D_i + u_i$.
+\begin{solucion}
+Los resultados se encuentran en el literal d
+\end{solucion}
+        \item[d.] Estime la especificación que usted propuso en el inciso a.
+ \begin{solucion}
+ Los resultados se encuentran en el literal d
+\end{solucion}
+        \item[e.] Reporte los resultados de los incisos c., y d.en una tabla, compárelos y concluya. 
+ 
+\begin{solucion}
 
-
-\end{itemize}
-
-c.)\begin{table}[H]
+ \begin{table}[H]
     \centering
     \caption{Efecto de \textit{trending\_topic} sobre \textit{author\_citations}}
     \label{tab:resultados}
-    \begin{tabular}{l c}
+    \begin{tabular}{l c c}
         \toprule
-        & Número total de citaciones\\
+        & (1) & (2) \\
+        & Número total de citaciones & Número total de citaciones \\
         \midrule
-        \textbf{Trending Topic} & 5.167*** \\
-        & (0.051) \\
-        \textbf{Constante} & 12.120*** \\
-        & (0.023) \\
+        \textbf{Trending Topic} & 5.167*** & 3.93*** \\
+        & (0.051) & (0.069) \\
+        \textbf{Trending Topic $\times$ Collaborative} &  & 2.552*** \\
+        &  & (0.088) \\
+        \textbf{Constante} & 12.120*** & 12.084*** \\
+        & (0.023) & (0.031) \\
         \midrule
-        Observaciones & 10,381 \\
-        Controles & No \\
-        R cuadrado ajustado & 0.4958 \\
+        Observaciones & 10,381 & 10,381 \\
+        Controles & No & Sí \\
+        R cuadrado ajustado & 0.4958 & 0.5338 \\
+        Root MSE &  & 2.0232 \\
         \bottomrule
     \end{tabular}
     
@@ -708,40 +844,14 @@ c.)\begin{table}[H]
     Errores estándar robustos a heterocedasticidad entre paréntesis.}
 \end{table}
 
-El coeficiente estimado de $\tau$ es 5.167. Indica que en promedio, los investigadores que publican en trending research topic reciben 5.167 más citas que los que no lo hacen. Este valor es  mayor que el valor teórico esperado de 4, lo cual indica que el sesgo es positivo y que tiene una magnitud de $\approx 1.167$.
+Para la primera regresión, el coeficiente estimado de $\tau$ es 5.167. Indica que en promedio, los investigadores que publican en trending research topic reciben 5.167 más citas que los que no lo hacen. Este valor es  mayor que el valor teórico esperado de 4, lo cual indica que el sesgo es positivo y que tiene una magnitud de $\approx 1.167$.
 
-        d.)
-        \begin{table}[H]
-    \centering
-    \caption{Efecto de \textit{trending\_topic} y su interacción con \textit{collaborative} sobre \textit{author\_citations}}
-    \label{tab:resultados}
-    \begin{tabular}{l c}
-        \toprule
-        & Número total de citaciones \\
-        \midrule
-        \textbf{Trending Topic} & 3.93*** \\
-        & (0.069) \\
-        \textbf{Trending Topic $\times$ Collaborative} & 2.552*** \\
-        & (0.088) \\
-        \textbf{Constante} & 12.084*** \\
-        & (0.031) \\
-        \midrule
-        Observaciones & 10,381 \\
-        R-cuadrado ajustado & 0.5338 \\
-        Root MSE & 2.0232 \\
-        \bottomrule
-    \end{tabular}
-    
-    \vspace{0.3cm}
-    \footnotesize{*** p$<$0.01, ** p$<$0.05, * p$<$0.1. \\
-    Errores estándar en paréntesis.}
-\end{table}
-Un aspecto relevante, es que el valor del sesgo no es simplemente el coeficiente de la interacción entre la variable de tratamiento (trending topic) y colaborar con coatures (collaborative). Como mostramos en la parte práctica del segundo ejericio, el sesgo en realidad será $\theta' \frac{\operatorname{cov}(\tilde{trending topic}, \tilde{colaborative})}{\operatorname{var}(\tilde{trending topic})}$, 
+Un aspecto relevante, es que el valor del sesgo no es simplemente el coeficiente de la interacción entre la variable de tratamiento (trending topic) y colaborar con coatures (collaborative). Como mostramos en la parte práctica del segundo ejericio, el sesgo en realidad será $\theta' \frac{\operatorname{cov}(\tilde{trending topic}, \tilde{colaborative})}{\operatorname{var}(\tilde{trending topic})}$
+\end{solucion}
+    \end{itemize}
+ \end{itemize}    
 
-        \end{solucion}
-    
 
-\end{itemize}
 \bigskip
 
 
@@ -1278,7 +1388,6 @@ En términos de covarianzas, la estimación de \( \beta_2 \) se puede expresar d
 Los numeradores de ambas expresiones son equivalente por el hecho de que \( \tilde{X}_2 \) no tiene niguna influencia de \( X_2 \) entonces no importa si no se descuenta la influencia de \( X_1 \) sobre \( y \) en el resultado de este inciso, porque \( X_1 \) no va a ejercer ninguna influencia sobre la relación entre 
 $\text{cov}(y, \tilde{X}_2)$
 
-\colorbox{yellow}{HELP!!!}
 
 \end{solucion}
 
@@ -1333,7 +1442,7 @@ Entonces:
 \end{align*}
 
 \end{proof}
-La clave en esta prueba es que $X^\top P=X^\top$. Esto es porque  \( P = X (X^\top X)^{-1} X^\top \), y la propiedad de la proyección ortogonal implica que proyectar \( X \) sobre el espacio generado por sus columnas no cambia las columnas de \( X \).  La estimación de \( \beta \) mediante la proyección ortogonal \( \hat{\beta} = (X'X)^{-1} X'y \) garantiza que toda la variación de \( y \) que no está contenida en el espacio columna de \( X \) se elimina. Los residuos \( \hat{\epsilon} = (I_n - P)y \) son ortogonales a todo vector en dicho espacio.\textcolor{red}{revisar}
+La clave en esta prueba es que $X^\top P=X^\top$. Esto es porque  \( P = X (X^\top X)^{-1} X^\top \), y la propiedad de la proyección ortogonal implica que proyectar \( X \) sobre el espacio generado por sus columnas no cambia las columnas de \( X \).  La estimación de \( \beta \) mediante la proyección ortogonal \( \hat{\beta} = (X'X)^{-1} X'y \) garantiza que toda la variación de \( y \) que no está contenida en el espacio columna de \( X \) se elimina. Los residuos \( \hat{\epsilon} = (I_n - P)y \) son ortogonales a todo vector en dicho espacio.
 
  \end{solucion}
 
@@ -1495,10 +1604,9 @@ Usted cuenta con una base de datos de corte transversal a nivel de individuo con
     \item Bajo el contexto dado, ¿cuál es el principal obstáculo para la identificación del efecto causal? Adicionalmente, argumente si la propuesta de su co-autora~\eqref{eq:no_z} logra capturar dicho efecto.
     \begin{solucion}
         
-        El principal obstáculo para identificar el efecto causal de ser victima sobre la voluntad de firmar la paz $\tau$ es que se incumpla el supuesto de unconfoundedness. El detrás de esto es la falta de una correcta aleatorización entre el grupo de tratados y de control, lo que hace que no sean comparables. Al existir un confounder, no hay garantía de que su dristribución sea igual para los tratados y para los no tratados, esto porque entra al error a alterar los resultados.\\
+        El principal obstáculo para identificar el efecto causal de ser victima sobre la voluntad de firmar la paz $\tau$ es que se incumpla el supuesto de unconfoundedness. El detrás de esto es que la probabilidad de ser victima (tratamiento) podría correlacionarse con el error y con la voluntad de firmar la paz (y). Esta no completa aleatorización entre el grupo de tratados y de control, hace que no sean comparables y no hay garantía ambos grupos sean comparables.\\
         
-        
-        Esto es preocupante en cuanto la presencia la presencia de confounders o variable omitida estaría originando un sesgo por la variable omitida, haciendo que el grupo de tratados (victimas) sea distinto al grupo de no tratados (no victimas). Este confounder o variable omitida, entraría en el error indebidamente. La razón importante detrás es que el confounder va a estar afectando tanto el ser victima como la voluntad de firmar la paz, por lo tanto la estimación de $\tau$ va a estar contaminada por el efecto de este confounder, impidiendo la identificación del verdadero efecto causal. Por lo tanto, en el contexto particular de la violencia en Dafur se requiere controlar por los posibles confounders para aislar el efecto causal y garantizar que $\tau$ refleje únicamente el efecto causal de ser victima sobre la voluntad de firmar la paz.  En este sentido, el problem se soluciona si hay disponibilidad de datos del confounder. Sin embargo, si no es posible observar esta variable, la credibilidad de la regresión quedaría en riesgo pues no se podría incluir como control.\\
+        Ahondando, es preocupante en cuanto la presencia la presencia de confounders o variable omitida estaría originando un sesgo por la variable omitida,la variable omitida, entraría en el error indebidamente y podría incumplirse el supuesto que $cov(victim, e)=0$. Que implica que $victim \not \perp Y_i^1, Y_i^0.$ Esto estaría impidiendo la identificación del verdadero efecto causal. Por lo tanto, en el contexto particular de la violencia en Dafur se requiere controlar por los posibles confounders para aislar el efecto causal y garantizar que $\tau$ refleje únicamente el efecto causal de ser victima sobre la voluntad de firmar la paz.  En este sentido, el problema se soluciona si hay disponibilidad de datos del confounder. Sin embargo, si no es posible observar esta variable, la credibilidad de la regresión quedaría en riesgo pues no se podría incluir como control.\\
 
         Un ejemplo de un posible confounder podría ser estar en el centro. Estar en el centro y ser victima podrían estar correlacionados porque podría ser que los bombardeos dirigidos al centro tiendan a ser más letales porque se invierte más maquinaria, precisamente porque el centro está más poblado usualmente y es más fácil acceso para los bombardeos. Por otro lado, estar en el centro podría estar correlacionado con la voluntad de firmar la paz bajo la teoría de que las personas del centro suelen tener opiniones distintas que las personas de las periferia, se podría argumentar que habría una mayor voluntad de firmar la paz precisamente porque se vive una mayor intranquilidad. Lo clave es que pueden existir diferencias sistemáticas entre la voluntad de firmar la paz que tienen las personas del centro y la voluntad de firmar la paz que tienen personas de la periferia.\\
 
@@ -1523,7 +1631,8 @@ Usted cuenta con una base de datos de corte transversal a nivel de individuo con
 
   \begin{solucion}
         
-        La preocupación de mi coautora puede ser un obstáculo en la identificación del efecto causal en cuanto que apoya la idea de que hay una mala aleatorización, en el sentido de que existe un confounder, en este caso sería la variable center. Como center no es observable, entonces no se podría estimar la  estimar la regresión \eqref{eq:center}. Si no hay otra alternativa, tocaría estimar \ref{eq:no_z} pero prendería alarmas sobre la credibilidad del estimador $\tau$ pues este está mal estimado, no capturaría el efecto causal que queremos (ser victima sobre la voluntad de firmar paz) y esto se da precisamente porque se tenía que meter center como control pero no fue posible. \\
+        La preocupación de mi coautora puede ser un obstáculo en la identificación del efecto causal en cuanto que apoya la idea de que hay una variable omitida (center). Como center no es observable, entonces no se podría estimar la  estimar la regresión \eqref{eq:center}. Esto conlleva a un problema de endogeneidad pues $center$ entraría en el error no observable e implicaría $cov (X, e)\neq 0$. De continuar con \ref{eq:no_z}, surgirían problemas de credibilidad $\tau$ porque el modelo causal empleado es incorrecto. \\
+        
         Esto también abre la discusión a que así como center, puede haber otras variables que se están omitiendo, por ejemplo también incluir una variable dummy ('neighbhor') que sea 1 si se vive en el mismo barrio de alguien del gobierno o de un familiar de hasta tercer grado de alguien del gobierno y 0 de lo contrario, etc.\\
         
     Vamos a mostrar que en este caso, el estimador  $\hat\tau^c$ tendría un sesgo con respecto al estimador $\hat\tau$. Para ello, vamos a computar $\hat\tau$
@@ -1591,7 +1700,21 @@ Luego hemos mostrado que $\hat{\tau} =\hat{\tau}^c+ \hat{\gamma} \hat{\delta}$. 
         \begin{equation*} 
         |\hat{sesgo}| = |\hat\tau - \hat\tau^c| = \hat{\gamma} \hat{\delta}
     \end{equation*}
-    \textcolor{red}{completar interpretacion}
+   Interpretación:
+   \begin{itemize}
+        \item $\hat{\delta}$: este corresponde al ratio $\frac{\operatorname{cov}(\tilde{victim}, \tilde{center})}{\operatorname{var}(\tilde{victim})}$, el cual muestra la correlación entre las variable de tratamiento (ser victima de un atentado) y la variable omitida (estar en el centro), después de haber eliminado la información explicada por las covariables $X$.  Ahora bien, respecto a la dirección y la magnitud de $\hat{\delta}$, argumentamos que esta correlación es alta y positiva. La razón es que los ataques dirigidos al centro de la población tiene una mayor probabilidad de destruir viviendas, escuelas, lugares públicos altamente concurridos. Por esto, los ataques al centro van correlacionados con mayores victimas. Debido a la gravedad del asunto, argumentamos que el coeficiente es alto y con signo positivo.Ahora bien, este es un valor entre [0,1] y de acuerdo a Cinelli, C., \& Hazlett, C. (2020) podría ser cercano a 0.25.
+         \item $\hat{\gamma}$: este representa la correlación entre estar en el centro y la voluntad de firmar la paz. Note que es el coeficiente que acompaña a la variable omitida (center) en la ecuación \ref{eq:center}. Ahora bien, la argumentación es que la magnitud de este será alta pues según la fuente ‘Justice has to happen first’: Why Darfuris are rejecting a local reconciliation drive, la población tiene una posición contundente al afirmar que no está dispuesta a firmar la paz sin antes haber tenido justicia. También, el Peace Index muestra que Sudán es uno de los países con índices más bajos de paz (ocupa la posición 162 de 163 países). Lo cual indica que hay un descontento generalizado en la población, incluyendo a la región de Dafur. Así, tanto en el centro como en la periferia, se podría afirmar que no hay voluntad de firmar la paz hasta que exista justicia. Por ende, $\hat{\gamma}$ sería pequeño, probablemente cercano a 0, y su signo sería negativo.
+          \item Conclusión: Con base en las fuentes; se argumenta que por un lado, el efecto de $\hat{\delta}$ es positivo sobre el sesgo, pero por el otro se argumenta que el efecto de $\hat{\gamma}$ es negativo.Por tanto, al final el sesgo $\hat{\delta}\hat{\gamma}$ tendría una dirección negativa, pero este tendria una magnitud pequeña.
+\item Referencias 
+\begin{itemize}
+    \item ‘Justice has to happen first’: Why Darfuris are rejecting a local reconciliation drive. Tomado de :https://www.thenewhumanitarian.org/news-feature/2023/02/08/local-peace-controversy-Sudan-Darfur-Hemedti
+    \item Cinelli, C., \& Hazlett, C. (2020). Making sense of sensitivity: Extending omitted variable bias. Journal of the Royal Statistical Society
+Series B: Statistical Methodology, 82(1), 39-67.
+\end{itemize}
+
+    
+       
+   \end{itemize}
        
 
         \end{solucion}
@@ -1810,7 +1933,7 @@ var_i = \beta_0 + \beta_{incentives} D_{i1} + \beta_{automnomy} D_{i2} +  \beta_
     
         \item En la práctica, ¿una asignación aleatoria al tratamiento garantiza inequívocamente el cumplimiento de correcto balance muestral? (Menos de 100 palabras)
           \begin{solucion}
-  No  necesarimente. Esto porque siempre hay una posibilidad de rechazar la hipótesis nula aún cuando sea verdadera. Este es el error tipo 1 ($\alpha$). Este es usualmente $1\%, 5\% \quad o \quad 10\%$ entonces siempre existirá algo de incertidumbre.
+  No  necesarimente. Esto porque siempre hay una posibilidad de rechazar la hipótesis nula aún cuando sea verdadera. Este es el error tipo 1 (el valor de $\alpha$). Este es usualmente $1\%, 5\% \quad o \quad 10\%$ entonces siempre existirá algo de incertidumbre.
         \end{solucion}
     
         \item Con base en sus resultados, ¿hay evidencia de una correcta aleatorización del tratamiento en el caso de Punjab? (Menos de 150 palabras)
@@ -1879,7 +2002,29 @@ Para evaluar esta hipótesis, utilizamos el análisis de varianza (ANOVA), con e
             \end{tabular}
              {\footnotesize{\\Nota: Errores estándar entre paréntesis. La tabla muestra los resultados de una regresión múltiple a nivel de Oficina de Gobierno. La regresión incluye observaciones para 587 oficinas de Gobierno en 26 distritos de la región de Punjab, Pakistán.  La categoría de control en cada regresión corresponde a las oficinas asignadas al grupo de control en el Experimento.}}
 	\end{table}
-     
+      \item Suponga que se cumplen lo supuestos listados en el numeral 2. Plantee una especificación que le permita recuperar el diferencial de cada tipo de tratamiento sobre el precio de compra respecto al grupo de control. Recuerde que la asignación al tratamiento fue estratificada.
+   \begin{solucion}
+   Se plantea la especificación
+   $$
+Y_{igj} = \beta_0 + \beta_{incentives} D_{i1} + \beta_{automnomy} D_{i2} +  \beta_{both} D_{i3} + X_{ig}'\beta + \theta_{j}+  \varepsilon_{igj}$$
+donde:
+ 
+
+\begin{itemize}
+    \item \( Y_{igj} \) el precio de compra pagado por el oficial $i$ en cada compra realizada  $g$ en el distrito $j$.
+    \item \( D_{i1} \), \( D_{i2} \) y \( D_{i3} \) son variables indicadoras (\textit{dummies}) que representan los distintos tratamientos. ( Acá se supone que el tratamiento se recibe a nivel ofical por tanto \( D_{ig} =  D_{igl} , l=1,2,3)\)):
+        \begin{itemize}
+            \item \( D_{i1} \) = 1 si el oficial \( i \) recibió incentivos.
+            \item \( D_{i2} \) = 1 si el oficial \( i \) recibió autonomía.
+            \item \( D_{i3} \) = 1 si el oficial \( i \) recibió incentivos y autonomía.
+        \end{itemize}
+    \item \( X_{ig} \) representa un conjunto de variables de control para el funcionario \( i \) por la compra \( g \).
+    
+    \item \( district_{igj} = district_{j} \) busca capturar los efectos fijos por distrito. El oficial \( i \) realiza la compra \( g \) en el distrito \( j \).
+    \item \( \varepsilon_{igj} \) es el término de error.
+\end{itemize}
+Así \( \beta_{\text{incentives}} \), \( \beta_{\text{autonomy}} \) y \( \beta_{\text{both}} \) captura los efectos de cada tratamiento en comparación con el grupo de control
+   \end{solucion}
 
 
    \item Después de la toma de datos en línea base, el Gobierno de Punjab aplica junto a usted el experimento planteado en los numerales a)-d) descrito al principio. Dos años después de su implementación, el Gobierno le comparte la base \textit{02.Results\_PK.dta} el precio a nivel de producto para todas las compras realizadas por los 587 oficiales de compra que participaron en el experimento. Ejecute la regresión planteada en el numeral anterior y reporte sus resultados.
@@ -1931,7 +2076,7 @@ Observaciones &  \\ \hline
     \multicolumn{2}{c}{ *** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
     \end{tabular}
 \end{table}
-
+Los resultados muestran que los incentivos reducen en promedio el precio unitario en un $14\%$ y la autonomía en un $11.7\%$, respecto a no haber aplicado ninguna de estas estrategias. Estos efectos no son estadísticamente significativos, aún así guiarse por ello sería seguir reproduciendo la guerra por estrellas que existe en el mundo investigativo.Por otro lado, cuando se combinan incentivos y autonomía, la reducción en el precio unitario alcanza un $16.3\%$, con una significancia marginal (p < 0.1), lo que sugiere que ambas estrategias podrían complementarse. Aunque el modelo solo explica una parte de la variabilidad en los precios (R² = 0.0864), estos hallazgos sugieren que aplicar incentivos y otorgar autonomía en conjunto podría hacer más eficiente el gasto en comparación con no implementar ningún tratamiento.
 \begin{table}[H]
     \centering
     \caption{Efecto de los tratamientos sobre el Precio Unitario con covariables}
@@ -1957,16 +2102,19 @@ Observaciones &  \\ \hline
     \multicolumn{2}{c}{ *** p$<$0.01, ** p$<$0.05, * p$<$0.1} \\
     \end{tabular}
 \end{table}
+Los resultados muestran que, al incluir covariables en el análisis, el efecto de los incentivos sobre el precio unitario se reduce a un $4.6\%$, mientras que la autonomía mantiene una disminución más pronunciada del $12.5\%$, esta vez con significancia estadística ($p < 0.05$). La combinación de incentivos y autonomía también muestra una reducción del $10.2\%$, siendo significativa al mismo nivel. A diferencia del modelo sin controles, estos resultados sugieren que la autonomía, ya sea sola o combinada con incentivos, tiene un impacto más claro en la eficiencia del gasto. Además, el coeficiente del segundo año indica un aumento del $9.2\%$ en los precios unitarios ($p < 0.05$), lo que podría reflejar tendencias inflacionarias o cambios en las dinámicas del mercado. Con un $R\textsuperscript{2}$ de $0.9691$, el modelo captura gran parte de la variabilidad en los precios, lo que refuerza la solidez de estos hallazgos.
+
    \end{solucion}
+   
     Además, responda:
    \begin{enumerate}
         \item Dado el cumplimiento de correcta aleatorización de tratamiento, ¿por qué es deseable incluir controles adicionales como los especificados arriba? (Menos de 100 palabras)
          \begin{solucion}
-           Suponiendo que hay correcta aleatorización, incluir controles permite reducir la varianza de los estimadores y tener pruebas estadísticas más precisas. Esto porque cuando se incluye un buen control, la fuente de variación que captura el error disminuye, luego $\sigma^2$ disminuye.Ahora, la varianza de los estimadores es proporcional  $\sigma^2$ entonces queremos estimadores mucho más precisos, con menor variabilidad.
+           Suponiendo que hay correcta aleatorización, incluir controles permite reducir la varianza de los estimadores y tener pruebas estadísticas más precisas. Esto porque cuando se incluye un buen control, la fuente de variación que captura el error disminuye, luego $\hat{\sigma}^2$ disminuye.Ahora, la varianza de los estimadores es proporcional  $\hat{\sigma}^2$ entonces queremos estimadores mucho más precisos, con menor variabilidad.
    \end{solucion}
        \item ¿Cuál es el mejor mecanismo para reducir el precio de los productos comprados?\footnote{\footnotesize{Los resultados que usted va a calcular en este punto se derivan de las bases oficiales del experimento aplicado en Punjab por \href{https://academic.oup.com/qje/article-abstract/136/4/2195/6354797?redirectedFrom=fulltext}{Bandiera at al. (2021)}. Los resultados son consistentes (no idénticos) con las estimaciones encontradas en este artículo.}}(Menos de 150 palabras)
        \begin{solucion}
-           De acuerdo con los resultados presentados en la tabla, el mejor mecanismo para reducir el precio de los productos comprados es la autonomía. \textcolor{red}{completar}
+           De acuerdo con los resultados presentados en la tabla, el mejor mecanismo para reducir el precio de los productos comprados es la autonomía.  El efecto causal promedio de otorgar autonomía a los oficiales versus no hacerlo, sobre los precios es una reducción del 12.5\%. La explicación a partir de teoría del comportamiento puede ser que el fomento de la autonomía permite que los oficiales tengan mayor compromiso al tener una mayor responsabilidad. Esta libertad muestra que la estrategia para hacer el gasto mas eficiente, debe ser una que fomente la independencia y toma de decisiones autonoma.
       \end{solucion}
      
        \item En su opinión, ¿Cuál es la validez externa de las conclusiones?¿Son los resultados del experimento extrapolables a contextos como el colombiano? (Menos de 100 palabras)
@@ -1988,7 +2136,7 @@ Observaciones &  \\ \hline
 
     \item El experimento realizado por usted dependió del monitoreo del gasto público realizado por las 587 oficinas participantes a través de la plataforma \textit{Punjab Online Procurement System (POPS)}, la cual se creó de manera específica para el experimento. En este contexto, explique: ¿Puede la introducción de este sistema de monitoreo haber generado cambios de comportamiento en los oficiales de compra?¿Cuál de los 4 tipos de cambios de comportamiento puede inducirse por esta plataforma?\footnote{\footnotesize{Efecto Placebo, \textit{Experimenter Demand Effect}, Hawthorne, o John Henry}} (Menos 200 palabras)
      \begin{solucion}
-     Sí, este sistema inducir cambios en el comportamiento de los oficiales. En particular, entre los 4 efectos mencionado, el que se pudo haber inducido es el efecto Hawthorne. La razón es que los oficiales de compra que recibieron el tratamiento (bien sea haber recibido incentivos, autonomía o ambos), pueden tratar de ser mucho más eficientes con el gasto, por ejemplo pedir descuentos, comparar precios antes de comprar, entre otros. Los tratados saben que están monitoreados, pues registran los datos en la plataforma. El punto clave es la reputación de los oficiales. Suponiendo que un oficial tratado y uno no tratado realizan la misma compra, si el registro del oficial tratado es a un precio mayor o igual que el del oficial no tratado, sería bastante vergonzoso y pondría en tela de juicio su competencia e idoneidad para ser oficial de compras. En este sentido, los oficiales tratados se van a esforzar al máximo para que eso no ocurra.  Por otro lado, algo extremadamente interesante con base en el literal anterior, es que en este contexto ocurre el inverso del efecto John Henry. En vez de esforzarse más para compensar el efecto, los no tratados se vuelven más negligentes.
+     Sí, este sistema podría inducir cambios en el comportamiento de los oficiales. En particular, entre los 4 efectos mencionado, el que se pudo haber inducido es el efecto Hawthorne. La razón es que los oficiales de compra que recibieron el tratamiento (bien sea haber recibido incentivos, autonomía o ambos), pueden tratar de ser mucho más eficientes con el gasto, por ejemplo pedir descuentos, comparar precios antes de comprar, entre otros. Los tratados saben que están monitoreados, pues registran los datos en la plataforma. El punto clave es la reputación de los oficiales. Suponiendo que un oficial tratado y uno no tratado realizan la misma compra, si el registro del oficial tratado es a un precio mayor o igual que el del oficial no tratado, sería bastante vergonzoso y pondría en tela de juicio su competencia e idoneidad para ser oficial de compras. En este sentido, los oficiales tratados se van a esforzar al máximo para que eso no ocurra.  Por otro lado, algo extremadamente interesante con base en el literal anterior, es que en este contexto ocurre el inverso del efecto John Henry. En vez de esforzarse más para compensar el efecto, los no tratados se vuelven más negligentes.
      
    \end{solucion}
 \end{enumerate}
@@ -2132,6 +2280,35 @@ reghdfe lUnitPrice IncentivesY2 AutonomyY2 BothY2 i.NewItemID#c.lQuantity Year2 
 
 \end{document}
 
+%   \begin{proof}
+%        Considere la regresión $Y_i =\alpha+ \tau^* D_i + u_i$. Sabemos 
+% \begin{align*}
+%     \hat{\tau}^*_{MCO} &=(X'X)^{-1} X' y \\
+%     &= (X'X)^{-1} X' (X \tau^* + \epsilon) \\
+%     &= (X'X)^{-1} X' (X (\tau + \theta) + \epsilon) \\
+%     &= (X'X)^{-1} X' X \tau + (X'X)^{-1} X' X\theta + (X'X)^{-1} X' \epsilon \\
+%     &= \tau + \theta + (X'X)^{-1} X' \epsilon \\
+%     &= \tau + \theta + \left( \frac{X'X}{N} \right)^{-1} \left( \frac{X'\epsilon}{N} \right) \quad \text{(multiplicando y dividiendo por N)} \\
+%     &= \tau + \theta + \left( \frac{1}{N} \sum_{i=1}^{N} x_i x_i' \right)^{-1} \left( \frac{1}{N} \sum_{i=1}^{N} x_i \epsilon_i \right).
+%   \end{align*}
+%   Ahora, aplicando el p-lim tenemos:
+%   \begin{align*}
+%     \text{plim } \hat{\tau}^*_{MCO} &= \text{plim} \left( \tau + \theta+ \left( \frac{1}{N} \sum_{i=1}^{N} x_i x_i' \right)^{-1} 
+%     \left( \frac{1}{N} \sum_{i=1}^{N} x_i \epsilon_i \right) \right) \\
+%     &= \text{plim } \tau + \text{plim } \theta +\text{plim} \left( \left( \frac{1}{N} \sum_{i=1}^{N} x_i x_i' \right)^{-1} 
+%     \left( \frac{1}{N} \sum_{i=1}^{N} x_i \epsilon_i \right) \right) \\
+%     &= \tau +\theta+ \text{plim} \left( \frac{1}{N} \sum_{i=1}^{N} x_i x_i' \right)^{-1} 
+%     \cdot \text{plim} \left( \frac{1}{N} \sum_{i=1}^{N} x_i \epsilon_i \right) \\
+%       &= \tau +\theta + \text{plim} E[x_i x_i'] ^{-1} \text{plim} E[x_i \epsilon_i] \qquad \text{(por ley débil de grandes números) }\\
+%       &= \tau +\theta + \text{plim} E[x_i x_i'] ^{-1} 0 \qquad \text{(usando exogeneidad débil) }\\
+%        &= \tau +\theta
+%     \end{align*}
+%    Como $\theta > 0$ entonces se tiene que $\text{plim } \hat{\tau}^*_{MCO}=\tau + \theta >\tau$.
+%         \end{proof}
+%         Ahora, como empíricamente obtuvimos $\hat{\tau}^*_{MCO} \approx 5.16$ y teóricamente $\tau \approx 4$ entonces el sesgo  $\theta \approx 1.16$.  Esto es congruente con los resultados obtenidos en cuanto el estimador empírico es mayor que el estimador teórico.
+%         \end{solucion}
 
+ (resaltamos que no es que sea de inferencia per ser sino que esto ocapuede derivar un problema de sesgo de selección, que sí es un problema de inferencia causal).. El sesgo de selección es un indicativo de que el error y el Adicionalmente, tener un con
+       . En particular, las alternativas 1 y 2 sugieren que el efecto va a estar subestimado, pues varios investigadores asignados al grupo de control, podrían ya ser populares por sus trabajos previos en los trendings reserach topics.
 
     
